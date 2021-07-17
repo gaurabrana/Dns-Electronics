@@ -361,7 +361,7 @@
                     obj = $.parseJSON(html);
                     if (obj.status) {
                         var percentVal = '100%';
-                        bar.width(percentVal)
+                        bar.width(percentVal)                        
                         percent.html(percentVal);
                         $("#imgArea>img").prop('src', obj.image_medium);
                     } else {

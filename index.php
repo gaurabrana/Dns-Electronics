@@ -1,4 +1,5 @@
 <?php
+require ('database/connect.php');
 $show_collection = "homepage";
 ?>
 <!DOCTYPE html>
@@ -65,7 +66,15 @@ $show_collection = "homepage";
 	<!-- Slider Area -->
 	<section class="hero-slider">
 		<!-- Single Slider -->
-		<div class="single-slider">
+
+		<div <?php
+		$image = 'img/homepage_image/logored.png';
+		$sql = "Select * from homepage_image where placing='heading'";
+		$result = mysqli_query($conn, $sql);
+		while($row = mysqli_fetch_assoc($result)){
+			$image = "img/homepage_image/".$row['image_name']."";
+		}
+		echo'style:"background-image: url('.$image.')"'; ?> class="single-slider">
 			<div class="container">
 				<div class="row no-gutters">
 					<div class="col-lg-9 offset-lg-3 col-12">

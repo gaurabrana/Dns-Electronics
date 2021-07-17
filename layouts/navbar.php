@@ -23,15 +23,24 @@ include("database/connect.php");
 						<ul class="list-main">
 							<li><i class="ti-location-pin"></i> Store location</li>
 							<li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-							<li><i class="ti-user"></i> <a href="#">My account</a></li>
-							<li>
-								<i class="ti-power-off"></i>											
-									<?php									
-									if(isset($_SESSION['name'])){
-										echo'<a href="database/logout.php">'.$_SESSION['name'].'</a>';
-									}
-									else{
-										echo'<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
+							<li><i class="ti-user"></i>																
+										<?php
+										if(isset($_SESSION['name']))
+										{
+											echo'<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
+										'.$_SESSION['name'].'</a>
+										<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuLink">
+												<li class="userProfile"><i class="fa fa-user-circle"></i><a class="dropdown-item" href="user/profile.php">UserProfile</a></li>
+												<li class="userProfile"><i class="fa fa-list-alt" aria-hidden="true"></i>
+												<a class="dropdown-item" href="user/myorders.php">Orders</a></li>
+												<li class="userProfile"><i class="fa fa-credit-card" aria-hidden="true"></i><a class="dropdown-item" href="user/mypayments.php">Payments</a></li>
+												<li class="userProfile"><i class="fa fa-shopping-cart"></i><a class="dropdown-item" href="cart.php">Cart</a></li>
+												<li class="userProfile"><div><i class="fa fa-heart-o" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
+												<li class="userProfile"><i class="ti-power-off"></i><a class="dropdown-item" href="database/logout.php">Logout</a></li>
+											</ul>';																																					
+										}		
+										else{
+											echo'<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
 										Login
 									</a>
 									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" ria-labelledby="loginbutton">
@@ -55,19 +64,62 @@ include("database/connect.php");
 												<label class="check" for="2"><input name="news" id="2" type="checkbox">Remember me</label>
 											</div>
 											<a href="#" class="lost-pass">Lost your password?</a>
-										</div>';	
-									}
-									?>
-																		
-								</div>
-						</ul>
+										</div>';
+										}					
+										?>
+									</a>
+										<?php
+										if(isset($_SESSION['name'])){
+											echo '
+											<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuLink">
+												<li class="userProfile"><i class="fa fa-user-circle"></i><a class="dropdown-item" href="user/profile.php">UserProfile</a></li>
+												<li class="userProfile"><i class="fa fa-list-alt" aria-hidden="true"></i>
+												<a class="dropdown-item" href="user/myorders.php">Orders</a></li>
+												<li class="userProfile"><i class="fa fa-credit-card" aria-hidden="true"></i><a class="dropdown-item" href="user/mypayments.php">Payments</a></li>
+												<li class="userProfile"><i class="fa fa-shopping-cart"></i><a class="dropdown-item" href="cart.php">Cart</a></li>
+												<li class="userProfile"><div><i class="fa fa-heart-o" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
+												<li class="userProfile"><i class="ti-power-off"></i><a class="dropdown-item" href="database/logout.php">Logout</a></li>
+											</ul>';
+										}
+										else{
+											echo'<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuLink">
+											<div class="form-fields">
+											<div class="loginform">										
+												<form id="login" method="POST" action="database/logindata.php" role="form">
+													<i class="ti-power-off"></i><label for="email">Email Address</label>
+													<input type="email" id="email_log" name="email" required>
+													<i class="ti-power-off"></i><label for="password">Password</label>
+													<input type="password" id="password_log" name="password" required>
+												</form>
+												<div class="form-group login-btn">
+													<button class="btn navbarlogin">Login</button>
+													<button class="btn navbarregister">Register</button>
+												</div>
+												<div class="alert alert-danger alert-dismissible" id="error" style="display:none;">
+													<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+												</div>
+											</div>
+											<div class="checkbox">
+												<label class="check" for="2"><input name="news" id="2" type="checkbox">Remember me</label>
+											</div>
+											<a href="#" class="lost-pass">Lost your password?</a>
+										</div>
+											</ul>';											
+										}
+										?>
+
+								
+							</li>
+							
 					</div>
-					</li>
 					</ul>
-					<!-- End Top Right -->
 				</div>
+				</li>
+				</ul>
+				<!-- End Top Right -->
 			</div>
 		</div>
+	</div>
 	</div>
 	<!-- End Topbar -->
 	<div class="middle-inner">
@@ -76,7 +128,7 @@ include("database/connect.php");
 				<div class="col-lg-2 col-md-2 col-12">
 					<!-- Logo -->
 					<div class="logo">
-						<a href="index.php"><img src="images/logored.png" alt="logo"></a>
+						<a href="index.php"><img src="img/logored.png" alt="logo"></a>
 					</div>
 					<!--/ End Logo -->
 					<!-- Search Form -->
@@ -157,15 +209,15 @@ include("database/connect.php");
 		</div>
 	</div>
 	<!-- Header Inner -->
-	
-			<div class="header-inner">
-			<div class="container">
-				<div class="cat-nav-head">
-					<div class="row">
+
+	<div class="header-inner">
+		<div class="container">
+			<div class="cat-nav-head">
+				<div class="row">
 					<?php
-	if(isset($show_collection)){
-		if($show_collection == "homepage"){
-			echo'<div class="col-lg-3">
+					if (isset($show_collection)) {
+						if ($show_collection == "homepage") {
+							echo '<div class="col-lg-3">
 							<div class="all-category">
 								<h3 class="cat-heading"><i class="fa fa-bars" aria-hidden="true"></i>CATEGORIES</h3>
 								<ul class="main-category">
@@ -235,58 +287,64 @@ include("database/connect.php");
 								</ul>
 							</div>
 						</div>';
+						}
 					}
-				}							
-						?>
-						<div class="col-lg-9 col-12">
-							<div class="menu-area">
-								<!-- Main Menu -->
-								<nav class="navbar navbar-expand-lg">
-									<div class="navbar-collapse">
-										<div class="nav-inner">
-											<ul class="nav main-menu menu navbar-nav">
-												<li class="active"><a href="index.php">Home</a></li>
-												<li><a href="shop-grid.php">Product</a></li>
-												<li><a href="#">Service</a></li>
-												<li>
-													<a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
-													<ul class="dropdown">
-														<!---
+					?>
+					<div class="col-lg-9 col-12">
+						<div class="menu-area">
+							<!-- Main Menu -->
+							<nav class="navbar navbar-expand-lg">
+								<div class="navbar-collapse">
+									<div class="nav-inner">
+										<ul class="nav main-menu menu navbar-nav">
+											<li class="active"><a href="index.php">Home</a></li>
+											<li><a href="shop-grid.php">Product</a></li>
+											<li><a href="#">Service</a></li>
+											<li>
+												<a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
+												<ul class="dropdown">
+													
 														<li><a href="shop-grid.php">Shop Grid</a></li>
-														-->
-														<li><a href="cart.php">Cart</a></li>
-														<li><a href="checkout.php">Checkout</a></li>
-													</ul>
-												</li>
-												<li><a href="#">Pages</a></li>
-												<li>
-													<a href="#">Blog<i class="ti-angle-down"></i></a>
-													<ul class="dropdown">
-														<li><a href="blog-single-sidebar.php">Blog Single Sidebar</a></li>
-													</ul>
-												</li>
-												<li><a href="contact.php">Contact Us</a></li>
-											</ul>
-										</div>
+														
+													<li><a href="cart.php">Cart</a></li>
+													<li><a href="checkout.php">Checkout</a></li>
+												</ul>
+											</li>
+											<li><a href="#">Pages<i class="ti-angle-down"></i></a>
+												<ul class="dropdown">																																								
+													<li><a href="traders/login.php">Sell my products</a></li>													
+												</ul></li>
+											<li>
+												<a href="#">Blog<i class="ti-angle-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="blog-single-sidebar.php">Blog Single Sidebar</a></li>
+												</ul>
+											</li>
+											<li><a href="contact.php">Contact Us</a></li>
+										</ul>
 									</div>
-								</nav>
-								<!--/ End Main Menu -->
-							</div>
+								</div>
+							</nav>
+							<!--/ End Main Menu -->
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 	<!--/ End Header Inner -->
 </header>
 <script src="js/jquery.min.js"></script>
 <script>
-	$(document).ready(function() {
+	$(document).ready(function() {	
+			$(".navbarregister").click(function(){
+					window.location.href="./register.php";
+			});
 		$(".navbarlogin").click(function() {
 			$(".navbarlogin").prop('disabled', true);
 
 			var email = $('#email_log').val();
-			
+
 			var password = $('#password_log').val();
 			console.log(email + "//" + password);
 
@@ -302,18 +360,20 @@ include("database/connect.php");
 					cache: false,
 					success: function(dataResult) {
 						var dataResult = JSON.parse(dataResult);
-						if(dataResult.statusCode != null){
+						if (dataResult.statusCode != null) {
 							console.log(dataResult.statusCode);
-							$("#error").show();					
+							if (dataResult.statusCode != 202) {
+								$("#error").show();
+							}
 						}
 						if (dataResult.statusCode == 200) {
-							$('#error').html('User not found.');														
-							$("#error").fadeOut(4300);					
+							$('#error').html('User not found.');
+							$("#error").fadeOut(4300);
 							//$("#error").slideUp(300).delay(8000).fadeOut(400);
 							$(".navbarlogin").removeAttr('disabled');
 						} else if (dataResult.statusCode == 201) {
-							$('#error').html('Invalid Password !');										
-							$("#error").fadeOut(4300);					
+							$('#error').html('Invalid Password !');
+							$("#error").fadeOut(4300);
 							//$("#error").slideUp(300).delay(8000).fadeOut(400);	
 							$(".navbarlogin").removeAttr('disabled');
 						} else if (dataResult.statusCode == 202) {
@@ -322,9 +382,9 @@ include("database/connect.php");
 					}
 				});
 			} else {
-				$('#error').html('Please fill all fields.');				
-				$("#error").show();						
-				$("#error").fadeOut(4300);					
+				$('#error').html('Please fill all fields.');
+				$("#error").show();
+				$("#error").fadeOut(4300);
 				$(".navbarlogin").removeAttr('disabled');
 			}
 		});

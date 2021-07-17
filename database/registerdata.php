@@ -57,8 +57,8 @@ $gender = $_POST['gender'];
 $phone = $_POST['phone'];
 $password = md5($_POST['password']);
     $email = strtolower(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
-    $name = mysqli_escape_string($conn, $name);
-    $email = mysqli_escape_string($conn, $email);
+    $name = mysqli_real_escape_string($conn, $name);
+    $email = mysqli_real_escape_string($conn, $email);
     $exists = false;
     $email_query = "Select email from customer";
     $email_result = mysqli_query($conn, $email_query);
@@ -72,7 +72,7 @@ $password = md5($_POST['password']);
         $output['statusCode'] = 200;        
     }
 
-    $password = mysqli_escape_string($conn, $password);
+    $password = mysqli_real_escape_string($conn, $password);
 
     if(!$exists){
         $sql = "Insert into customer values('$newUserID',$userUniqueKey,'$username','$name','$password','$email','$phone','$age','$gender','$date','$imageLink','NO','NO', '$verificationkey')";

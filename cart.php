@@ -1,3 +1,9 @@
+<?php
+include('database/connect.php');
+if(!isset($_SESSION['email'])){
+header("Location: index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -84,7 +90,7 @@
 	<div class="shopping-cart section">
 		<div class="container">
 			<div class="row">
-				<div class="col-12">
+				<div class="col-12">			
 					<!-- Shopping Summery -->
 					<table class="table shopping-summery">
 						<thead>
@@ -98,84 +104,63 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-								<td class="product-des" data-title="Description">
-									<p class="product-name"><a href="#">Women Dress</a></p>
-									<p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-								</td>
-								<td class="price" data-title="Price"><span>$110.00 </span></td>
-								<td class="qty" data-title="Qty"><!-- Input Order -->
-									<div class="input-group">
-										<div class="button minus">
-											<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-												<i class="ti-minus"></i>
-											</button>
-										</div>
-										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="1">
-										<div class="button plus">
-											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-												<i class="ti-plus"></i>
-											</button>
-										</div>
+						<?php
+						if(isset($_SESSION['cartid'])){
+							$cart_id = 	$_SESSION['cartid'];							
+						}						
+						$sql = "Select p.id, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
+						$result = mysqli_query($conn, $sql);
+						$total = 0;
+						$totalDiscount = 0;
+						$totalWithoutDiscount = 0;
+						while($row=mysqli_fetch_assoc($result)){							
+							$subtotal = 0;
+							$description = substr($row['description'],0,100)."....";							
+							$totalDiscount = $totalDiscount + ($row['discount']*$row['quantity']);
+							$totalWithoutDiscount = $totalWithoutDiscount + ($row['quantity'] * $row['price']);
+							if($row['discount']!=0){
+								$updatedPrice = $row['price'] - $row['discount'];								
+							}
+							else{
+								$updatedPrice = $row['price'];								
+							}							
+							$subtotal = $row['quantity'] * $updatedPrice;							
+							$total = $total + $subtotal;							
+							echo'<tr>
+							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
+							<td class="product-des" data-title="Description">
+								<p class="product-name"><a href="singleproduct.php?id='.$row['id'].'">'.$row['name'].'</a></p>
+								<p class="product-des">'.$description.'</p>
+							</td>
+							<td class="price" data-title="Price"><span>Rs </span>';
+							if($row['discount']!=0){								
+								echo'<span style="color:red;text-decoration: line-through;">'.$row['price'].'</span>';
+							}							
+							echo'<br><span>'.$updatedPrice.'</span></td>
+							<td class="price" hidden data-title="Price"><span>'.$updatedPrice.'</span></td>
+							<td class="qty" data-title="Qty"><!-- Input Order -->
+								<div class="input-group">
+									<div class="button minus" id="minus'.$row['productcartid'].'">
+										<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant['.$row['productcartid'].']">
+											<i class="ti-minus"></i>
+										</button>
 									</div>
-									<!--/ End Input Order -->
-								</td>
-								<td class="total-amount" data-title="Total"><span>$220.88</span></td>
-								<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-							</tr>
-							<tr>
-								<td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-								<td class="product-des" data-title="Description">
-									<p class="product-name"><a href="#">Women Dress</a></p>
-									<p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-								</td>
-								<td class="price" data-title="Price"><span>$110.00 </span></td>
-								<td class="qty" data-title="Qty"><!-- Input Order -->
-									<div class="input-group">
-										<div class="button minus">
-											<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[2]">
-												<i class="ti-minus"></i>
-											</button>
-										</div>
-										<input type="text" name="quant[2]" class="input-number"  data-min="1" data-max="100" value="2">
-										<div class="button plus">
-											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[2]">
-												<i class="ti-plus"></i>
-											</button>
-										</div>
+									<input type="text" value="'.$row['quantity_stock'].'" hidden id="stock'.$row['productcartid'].'">
+									<input type="text" id="quantity'.$row['productcartid'].'" name="quant['.$row['productcartid'].']" class="input-number"  data-min="1" data-max="'.$row['quantity_stock'].'" value="'.$row['quantity'].'">
+									<div class="button plus" id="plus'.$row['productcartid'].'">
+										<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant['.$row['productcartid'].']">
+											<i class="ti-plus"></i>
+										</button>
 									</div>
-									<!--/ End Input Order -->
-								</td>
-								<td class="total-amount" data-title="Total"><span>$220.88</span></td>
-								<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-							</tr>
-							<tr>
-								<td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
-								<td class="product-des" data-title="Description">
-									<p class="product-name"><a href="#">Women Dress</a></p>
-									<p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
-								</td>
-								<td class="price" data-title="Price"><span>$110.00 </span></td>
-								<td class="qty" data-title="Qty"><!-- Input Order -->
-									<div class="input-group">
-										<div class="button minus">
-											<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[3]">
-												<i class="ti-minus"></i>
-											</button>
-										</div>
-										<input type="text" name="quant[3]" class="input-number"  data-min="1" data-max="100" value="3">
-										<div class="button plus">
-											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[3]">
-												<i class="ti-plus"></i>
-											</button>
-										</div>
-									</div>
-									<!--/ End Input Order -->
-								</td>
-								<td class="total-amount" data-title="Total"><span>$220.88</span></td>
-								<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
-							</tr>
+								</div>
+								<!--/ End Input Order -->
+							</td>
+							<td class="total-amount" data-title="Total"><span id="subtotal'.$row['productcartid'].'">Rs '.$subtotal.'</span></td>
+							<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
+						</tr>';
+						}
+						?>
+												
 						</tbody>
 					</table>
 					<!--/ End Shopping Summery -->
@@ -202,10 +187,10 @@
 							<div class="col-lg-4 col-md-7 col-12">
 								<div class="right">
 									<ul>
-										<li>Cart Subtotal<span>$330.00</span></li>
-										<li>Shipping<span>Free</span></li>
-										<li>You Save<span>$20.00</span></li>
-										<li class="last">You Pay<span>$310.00</span></li>
+										<li>Cart Subtotal<span id="totalWithoutDiscount">Rs <?php echo $totalWithoutDiscount; ?></span></li>
+										<li>Shipping<span>--</span></li>
+										<li>You Save<span id="totalDiscount">Rs <?php echo $totalDiscount; ?></span></li>
+										<li class="last">You Pay<span id="totalpayment">Rs <?php echo $total; ?></span></li>
 									</ul>
 									<div class="button5">
 										<a href="#" class="btn">Checkout</a>
@@ -418,6 +403,8 @@
 	<!-- Popper JS -->
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/path/to/src/bootstrap-show-notification.js"></script>
 	<!-- Color JS -->
 	<script src="js/colors.js"></script>
 	<!-- Slicknav JS -->
@@ -445,6 +432,6 @@
 	<!-- Easing JS -->
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
-	<script src="js/active.js"></script>
+	<script src="js/active.js"></script>	
 </body>
 </html>
