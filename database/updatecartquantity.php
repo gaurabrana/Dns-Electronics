@@ -4,8 +4,13 @@ if(isset($_POST['a'])){
 $action = $_POST['a'];
 $id = $_POST['b'];
 $cart_id = $_SESSION['cartid'];
+if($action == "delete"){
+$sql = "Delete from product_in_cart where id = '$id'";
+}
+else{
 $updatedQuantity = $_POST['c'];
 $sql = "Update product_in_cart set quantity = '$updatedQuantity' where id = '$id'";
+}
 $result = mysqli_query($conn, $sql);
     if($result){
         $total = 0;

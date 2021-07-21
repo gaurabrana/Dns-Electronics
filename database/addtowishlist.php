@@ -42,7 +42,7 @@ if(isset($_SESSION['email'])){
 else{
     echo json_encode(array("statusCode"=>203));
 }
-function generateRandomString($length = 5) {
+function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';

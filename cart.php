@@ -83,9 +83,7 @@ header("Location: index.php");
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- End Breadcrumbs -->
-			
+	</div>	
 	<!-- Shopping Cart -->
 	<div class="shopping-cart section">
 		<div class="container">
@@ -126,7 +124,7 @@ header("Location: index.php");
 							}							
 							$subtotal = $row['quantity'] * $updatedPrice;							
 							$total = $total + $subtotal;							
-							echo'<tr>
+							echo'<tr id="tablerow'.$row['productcartid'].'">
 							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
 							<td class="product-des" data-title="Description">
 								<p class="product-name"><a href="singleproduct.php?id='.$row['id'].'">'.$row['name'].'</a></p>
@@ -152,15 +150,17 @@ header("Location: index.php");
 											<i class="ti-plus"></i>
 										</button>
 									</div>
+									<p style="margin-top:4px; display:none;" id="cartError'.$row['productcartid'].'">Error</p>
 								</div>
 								<!--/ End Input Order -->
 							</td>
 							<td class="total-amount" data-title="Total"><span id="subtotal'.$row['productcartid'].'">Rs '.$subtotal.'</span></td>
-							<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
+							<td class="action" data-title="Remove"><p style="cursor:pointer;" id="remove'.$row['productcartid'].'"><i class="ti-trash remove-icon"></i></p></td>
+							<td>
+							</td>
 						</tr>';
 						}
-						?>
-												
+						?>												
 						</tbody>
 					</table>
 					<!--/ End Shopping Summery -->
@@ -193,7 +193,7 @@ header("Location: index.php");
 										<li class="last">You Pay<span id="totalpayment">Rs <?php echo $total; ?></span></li>
 									</ul>
 									<div class="button5">
-										<a href="#" class="btn">Checkout</a>
+										<a href="checkout.php" class="btn">Checkout</a>
 										<a href="#" class="btn">Continue shopping</a>
 									</div>
 								</div>
@@ -404,7 +404,7 @@ header("Location: index.php");
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/path/to/src/bootstrap-show-notification.js"></script>
+<script src="js/bootstrap-show-notification.js"></script>
 	<!-- Color JS -->
 	<script src="js/colors.js"></script>
 	<!-- Slicknav JS -->
@@ -433,5 +433,6 @@ header("Location: index.php");
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="js/active.js"></script>	
+	
 </body>
 </html>

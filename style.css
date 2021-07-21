@@ -3839,6 +3839,10 @@
    Start Checkout Form CSS
 ========================================*/
 
+#shippingInfo {
+    display: none;
+}
+
 .shop.checkout {
     padding: 0;
     background: #fff;
@@ -3985,6 +3989,11 @@
     height: 2px;
     width: 50px;
     background: #ed1c24;
+}
+
+.cart-data-in-checkout {
+    margin-top: 50px;
+    padding: 10px;
 }
 
 .shop.checkout .single-widget .content ul {

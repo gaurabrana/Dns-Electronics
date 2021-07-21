@@ -514,17 +514,16 @@
 
     $(".input-group .minus").on("click", function(e) {
         var id = $(this).attr("id");
-        var valueHeight = ($(id).height);
         var productID = id.split("minus")[1];
         var quantity = parseInt($("#quantity" + productID).val(), 10);
-        updatecartquantity("minus", productID, quantity, valueHeight);
+        updatecartquantity("minus", productID, quantity);
     });
 
-    function updatecartquantity(j, k, l, n) {
+    function updatecartquantity(j, k, l) {
         var m = $("#stock" + k).val();
-        alert(parseInt(n));
         var l_a = parseInt(l, 10);
         var m_a = parseInt(m, 10);
+        var isCheckout = $("#placeorder").val();
         if (l_a >= 1 && l_a <= m_a) {
             $.ajax({
                 url: "database/updatecartquantity.php",
@@ -541,30 +540,62 @@
                     $("#subtotal" + k).html("Rs " + subtotal);
                     var totalDiscount = data.totalDiscount;
                     $("#totalDiscount").html("Rs " + totalDiscount);
+                    if (isCheckout != null) {
+                        $("#subTotalCheckout").html("Rs " + total);
+                        $("#TotalCheckout").html("Rs " + total);
+                    }
                 }
             });
         } else {
-            $.bootstrapGrowl("Quantity available for this product is 1 - " + m + ".", {
-                type: "info",
-                offset: { from: "top", amount: parseInt(n, 10) },
-                align: "right",
-                delay: 6000,
-                allow_dismiss: true,
-                stackup_spacing: 10
-            });
+            $("#cartError" + k).html("Quantity available for this product is 1 - " + m + ".");
+            $("#cartError" + k).css('display', 'block');
+            $("#cartError" + k)
+                .delay(3000)
+                .queue(function(next) {
+                    $(this).css('display', 'none');
+                    next();
+                });
+            // $.bootstrapGrowl("Quantity available for this product is 1 - " + m + ".", {
+            //     type: "info",
+            //     offset: { from: "top", amount: parseInt(n, 10) },
+            //     align: "right",
+            //     delay: 6000,
+            //     allow_dismiss: true,
+            //     stackup_spacing: 10
+            // });
 
         }
 
     };
 
+    $(".action p").on("click", function(e) {
+        var id = $(this).attr("id");
+        var productID = id.split("remove")[1];
+        $.ajax({
+            url: "database/updatecartquantity.php",
+            type: "POST",
+            data: { a: "delete", b: productID },
+            cache: false,
+            success: function(result) {
+                var data = JSON.parse(result);
+                var total = data.total;
+                $("#tablerow" + productID).remove();
+                $("#totalpayment").html("Rs " + total);
+                var totalWithoutDiscount = data.totalWithoutDiscount;
+                $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
+                var totalDiscount = data.totalDiscount;
+                $("#totalDiscount").html("Rs " + totalDiscount);
+            }
+        });
+    });
+
 
     $('.input-group input').keypress(function(event) {
         if (event.keyCode == 13) {
             var id = $(this).attr("id");
-            var valueHeight = ($(id).height);
             var productID = id.split("quantity")[1];
             var quantity = $("#quantity" + productID).val();
-            updatecartquantity("middle", productID, quantity, valueHeight);
+            updatecartquantity("middle", productID, quantity);
         }
     });
 
@@ -572,9 +603,8 @@
     $(".input-group .plus").on("click", function(e) {
         var id = $(this).attr("id");
         var productID = id.split("plus")[1];
-        var valueHeight = ($(id).height);
         var quantity = parseInt($("#quantity" + productID).val(), 10);
-        updatecartquantity("plus", productID, quantity, valueHeight);
+        updatecartquantity("plus", productID, quantity);
     });
 
 
@@ -592,6 +622,129 @@
             navText: ['<i class=" ti-arrow-left"></i>', '<i class=" ti-arrow-right"></i>'],
         });
     };
+
+    /*
+CHECKOUT PAGE
+    */
+
+    $("#cbox").on("click", function(e) {
+        if ($(this).prop("checked") == true) {
+            $("#shippingInfo").css("display", "flex");
+            $("#shippingInfo input").prop("disabled", false);
+        } else {
+            $("#shippingInfo").css("display", "none");
+            $("#shippingInfo input").prop("disabled", true);
+        }
+    });
+
+    $(document).on("submit", "form", function(e) {
+        e.preventDefault();
+        //billing info
+        var radios = document.querySelectorAll('input[type="radio"]:checked');
+        var value = radios.length > 0 ? radios[0].value : null;
+        if (value == null) {
+            $("#paymenterror").html("Payment method not selected.");
+            $("#paymenterror").css("display", "block");
+            $("#paymenterror")
+                .delay(3000)
+                .queue(function(next) {
+                    $(this).css('display', 'none');
+                    next();
+                });
+            return;
+        } else {
+            $("#triggerConfirmation").click();
+            return false;
+        }
+    });
+
+    $("#placeorder").on("click", function(e) {
+        $("#submitButton").click();
+    });
+
+
+    $("#confirmOrder").on("click", function(e) {
+        var billingfname = $("#billingfname").val();
+        var billinglname = $("#billinglname").val();
+        var billingemail = $("#billingemail").val();
+        var billingphone = $("#billingphone").val();
+        var country = $("#country").val();
+        var billingaddressone = $("#billingaddressone").val();
+        var billingaddresstwo = $("#billingaddresstwo").val();
+        var billingpostalcode = $("#billingpostalcode").val();
+        var payment = $('input[type="radio"]:checked').val();
+        if ($(this).prop("checked") == true) {
+            var shippingname = $("#shippingname").val();
+            var shippingphone = $("#shippingphone").val();
+            var shippingcountry = $("#shippingcountry").val();
+            var shippingaddressone = $("#shippingaddressone").val();
+            var shippingaddresstwo = $("#shippingaddresstwo").val();
+            var shippingpostalcode = $("#shippingpostalcode").val();
+            $.ajax({
+                url: "database/confirmorder.php",
+                type: "POST",
+                data: {
+                    info: "includeshipping",
+                    billingfname: billingfname,
+                    billinglname: billinglname,
+                    billingemail: billingemail,
+                    billingphone: billingphone,
+                    country: country,
+                    billingaddressone: billingaddressone,
+                    billingaddresstwo: billingaddresstwo,
+                    billingpostalcode: billingpostalcode,
+                    shippingname: shippingname,
+                    shippingphone: shippingphone,
+                    shippingcountry: shippingcountry,
+                    shippingaddressone: shippingaddressone,
+                    shippingaddresstwo: shippingaddresstwo,
+                    shippingpostalcode: shippingpostalcode,
+                    payment: payment
+                },
+                cache: false,
+                success: function(result) {
+                    // var data = JSON.parse(result);
+                    // var total = data.total;
+                    // $("#tablerow" + productID).remove();
+                    // $("#totalpayment").html("Rs " + total);
+                    // var totalWithoutDiscount = data.totalWithoutDiscount;
+                    // $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
+                    // var totalDiscount = data.totalDiscount;
+                    // $("#totalDiscount").html("Rs " + totalDiscount);
+                }
+            });
+        } else {
+            alert("working");
+            $.ajax({
+                url: "database/confirmorder.php",
+                type: "POST",
+                data: {
+                    info: "onlybilling",
+                    billingfname: billingfname,
+                    billinglname: billinglname,
+                    billingemail: billingemail,
+                    billingphone: billingphone,
+                    country: country,
+                    billingaddressone: billingaddressone,
+                    billingaddresstwo: billingaddresstwo,
+                    billingpostalcode: billingpostalcode,
+                    payment: payment
+                },
+                cache: false,
+                success: function(result) {
+                    // var data = JSON.parse(result);
+                    // var total = data.total;
+                    // $("#tablerow" + productID).remove();
+                    // $("#totalpayment").html("Rs " + total);
+                    // var totalWithoutDiscount = data.totalWithoutDiscount;
+                    // $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
+                    // var totalDiscount = data.totalDiscount;
+                    // $("#totalDiscount").html("Rs " + totalDiscount);
+                }
+            });
+        }
+
+    });
 
 
 })(jQuery);
