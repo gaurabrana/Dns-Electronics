@@ -20,6 +20,7 @@ if($info == "includeshipping"){
     
     $shippingname = mysqli_escape_string($conn,$shippingname);
     $shippingphone = mysqli_escape_string($conn,$shippingphone);
+    $shippingemail = mysqli_escape_string($conn,$shippingemail);
     $shippingcountry = mysqli_escape_string($conn,$shippingcountry);
     $shippingaddressone = mysqli_escape_string($conn,$shippingaddressone);
     $shippingaddresstwo = mysqli_escape_string($conn,$shippingaddresstwo);
@@ -28,7 +29,7 @@ if($info == "includeshipping"){
     //insert shipping address    
     
         //insert billing address
-        $shippingSql = "Insert into shipping_info values ('$shipping_info_id','$user_id','$shippingname','$shippingphone','$shippingcountry','$shippingaddressone','$shippingaddresstwo','$shippingpostalcode','$added_date')";
+        $shippingSql = "Insert into shipping_info values ('$shipping_info_id','$user_id','$shippingname','$shippingemail','$shippingphone','$shippingcountry','$shippingaddressone','$shippingaddresstwo','$shippingpostalcode','$added_date')";
         $resultShipping = mysqli_query($conn, $shippingSql);
         $billingSql = "Insert into billing_info values ('$billingfname','$billinglname', '$billingemail','$billingphone','$country','$billingaddressone','$billingaddresstwo','$billingpostalcode','$user_id','$shipping_info_id','$added_date', '$infoid')";
         $resultbilling = mysqli_query($conn, $billingSql);
@@ -118,7 +119,7 @@ else if($info == "onlybilling"){
 }
 }
 function RandomString($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789';
     $charactersLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {

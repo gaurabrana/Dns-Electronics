@@ -11,7 +11,7 @@ define('IMAGE_SMALL_DIR_TO_DISPLAY', './img/UserProfile/'.$userUniqueKey.'/');
 define('IMAGE_SMALL_SIZE', 50);
 define('IMAGE_MEDIUM_DIR', '../img/UserProfile/'.$userUniqueKey.'/');
 define('IMAGE_MEDIUM_DIR_TO_DISPLAY', './img/UserProfile/'.$userUniqueKey.'/');
-define('IMAGE_MEDIUM_SIZE', 250);
+define('IMAGE_MEDIUM_SIZE', 300);
 /*defined settings - end*/
 if(isset($_FILES['image_upload_file'])){
 $output['status']=FALSE;

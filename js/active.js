@@ -474,7 +474,13 @@
     $(document).on("click", ".product-action-2 p", function(e) {
         var id = $(this).attr("id");
         var productID = id.split("cart")[1];
-        var resultID = "#result" + productID;
+        var resultID = null;
+        if (id.indexOf("explore") >= 0) {
+            resultID = "#exploreresult" + productID;
+        } else {
+            resultID = "#result" + productID;
+        }
+        alert(resultID);
         $.ajax({
             url: "database/addtocart.php",
             type: "POST",
@@ -637,6 +643,8 @@ CHECKOUT PAGE
         }
     });
 
+
+
     $(document).on("submit", "form", function(e) {
         e.preventDefault();
         //billing info
@@ -662,6 +670,15 @@ CHECKOUT PAGE
         $("#submitButton").click();
     });
 
+    $("#country").on("change", function() {
+        var country = $(this).val().toLowerCase();
+        $("#billingcountryflag").attr("src", "img/flags/" + country + ".png");
+    });
+
+    $("#shippingcountry").on("change", function() {
+        var country = $(this).val().toLowerCase();
+        $("#shippingcountryflag").attr("src", "img/flags/" + country + ".png");
+    });
 
     $("#confirmOrder").on("click", function(e) {
         var billingfname = $("#billingfname").val();
@@ -676,6 +693,7 @@ CHECKOUT PAGE
         if ($(this).prop("checked") == true) {
             var shippingname = $("#shippingname").val();
             var shippingphone = $("#shippingphone").val();
+            var shippingemail = $("#shippingemail").val();
             var shippingcountry = $("#shippingcountry").val();
             var shippingaddressone = $("#shippingaddressone").val();
             var shippingaddresstwo = $("#shippingaddresstwo").val();
@@ -695,6 +713,7 @@ CHECKOUT PAGE
                     billingpostalcode: billingpostalcode,
                     shippingname: shippingname,
                     shippingphone: shippingphone,
+                    shippingemail: shippingemail,
                     shippingcountry: shippingcountry,
                     shippingaddressone: shippingaddressone,
                     shippingaddresstwo: shippingaddresstwo,
@@ -746,5 +765,50 @@ CHECKOUT PAGE
 
     });
 
+
+    $('#myTab a').on('click', function(e) {
+        e.preventDefault()
+        $(this).tab('show');
+    })
+
+    $("#searchProduct").on("keyup", function(e) {
+        var searchKeyword = $(this).val();
+        var category = $("#categorySearch").val();
+        if (searchKeyword.length > 0) {
+            $(".search-bar-popup").css("display", "block");
+        } else {
+            $(".search-bar-popup").css("display", "none");
+        }
+
+        $.ajax({
+            url: "database/searchProduct.php",
+            type: "POST",
+            data: { search: searchKeyword, category: category },
+            success: function(data) {
+                $(".search-list").html(data);
+            }
+        });
+    });
+
+    $(".fav-del").on("click", function(e) {
+        var id = $(this).attr("id");
+        var productCode = id.split("removeFav")[1];
+
+        $.ajax({
+            url: "database/addtowishlist.php",
+            type: "POST",
+            data: { code: productCode, action: "remove" },
+            success: function(data) {
+                var result = JSON.parse(data);
+                if (result.statusCode == "200") {
+                    var item = "favItem" + productCode;
+                    $("#" + item).remove();
+                } else if (result.statusCode == "201") {
+
+                }
+            }
+        });
+
+    });
 
 })(jQuery);

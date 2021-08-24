@@ -1449,11 +1449,11 @@
 
 .hero-slider .single-slider {
     height: auto;
-    background-image: url('https://via.placeholder.com/1900x700');
+    background-image: url('https://external-preview.redd.it/zpsOdhd7ULcPyZt3Do-rHGvmCc22PEyAc-rSox5xCTs.jpg?auto=webp&s=cf0baa84fc75a3e4affc0ad565e93a07aabe3481');
     background-size: cover;
-    background-position: center;
+    background-position: top;
     background-repeat: no-repeat;
-    height: 510px;
+    height: 550px;
 }
 
 .hero-slider .text-inner {}
@@ -4364,6 +4364,7 @@
 }
 
 .shop-services.home {
+    margin-top: 100px;
     padding: 60px 0;
     background: #F6F7FB;
 }
@@ -5878,4 +5879,74 @@
     padding: 13px 32px;
     border-radius: 0px;
     text-transform: uppercase;
+}
+
+.search-bar-popup {
+    position: absolute;
+    z-index: 21000;
+    top: 100%;
+    display: none;
+    right: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 3px;
+    background: #fff;
+    -webkit-box-shadow: 0 2px 4px 0 rgb(0 0 0 / 21%);
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 21%);
+}
+
+.suggest-list,
+.No-Record {
+    color: black;
+    line-height: 1;
+    padding: 8px 20px;
+    display: block;
+    outline: none;
+    text-decoration: none;
+}
+
+.suggest-list:hover {
+    background-color: #ed1c24;
+    color: #fff;
+}
+
+.search-list {
+    padding-bottom: 12px;
+}
+
+.fav-title {
+    padding-top: 10px;
+    width: auto;
+    margin: auto;
+}
+
+.fav-title h4:hover {
+    color: #ed1c24;
+}
+
+.fav-del {
+    cursor: pointer;
+    opacity: 1;
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-shadow: none;
+    font-size: 11px;
+    background: transparent;
+    color: #737373;
+    border-radius: 100%;
+    border: 1px solid #eee;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.fav-del:hover {
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+    background: red;
+    color: #fff;
 }

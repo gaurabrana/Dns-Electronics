@@ -127,7 +127,7 @@ header("Location: index.php");
 							echo'<tr id="tablerow'.$row['productcartid'].'">
 							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
 							<td class="product-des" data-title="Description">
-								<p class="product-name"><a href="singleproduct.php?id='.$row['id'].'">'.$row['name'].'</a></p>
+								<p class="product-name"><a href="singleproduct.php?id='.$row['code'].'">'.$row['name'].'</a></p>
 								<p class="product-des">'.$description.'</p>
 							</td>
 							<td class="price" data-title="Price"><span>Rs </span>';
@@ -194,7 +194,7 @@ header("Location: index.php");
 									</ul>
 									<div class="button5">
 										<a href="checkout.php" class="btn">Checkout</a>
-										<a href="#" class="btn">Continue shopping</a>
+										<a href="shop-grid.php" class="btn">Continue shopping</a>
 									</div>
 								</div>
 							</div>

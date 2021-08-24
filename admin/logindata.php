@@ -15,7 +15,7 @@ if(mysqli_num_rows($result) > 0){
         $login_password = $row['password'];        
     }
     if(($password) == $login_password){        
-        $_SESSION['email'] = $login_email;            
+        $_SESSION['adminemail'] = $login_email;            
         echo json_encode(array("statusCode"=>202));
     }
     else{

@@ -25,6 +25,9 @@ $newCartID = getData("cart",$conn);
 if(isset($_SESSION['uniquekey'])){
     $userUniqueKey = $_SESSION['uniquekey'];
 }
+else{
+    $userUniqueKey = rand(100, 500).time();
+}
 
 
 //get current date from system
@@ -60,20 +63,12 @@ $password = md5($_POST['password']);
     $name = mysqli_real_escape_string($conn, $name);
     $email = mysqli_real_escape_string($conn, $email);
     $exists = false;
-    $email_query = "Select email from customer";
+    $email_query = "Select * from customer where email = '$email'";    
     $email_result = mysqli_query($conn, $email_query);
-    while($row=mysqli_fetch_assoc($email_result)){
-        if($email == $row['email']){
-            $exists = true;
-        }
-    }
-
-    if($exists){
-        $output['statusCode'] = 200;        
-    }
-
+    if(mysqli_num_rows($email_result) > 0){
+        $exists = true;
+    }    
     $password = mysqli_real_escape_string($conn, $password);
-
     if(!$exists){
         $sql = "Insert into customer values('$newUserID',$userUniqueKey,'$username','$name','$password','$email','$phone','$age','$gender','$date','$imageLink','NO','NO', '$verificationkey')";
         $result = mysqli_query($conn, $sql);
@@ -82,8 +77,12 @@ $password = md5($_POST['password']);
             $result1 = mysqli_query($conn, $sql1);
             include('sendmail.php');        
             $output['statusCode'] = 201;                        
-        }    
+        }
+        
     }
+    else{
+        $output['statusCode'] = 200;   
+    }    
     echo json_encode($output);    
 }
 

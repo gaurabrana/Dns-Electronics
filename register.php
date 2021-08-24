@@ -179,10 +179,10 @@
 
                                         <p style="color:black;margin:8px 0px; font-size:medium;cursor:pointer;" id="reset" onclick="resetUpload()">Reset</p>                                                                                
                                     </div>                                                                        
-                                </div><Button type="button" id="nextstep" hidden name="skipped" class="next action-button">Next Step</Button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />                                                    
+                                </div><button type="button" hidden id="nextstep"  name="skipped" class="next action-button">Next Step</button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />                                                    
                                 <br/> <br/>
                                 <div class="imageLoading">
-                                <img id="loadingregister" src="img/loading-red-spot.gif">
+                               
                                 </div>
                                                     <div class="alert alert-danger alert-dismissible" id="errormessage" style="display: none; margin-top:20px;">
                                                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -273,17 +273,14 @@
         $(document).ready(function() {
             $("#submitForm").click(function() {
                 $("#submitForm").prop('disabled', true);
-                $("#loadingregister").css("display", "block");
                 var email = $('#email_register').val();
                 var password = $('#password_register').val();
                 var fullname = $('#fullname').val();
                 var age = $('#age').val();
                 var gender = $('#gender').val();
                 var full_number = intl.getNumber(intlTelInputUtils.numberFormat.E164);
-                console.log(full_number);
                 var phone_number = $('#phone').val();
-
-                                 
+                        
                 if (email != "" && password != "" && age != "" && phone_number != "" && fullname != "" && gender!="notselected") {
                     $.ajax({
                         url: "database/registerdata.php",
@@ -299,14 +296,10 @@
                         },
                         cache: false,
                         success: function(dataResult) {
-                            var dataResult = JSON.parse(dataResult);
-                            if (dataResult.statusCode != null) {
-                                console.log(dataResult.statusCode);
-                                $("#errormessage").css("display", "block");
-                            }
-                           if (dataResult.statusCode == 201) {                                                                                    
-                            document.getElementById("nextstep").click();
-                            var delay = 3000; 
+                            var dataResult = JSON.parse(dataResult);                           
+                           if (dataResult.statusCode == 201) {           
+                               $("#nextstep").click();                                                                         
+                                var delay = 3000; 
                             setTimeout(function(){ window.location = "index.php"; }, delay);
                             }
                             else if (dataResult.statusCode == 200) {
@@ -314,6 +307,7 @@
                                 $("#errordetail").html("An account already exist with the email address " + email);
                                 //$("#errormessage").fadeOut(4300);
                                 //$("#error").slideUp(300).delay(8000).fadeOut(400);	
+                                $("#errormessage").css("display", "block");
                                 $("#submitForm").removeAttr("disabled");                                
                             }
                         }
@@ -322,7 +316,6 @@
                     console.log("eror");
                     $("#errormsg").html('Empty fields found.');
                     $("#errormessage").css("display", "block");
-                    $("#loadingregister").css("display", "none");
                     $("#errordetail").html("Please make sure the details are entered correctly.");
                     $("#submitForm").removeAttr("disabled");
                 }
@@ -342,8 +335,6 @@
                 var progressBar = $('.progressBar'),
                 bar = $('.progressBar .bar'),
                 percent = $('.progressBar .percent');
-
-                console.log("imageupload");
 
             $('#image_upload_file').ajaxForm({
                 beforeSend: function() {
@@ -443,11 +434,11 @@
             values.push(elements);
             var val = values.toString();
             if (val.length > 0) {
-                if (val.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!$%@#£€*?&*_]{8,}$/)) {
+                if (val.length > 7 && val.length < 20) {
                     document.getElementById("errorpass").innerHTML = "Valid Password";
                     document.getElementById("errorpass").style.color = "#27AE60";
                 } else {
-                    document.getElementById("errorpass").innerHTML = "Invalid Password (at least 8 characters, 1 numeric, 1 lowercase and 1 uppercase needed.)";
+                    document.getElementById("errorpass").innerHTML = "Invalid Password (8-20 characters.)";
                     document.getElementById("errorpass").style.color = "#ed1c24";
                 }
             }
@@ -473,8 +464,6 @@
             }
         };
 
-
-
         function validateEmail(email) {
             const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
@@ -499,39 +488,7 @@
                 document.getElementById("errorage").style.color = "#ed1c24";
             }
         };
-        /* function checkConfirmPassword(){
-            var element = document.getElementById("password_register").value;
-            var elements = document.getElementById("confirm_password_register").value;
-          var values = [];  
-          var allgood = false;
-          values.push(elements);
-          var val = values.toString();    
-          if(val.length>0){
-              if(val==element){        
-                document.getElementById("errorconfirmpass").innerHTML = "Password Match.";
-                document.getElementById("errorconfirmpass").style.color = "#27AE60";
-                document.getElementById("step1").style.backgroundColor = "#ed1c24";
-                document.getElementById("step1").style.color = "#ffffff";        
-                document.getElementById("step1").disabled = false;     
-              }
-              else{
-                document.getElementById("errorconfirmpass").innerHTML = "Password Does Not Match.";
-                document.getElementById("errorconfirmpass").style.color = "#ed1c24";
-                document.getElementById("step1").style.backgroundColor = "#ffffff";
-                document.getElementById("step1").style.border = "1px solid";
-                document.getElementById("step1").style.borderColor = "#ed1c24";
-                document.getElementById("step1").style.color = "#ed1c24";        
-                document.getElementById("step1").disabled = true;  
-              }
-          }
-          return val;  
-        } */
-
-
-
-        //var _0x4523=['innerHTML','push','Valid\x20Password','11821LuIcyv','errorpass','346732tlBNYW','939166eRrQma','26ZeDFLm','52666JMPYhz','89396JLjLBg','83wYjqgE','1wsbuvQ','value','toString','password_register','4CHDCCq','disabled','match','step1','getElementById','1351151ldkgrT','386929GyZhGS'];(function(_0xcfb69b,_0x3356af){var _0x15b24c=_0x9479;while(!![]){try{var _0x1a8ad8=parseInt(_0x15b24c(0xe3))+-parseInt(_0x15b24c(0xe2))*parseInt(_0x15b24c(0xe1))+parseInt(_0x15b24c(0xdf))+parseInt(_0x15b24c(0xd9))+parseInt(_0x15b24c(0xe5))*-parseInt(_0x15b24c(0xd8))+-parseInt(_0x15b24c(0xe4))*parseInt(_0x15b24c(0xdd))+parseInt(_0x15b24c(0xd3))*parseInt(_0x15b24c(0xe0));if(_0x1a8ad8===_0x3356af)break;else _0xcfb69b['push'](_0xcfb69b['shift']());}catch(_0x1d9b2a){_0xcfb69b['push'](_0xcfb69b['shift']());}}}(_0x4523,0xd661f));function _0x9479(_0x151af7,_0x4157c7){_0x151af7=_0x151af7-0xd2;var _0x452321=_0x4523[_0x151af7];return _0x452321;}function checkPassword(){var _0x29ef99=_0x9479,_0x1825cb=document[_0x29ef99(0xd7)](_0x29ef99(0xd2))[_0x29ef99(0xe6)],_0xf38c60=[];_0xf38c60[_0x29ef99(0xdb)](_0x1825cb);var _0x3c3055=_0xf38c60[_0x29ef99(0xe7)]();return _0x3c3055['length']>0x0&&(_0x3c3055[_0x29ef99(0xd5)](/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!$%@#£€*?&*_]{8,}$/)?(document[_0x29ef99(0xd7)](_0x29ef99(0xde))[_0x29ef99(0xda)]=_0x29ef99(0xdc),document[_0x29ef99(0xd7)](_0x29ef99(0xd6))['disabled']=![]):(document[_0x29ef99(0xd7)](_0x29ef99(0xde))[_0x29ef99(0xda)]='Invalid\x20Password\x20(at\x20least\x201\x20numeric,\x201\x20lowercase\x20and\x201\x20uppercase\x20needed.)',document['getElementById'](_0x29ef99(0xd6))[_0x29ef99(0xd4)]=!![])),_0x3c3055;}
-
-        //$("#email_register")
+  
     </script>
 
 </body>
