@@ -1,6 +1,7 @@
 <?php
 include("database/connect.php");
 ?>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 <!-- Header -->
 <header class="header shop">
 	<!-- Topbar -->
@@ -33,7 +34,7 @@ include("database/connect.php");
 												<a class="dropdown-item" href="user/myorders.php">Orders</a></li>
 												<li class="userProfile"><i class="fa fa-credit-card" aria-hidden="true"></i><a class="dropdown-item" href="user/mypayments.php">Payments</a></li>
 												<li class="userProfile"><i class="fa fa-shopping-cart"></i><a class="dropdown-item" href="cart.php">Cart</a></li>
-												<li class="userProfile"><div><i class="fa fa-heart-o" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
+												<li class="userProfile"><div><i class="far fa-heart" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
 												<li class="userProfile"><i class="ti-power-off"></i><a class="dropdown-item" href="database/logout.php">Logout</a></li>
 											</ul>';
 								} else {
@@ -43,12 +44,12 @@ include("database/connect.php");
 									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" ria-labelledby="loginbutton">
 										<div class="form-fields">
 											<div class="loginform">										
-												<form id="login" method="POST" action="database/logindata.php" role="form">
+												<form id="login" method="" action="" role="form">
 													<i class="ti-power-off"></i><label for="email">Email Address</label>
 													<input type="email" id="email_log" name="email" required>
 													<i class="ti-power-off"></i><label for="password">Password</label>
 													<input type="password" id="password_log" name="password" required>
-												</form>
+												
 												<div class="form-group login-btn">
 													<button class="btn navbarlogin">Login</button>
 													<button class="btn navbarregister" onclick="window.location.href=\'register.php\'">Register</button>
@@ -58,8 +59,9 @@ include("database/connect.php");
 												</div>
 											</div>
 											<div class="checkbox">
-												<label class="check" for="2"><input name="news" id="2" type="checkbox">Remember me</label>
+												<label class="check" for="2"><input name="rememberme" id="rememberme" type="checkbox">Remember me</label>
 											</div>
+											</form>
 											<a href="#" class="lost-pass">Lost your password?</a>
 										</div>';
 								}
@@ -127,7 +129,7 @@ include("database/connect.php");
 					</div>
 					<div class="search-bar-popup">
 						<div class="search-list">
-							<a class="suggest-list" href="#">Okay</a>
+							<a class="suggest-list" href="#"></a>
 						</div>
 					</div>																					
 				</div>
@@ -141,9 +143,9 @@ include("database/connect.php");
 							$cartquery = mysqli_query($conn, $getcartitem);
 							$totalItems = mysqli_num_rows($cartquery);
 							echo '<div class="sinlge-bar">
-							<a href="favourite.php" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+							<a href="favourite.php" class="single-icon"><i class="fal fa-heart fa-lg" aria-hidden="true"></i></a>
 						</div><div class="sinlge-bar shopping">
-								<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">' . $totalItems . '</span></a>
+								<a href="#" class="single-icon"><i class="fal fa-bags-shopping fa-lg"></i> <span class="total-count">' . $totalItems . '</span></a>
 								<!-- Shopping Item -->
 								<div class="shopping-item">
 									<div class="dropdown-cart-header">
@@ -305,9 +307,15 @@ include("database/connect.php");
 			$(".navbarlogin").prop('disabled', true);
 
 			var email = $('#email_log').val();
-
 			var password = $('#password_log').val();
-			console.log(email + "//" + password);
+			var rememberme = false;
+			var currentLocation = window.location.href;			
+			if($("#rememeberme").prop('checked')){
+				rememberme = true;
+			}
+			else{
+				rememberme = false;
+			}
 
 			if (email != "" && password != "") {
 				$.ajax({
@@ -315,14 +323,14 @@ include("database/connect.php");
 					type: "POST",
 					data: {
 						type: "login",
-						email: email,
-						password: password
+						email: email,						
+						password: password,
+						rememberuser: rememberme
 					},
 					cache: false,
 					success: function(dataResult) {
 						var dataResult = JSON.parse(dataResult);
-						if (dataResult.statusCode != null) {
-							console.log(dataResult.statusCode);
+						if (dataResult.statusCode != null) {							
 							if (dataResult.statusCode != 202) {
 								$("#error").show();
 							}
@@ -338,7 +346,7 @@ include("database/connect.php");
 							//$("#error").slideUp(300).delay(8000).fadeOut(400);	
 							$(".navbarlogin").removeAttr('disabled');
 						} else if (dataResult.statusCode == 202) {
-							location.href = "index.php";
+							location.href = currentLocation;
 						}
 					}
 				});

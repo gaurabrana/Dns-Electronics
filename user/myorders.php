@@ -89,7 +89,7 @@ $active = "orders";
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><a data-toggle="collapse" href="#getorderproducts" role="button" aria-expanded="false" aria-controls="getorderproducts">
+                                            <td><a data-toggle="collapse" href="#getorderproducts'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderproducts'.$billingid.'">
                                             Expand more..
                                           </a></td>
                                             <td>
@@ -99,7 +99,7 @@ $active = "orders";
                                             '.$row['status'].'
                                             </td>
                                             <td>
-                                            <a data-toggle="collapse" href="#getorderbillingaddress" role="button" aria-expanded="false" aria-controls="getorderbillingaddress">
+                                            <a data-toggle="collapse" href="#getorderbillingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderbillingaddress'.$billingid.'">
                                             Expand more..
                                           </a>                                         
                                             </td>
@@ -108,7 +108,7 @@ $active = "orders";
                                                 echo'Same as billing address';
                                             }
                                             else{
-                                                echo'<a data-toggle="collapse" href="#getordershippingaddress" role="button" aria-expanded="false" aria-controls="getordershippingaddress">
+                                                echo'<a data-toggle="collapse" href="#getordershippingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getordershippingaddress'.$billingid.'">
                                                 Expand more..
                                               </a>';
                                             }                                            
@@ -125,7 +125,7 @@ $active = "orders";
                                     </tbody>
                                 </table>                                
                                 <!---collapsibles start--->
-                              <div class="collapse" id="getorderproducts">
+                              <div class="collapse" id="getorderproducts'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
                                 <h4 class="text-warning">Ordered Products</h4>                                                   
                                 <table class="table table-hover">
@@ -153,7 +153,7 @@ $active = "orders";
                                 </table>
                                 </div>                                
                               </div>
-                              <div class="collapse" id="getorderbillingaddress">
+                              <div class="collapse" id="getorderbillingaddress'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
                                 <h4 class="text-success">Billing Details</h4>                                 
                                 <table class="table table-hover">
@@ -183,12 +183,13 @@ $active = "orders";
                                 </div>
                               </div>';
                               if(!$sameshipping){
-                                echo'<div class="collapse" id="getordershippingaddress">
+                                echo'<div class="collapse" id="getordershippingaddress'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
                                 <h4 class="text-info">Shipping Details</h4>                                                   
                                 <table class="table table-hover">
                                     <thead class="text-info">
-                                    <th>Name</th>                                    
+                                    <th>Name</th>           
+                                    <th>Email Address</th>                         
                                     <th>Phone Number</th>
                                     <th>Address</th>
                                     <th>Country</th>
@@ -199,7 +200,8 @@ $active = "orders";
                                     if(mysqli_num_rows($getOrderShippingAddressResult) > 0){
                                         while($orderShippingAddress = mysqli_fetch_assoc($getOrderShippingAddressResult)){
                                         echo'<tr>
-                                        <td>'.$orderShippingAddress['fullname'].'</td>                                    
+                                        <td>'.$orderShippingAddress['fullname'].'</td>     
+                                        <td>'.$orderShippingAddress['email_address'].'</td>                                   
                                         <td>'.$orderShippingAddress['phone_number'].'</td>
                                         <td>'.$orderShippingAddress['address_one'].', '.$orderShippingAddress['address_two'].', '.$orderShippingAddress['postal_code'].'</td>                                        
                                         <td>'.$orderShippingAddress['country'].'</td>

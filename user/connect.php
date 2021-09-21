@@ -3,6 +3,7 @@ if(!isset($_SESSION))
 { 
     session_start(); 
 } 
+date_default_timezone_set("Asia/Kathmandu");
 $host="localhost";
 $db="ecommerceproject";
 $u = "root";

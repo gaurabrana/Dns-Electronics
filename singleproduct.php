@@ -1,8 +1,6 @@
 <?php
 include('database/connect.php');
-if (!isset($_SESSION['email'])) {
-	header("Location: index.php");
-}
+
 
 ?>
 <!DOCTYPE html>
@@ -29,7 +27,7 @@ if (!isset($_SESSION['email'])) {
 	<!-- Magnific Popup -->
 	<link rel="stylesheet" href="css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-	<link rel="stylesheet" href="css/font-awesome.css">
+	
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -51,7 +49,7 @@ if (!isset($_SESSION['email'])) {
 	<link rel="stylesheet" href="css/singleproduct.css">
 	<link rel="stylesheet" href="css/responsive.css">
 
-
+	<link href="css/star-rating.css" rel="stylesheet" />
 
 </head>
 
@@ -73,6 +71,18 @@ if (!isset($_SESSION['email'])) {
 	?>
 	<!--/ End Header -->
 
+	<?php
+			if (isset($_GET['i'])) {
+				if(isset($_SESSION['id'])){
+					$user_id = $_SESSION['id'];
+				}
+				$product_code = $_GET['i'];
+				$sql = "Select * from product where code = '$product_code'";
+				$result = mysqli_query($conn, $sql);
+				$result1 = mysqli_query($conn, $sql);
+				$getProductDetail = mysqli_fetch_array($result1);			
+			}
+				?>
 	<!-- Breadcrumbs -->
 	<div class="breadcrumbs">
 		<div class="container">
@@ -81,7 +91,8 @@ if (!isset($_SESSION['email'])) {
 					<div class="bread-inner">
 						<ul class="bread-list">
 							<li><a href="index.php">Home<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="cart.php">Cart</a></li>
+							<li><a href="shop-grid.php">Products<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a id="inSingleProducts" href="singleproduct.php?i=<?php echo $product_code; ?>"><?php echo $getProductDetail['name']; ?></a></li>							
 						</ul>
 					</div>
 				</div>
@@ -92,11 +103,8 @@ if (!isset($_SESSION['email'])) {
 		<div class="row">
 			<?php
 			if (isset($_GET['i'])) {
-				$product_code = $_GET['i'];
-				$sql = "Select * from product where code = '$product_code'";
-				$result = mysqli_query($conn, $sql);
 				if (mysqli_num_rows($result) > 0) {
-					while ($row = mysqli_fetch_assoc($result)) {
+					while ($row = mysqli_fetch_assoc($result)) {						
 						$category = $row['category'];
 						echo '<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 			<!-- Product Slider -->
@@ -123,18 +131,54 @@ if (!isset($_SESSION['email'])) {
 				<h2>' . $row['name'] . '</h2>
 				<div class="quickview-ratting-review">
 					<div class="quickview-ratting-wrap">
-						<div class="quickview-ratting">
-							<i class="yellow fa fa-star"></i>
-							<i class="yellow fa fa-star"></i>
-							<i class="yellow fa fa-star"></i>
-							<i class="yellow fa fa-star"></i>
-							<i class="fa fa-star"></i>
+						<div class="quickview-ratting">';
+								$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+								$executegetRating = mysqli_query($conn, $getRating);
+								$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+								$totalRating =  $getRatingDetail['rating'];								
+								$totalUsers = $getRatingDetail['totalratingsgiven'];	
+								$whole = (int) $totalRating;
+								$frac  = $totalRating - (int) $totalRating;
+								if($totalRating!=0)	{
+								for($i=1;$i<6;$i++){
+									if($i<=$whole){										
+										echo'<i class="yellow fa fa-star"></i>';																														
+									}									
+									else{		
+										if($i==($whole+1)){
+											if($frac!=0){
+												echo'<i class="yellow fa fa-star-half-alt"></i>';
+											}
+											else{
+												echo'<i class="fa fa-star"></i>';
+											}	
+										}
+										else{
+											echo'<i class="fa fa-star"></i>';
+										}																																																																																								
+									}
+								}								
+								}
+								echo'</div>';
+								if($totalRating!=0){
+									echo '<a href="#"> ('.$totalUsers.' customer review)</a>';
+								}
+								else{
+									echo 'No reviews yet';
+								}									
+							echo'</div>
+							<div class="quickview-stock">';									
+							if($row['quantity_stock'] > 0){
+								$outOfStock = false;
+								echo'<span><i class="far fa-check-circle"></i>in stock ('.$row['quantity_stock'].')';
+							}
+							else{
+
+								$outOfStock = true;
+								echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK';
+							}
+							echo'</span>
 						</div>
-						<a href="#"> (1 customer review)</a>
-					</div>
-					<div class="quickview-stock">
-						<span><i class="fa fa-check-circle-o"></i> in stock</span>
-					</div>
 				</div>';
 						if ($row['discount'] != 0) {
 							$updatedPrice = $row['price'] - $row['discount'];
@@ -153,22 +197,7 @@ if (!isset($_SESSION['email'])) {
 				<div class="size">
 					<div class="row">
 						<div class="col-lg-4 col-12">
-							<a href="#" class="title">Category: ' . $row['category'] . '</a>
-							<!------<select>
-								<option selected="selected">s</option>
-								<option>m</option>
-								<option>l</option>
-								<option>xl</option>
-							</select>----!>
-						</div>
-						<div class="col-lg-4 col-12">
-							<a href="#" class="title">Brand: ' . $row['brand'] . '</a>
-							<!---	<select>
-								<option selected="selected">orange</option>
-								<option>purple</option>
-								<option>black</option>
-								<option>pink</option>
-							</select>----!>
+							<a href="#" class="title">Category: ' . $row['category'] . '</a>							
 						</div>
 						<div class="col-lg-4 col-12">
 							<a class="title">Code: ' . $row['code'] . '</a>																		
@@ -183,7 +212,8 @@ if (!isset($_SESSION['email'])) {
 								<i class="ti-minus"></i>
 							</button>
 						</div>
-						<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value="1">
+						<input type="text" hidden id="quanitymaxofproduct'.$row['code'].'" value="'.$row['quantity_stock'].'">
+						<input type="text" id="amountOfproduct'.$row['code'].'" name="quant[1]" class="input-number" data-min="1" data-max="'.$row['quantity_stock'].'" value="1">
 						<div class="button plus">
 							<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
 								<i class="ti-plus"></i>
@@ -192,19 +222,24 @@ if (!isset($_SESSION['email'])) {
 					</div>
 					<!--/ End Input Order -->
 				</div>
-				<div class="add-to-cart">
-					<a href="#" id="cart' . $row['code'] . '" class="btn">Add to cart</a>
-					<a href="#" id="wishlist' . $row['code'] . '" class="btn min"><i class="ti-heart"></i></a>
-					<a href="#" id="compare' . $row['code'] . '" class="btn min"><i class="fa fa-compress"></i></a>
+				<div class="add-to-cart">';
+				if(!$outOfStock){
+					echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to cart" id="fromModalcart'.$row['code'].'" class="btn"><i class="fas fa-cart-plus"></i></a>';
+				}								
+				echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to favourite" id="fromModalwishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
+				<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to compare list" id="fromModalcompare'.$row['code'].'" class="btn min"><i class="ti-bar-chart-alt"></i></a>
 				</div>
 				<div class="default-social">
 					<h4 class="share-now">Share:</h4>
 					<ul>
-						<li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-						<li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-						<li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-						<li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
+						<li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+						<li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+						<li><a class="youtube" href="#"><i class="fab fa-pinterest-p"></i></a></li>
+						<li><a class="dribbble" href="#"><i class="fab fa-google-plus"></i></a></li>
 					</ul>
+					<div  style="visibility:hidden;" id="fromModalResult'.$row['code'].'" class="alert" role="alert">
+  								
+								</div>
 				</div>
 			</div>
 		</div>';
@@ -219,100 +254,143 @@ if (!isset($_SESSION['email'])) {
 			<div class="col-12">
 				<div class="tabs">
 					<input type="radio" name="tabs" id="tabone" checked="checked">
-					<label for="tabone">Reviews</label>
-					<div class="tab">
-						<section id="testimonials">
-							<!--testimonials-box-container------>
-							<div class="testimonial-box-container">
-								<?php
-								$sql = "Select * from reviews where product_code = '$product_code'";
-								$i = 0;
-								while ($i < 2) {
-									$i++;
-									echo '
-<!--BOX-1-------------->
-<div class="testimonial-box">
+					<label class="btn" for="tabone">Reviews</label>
+					<div class="tab">	
+						<?php
+						if(isset($user_id)){
 
-	<!--top------------------------->
-	<div class="box-top">
-
-		<!--profile----->
-		<div class="profile">
-			<!--img---->
-			<div class="profile-img">
-				<img src="images/c-1.jpg" />
-			</div>
-			<!--name-and-username-->
-			<div class="name-user">
-				<strong>Elon Musk</strong>
-				<span>@touseeqijazweb</span>
-			</div>
-		</div>
-
-		<!--reviews------>
-		<div class="reviews">
-		<i class="yellow fa fa-star"></i>
-						<i class="yellow fa fa-star"></i>
-						<i class="yellow fa fa-star"></i>
-						<i class="yellow fa fa-star"></i>
-						<i class="fa fa-star"></i>
-		</div>
-
-	</div>
-
-	<!--Comments---------------------------------------->
-	<div class="client-comment">
-		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a. Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.</p>
-	</div>
-
-</div>
-
-<!--BOX-2-------------->
-<div class="testimonial-box">
-
-	<!--top------------------------->
-	<div class="box-top">
-
-		<!--profile----->
-		<div class="profile">
-			<!--img---->
-			<div class="profile-img">
-				<img src="images/c-2.jpg" />
-			</div>
-			<!--name-and-username-->
-			<div class="name-user">
-				<strong>Bill Gates</strong>
-				<span>Date: </span>
-			</div>
-		</div>
-
-		<!--reviews------>
-		<div class="reviews">
-		<i class="yellow fa fa-star"></i>
-		<i class="yellow fa fa-star"></i>
-		<i class="yellow fa fa-star"></i>
-		<i class="fa fa-star"></i>
-		<i class="fa fa-star"></i>
-		</div>
-
-	</div>
-
-	<!--Comments---------------------------------------->
-	<div class="client-comment">
-		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, quaerat quis? Provident temporibus architecto asperiores nobis maiores nisi a. Quae doloribus ipsum aliquam tenetur voluptates incidunt blanditiis sed atque cumque.</p>
-	</div>
-
-</div>';
-								}
-								?>
-
+							$ReviewToThisProduct = "Select * from reviews where customer_id = '$user_id' and product_code = '$product_code'";
+							$executeReviewToThisProduct = mysqli_query($conn, $ReviewToThisProduct);
+							if(mysqli_num_rows($executeReviewToThisProduct) > 0){
+								$hasreview = true;
+								$getReviewDetails = mysqli_fetch_assoc($executeReviewToThisProduct);
+							}
+							else{
+								$hasreview = false;
+							}
+						}
+						?>
+						<div class="row">
+							<div class="col-md-12 d-flex justify-content-center">							
+							<button data-bs-toggle="collapse" href="#addReview" id="actionTitle" aria-expanded="false" aria-controls="addReview" class="btn"><?php if(isset($hasreview) && $hasreview){echo'Update your review';}else{echo'Leave a review';}?></button>
 							</div>
-
-						</section>
+						</div>					
+							<!--testimonials-box-container------>
+							<div class="row">
+								<div class="col-md-12 collapse mt-2" id="addReview">
+									<div class="card">
+										<div class="card-body">
+										<div class="reply-head">											
+											<h7 id="resultreview"></h7>
+											<!-- Comment Form -->
+											
+												<div class="row">													
+													<div class="col-12 mt-2">
+														<div class="form-group">															
+														<select class="star-rating">
+														<option value="">Select a rating</option>
+														<option value="5" <?php if(isset($getReviewDetails) && $getReviewDetails['rating']=="5"){echo " selected ";} ?>>Excellent</option>
+														<option value="4" <?php if(isset($getReviewDetails) && $getReviewDetails['rating']=="4"){echo " selected ";} ?>>Very Good</option>
+														<option value="3" <?php if(isset($getReviewDetails) && $getReviewDetails['rating']=="3"){echo " selected ";} ?>>Average</option>
+														<option value="2" <?php if(isset($getReviewDetails) && $getReviewDetails['rating']=="2"){echo " selected ";} ?>>Poor</option>
+														<option value="1" <?php if(isset($getReviewDetails) && $getReviewDetails['rating']=="1"){echo " selected ";} ?>>Terrible</option>
+													</select>
+  
+														</div>
+														<div class="form-group">
+															<h6>Your Review</h6>
+															<input hidden type="text" id="productidforreview" value="<?php echo $product_code ?>">
+															<textarea id="review" name="message" placeholder=""><?php if(isset($getReviewDetails)){echo $getReviewDetails['comment'];}?></textarea>
+														</div>
+													</div>
+													<div class="col-12">
+														<div class="form-group button">
+															<?php
+															if(isset($hasreview) && $hasreview){
+																echo'<button id="updatereview" class="btn">Update</button>
+																	<button id="deletereview" class="btn">Delete</button>
+																';
+															}
+															else{
+																echo'<button id="submitreview" class="btn">Post</button>
+																<button style="display: none;" id="deletereview" class="btn">Delete</button>';
+															}
+															?>															
+														</div>
+														
+													</div>
+												</div>
+											
+											<!-- End Comment Form -->
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>	
+							<?php				
+							$getReviews = "Select c.name,c.profile_picture,c.uniquekey, r.added_date, r.rating, r.comment,r.customer_id from reviews r, customer c where product_code = '$product_code' and c.id = r.customer_id";
+							$executegetReviews = mysqli_query($conn, $getReviews);				
+								if(mysqli_num_rows($executegetReviews) > 0){
+									require('formatdate.php');
+									$no_of_reviews = mysqli_num_rows($executegetReviews);
+									echo'<h3 class="review-title mt-2">Reviews ('.$no_of_reviews.')</h3>
+									<p hidden id="noOfReviews">'.$no_of_reviews.'</p>';	
+									echo'<section id="testimonials">						
+									<div class="testimonial-box-container">';																
+									while($row = mysqli_fetch_assoc($executegetReviews)){																				
+										$formatteddate = formatDate($row['added_date']);
+										$formattedtime = formatTime($row['added_date']);
+										echo'<div class="testimonial-box"';
+										if(isset($user_id) && $user_id == $row['customer_id']){
+											echo "id=\"reviewOfCurrentUser\"";
+										}
+										echo'>							
+										<div class="box-top">									
+											<div class="profile">										
+												<div class="profile-img">
+													<img src="img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'" alt="userimage" />
+												</div>										
+												<div class="name-user">
+													<strong>'.$row['name'].'</strong>
+													<span>'.$formatteddate.' at '.$formattedtime.'</span>
+												</div>
+											</div>									
+											<div class="reviews">';
+											$rating = $row['rating'];
+											for($i = 1 ; $i<6; $i++){
+												if($i <= $rating){
+													echo'<i class="yellow fa fa-star"></i>';
+												}
+												else{
+													echo'<i class="fa fa-star"></i>';
+												}												
+											}																																	
+											echo'</div>											
+										</div>								
+										<div class="client-comment">
+											<p>'.$row['comment'].'</p>
+										</div>																												
+									</div>';
+									}												
+									echo'</div>
+								</section>';										
+								}
+								else{
+									echo'<h3 class="review-title mt-2">No Reviews Yet</h3>
+									<p hidden id="noOfReviews">0</p>
+									<section id="testimonials" >						
+									<div class="testimonial-box-container">
+									
+									</div>
+									</section>';					
+								}
+							?>
+							
+						
 					</div>
 
 					<input type="radio" name="tabs" id="tabtwo">
-					<label for="tabtwo">Queries</label>
+					<label class="btn"  for="tabtwo">Queries</label>
 					<div class="tab">
 					<section class="blog-single section">
 			<div class="container">
@@ -322,62 +400,61 @@ if (!isset($_SESSION['email'])) {
 							<div class="row">								
 								<div class="col-12">
 									<div class="comments">
-										<h3 class="comment-title">Questions (3)</h3>
-										<!-- Single Comment -->
-										<div class="single-comment">
-											<img src="https://via.placeholder.com/80x80" alt="#">
-											<div class="content">
-												<h4>Alisa harm <span>At 8:59 pm On Feb 28, 2018</span></h4>
-												<p>Enthusiastically leverage existing premium quality vectors with enterprise-wide innovation collaboration Phosfluorescently leverage others enterprisee  Phosfluorescently leverage.</p>
-												<div class="button">
-													<a href="#" class="btn"><i class="fa fa-reply" aria-hidden="true"></i>Reply</a>
+										<?php
+										$getQuestions = "Select c.name,c.profile_picture,c.uniquekey, p.added_date, p.replied_date, p.question, p.adminreply from product_queries p, customer c where p.product_code = '$product_code' and p.customer_id = c.id";
+										$executegetQuestions = mysqli_query($conn, $getQuestions);
+										if(mysqli_num_rows($executegetQuestions)>0){
+											$no_of_questions = mysqli_num_rows($executegetQuestions);
+											echo'<h3 class="comment-title">Questions ('.$no_of_questions.')</h3>';
+											while($row = mysqli_fetch_assoc($executegetQuestions)){
+												echo'<div class="single-comment">
+												<img src="img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'" alt="userimage">
+												<div class="content">
+													<h4>'.$row['name'].'<span>'.$row['added_date'].'</span></h4>
+													<p>'.$row['question'].'</p>   
 												</div>
-											</div>
-										</div>
-										<!-- End Single Comment -->
-										<!-- Single Comment -->
-										<div class="single-comment left">
-											<img src="https://via.placeholder.com/80x80" alt="#">
-											<div class="content">
-												<h4>john deo <span>Feb 28, 2018 at 8:59 pm</span></h4>
-												<p>Enthusiastically leverage existing premium quality vectors with enterprise-wide innovation collaboration Phosfluorescently leverage others enterprisee  Phosfluorescently leverage.</p>
-												<div class="button">
-													<a href="#" class="btn"><i class="fa fa-reply" aria-hidden="true"></i>Reply</a>
+											</div>';
+											if($row['adminreply']!="-"){
+												echo'<div class="single-comment left">
+												<img src="img/logored.png" alt="adminimage">
+												<div class="content">
+													<h4>Dns Electronics<span>'.$row['replied_date'].'</span></h4>
+													<p>'.$row['adminreply'].'</p>                    
 												</div>
+											</div>';
+											}
+											}
+										}
+										else{
+											echo'<h3 class="comment-title">Questions (0)</h3>
+											<div class="single-comment">
+											<h7>No questions for this product yet.</h7>
 											</div>
-										</div>
-										<!-- End Single Comment -->
-										<!-- Single Comment -->
-										<div class="single-comment">
-											<img src="https://via.placeholder.com/80x80" alt="#">
-											<div class="content">
-												<h4>megan mart <span>Feb 28, 2018 at 8:59 pm</span></h4>
-												<p>Enthusiastically leverage existing premium quality vectors with enterprise-wide innovation collaboration Phosfluorescently leverage others enterprisee  Phosfluorescently leverage.</p>
-												<div class="button">
-													<a href="#" class="btn"><i class="fa fa-reply" aria-hidden="true"></i>Reply</a>
-												</div>
-											</div>
-										</div>
-										<!-- End Single Comment -->
+											';
+										}
+										?>																			
 									</div>									
 								</div>											
 								<div class="col-12">			
 									<div class="reply">
 										<div class="reply-head">
 											<h2 class="reply-title">Leave a Question</h2>
+											<h7 id="resultmsg"></h7>
 											<!-- Comment Form -->
 											<form class="form" action="#">
 												<div class="row">													
 													<div class="col-12">
 														<div class="form-group">
 															<h6>Your Question</h6>
-															<textarea name="message" placeholder=""></textarea>
+															<input hidden type="text" id="productidforquery" value="<?php echo $product_code ?>">
+															<textarea id="query" name="message" placeholder=""></textarea>
 														</div>
 													</div>
 													<div class="col-12">
 														<div class="form-group button">
-															<button type="submit" class="btn">Post</button>
+															<button type="submit" id="submitquery" class="btn">Post</button>
 														</div>
+														
 													</div>
 												</div>
 											</form>
@@ -394,13 +471,13 @@ if (!isset($_SESSION['email'])) {
 					</div>
 
 					<input type="radio" name="tabs" id="tabthree">
-					<label for="tabthree">Seller Info</label>
-					<div class="tab">
-						<ul>
-							<li>Sold By: Dns Electronics</li>
-							<li>Contact Number: +977123456789</li>
-							<li>Delivery Time: 3-5 Working Days</li>
-						</ul>
+					<label class="btn"  for="tabthree">Seller Info</label>
+					<div class="tab card">
+					<table class="table table-responsive table-hover">
+								<tr><th><i class="fas fa-user"></i> Sold by </th><td>Dns Electronics</td></tr>								
+								<tr><th><i class="fas fa-phone-alt"></i> Contact Number </th><td>+9771234567890</td></tr>
+								<tr><th><i class="fas fa-shipping-fast"></i> Delivery Time </th><td>3-5 Working Days</td></tr>								
+					</table>
 					</div>
 				</div>
 
@@ -618,7 +695,7 @@ if (!isset($_SESSION['email'])) {
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="js/bootstrap-show-notification.js"></script>
 	<!-- Color JS -->
-	<script src="js/colors.js"></script>
+	
 	<!-- Slicknav JS -->
 	<script src="js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->
@@ -645,6 +722,24 @@ if (!isset($_SESSION['email'])) {
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="js/active.js"></script>
+	<!--custom page js -->
+	<script src="js/singleproduct.js"></script>
+	<script src="js/star-rating.js"></script>
+	<script>
+		var starRatingControl = new StarRating('.star-rating', {
+        maxStars: 5,        
+        clearable: false,
+        stars: function(el, item, index) {
+            el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect class="gl-star-full" width="19" height="19" x="2.5" y="2.5"/><polygon fill="#FFF" points="12 5.375 13.646 10.417 19 10.417 14.665 13.556 16.313 18.625 11.995 15.476 7.688 18.583 9.333 13.542 5 10.417 10.354 10.417"/></svg>';
+        },        		
+        classNames: {
+            active: 'gl-active',
+            base: 'gl-star-rating',
+            selected: 'gl-selected',
+        },
+
+    });    
+	</script>
 
 </body>
 

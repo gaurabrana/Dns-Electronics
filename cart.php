@@ -27,7 +27,7 @@ header("Location: index.php");
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -98,7 +98,7 @@ header("Location: index.php");
 								<th class="text-center">UNIT PRICE</th>
 								<th class="text-center">QUANTITY</th>
 								<th class="text-center">TOTAL</th> 
-								<th class="text-center"><i class="ti-trash remove-icon"></i></th>
+								<th class="text-center">REMOVE</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -111,55 +111,67 @@ header("Location: index.php");
 						$total = 0;
 						$totalDiscount = 0;
 						$totalWithoutDiscount = 0;
-						while($row=mysqli_fetch_assoc($result)){							
-							$subtotal = 0;
-							$description = substr($row['description'],0,100)."....";							
-							$totalDiscount = $totalDiscount + ($row['discount']*$row['quantity']);
-							$totalWithoutDiscount = $totalWithoutDiscount + ($row['quantity'] * $row['price']);
-							if($row['discount']!=0){
-								$updatedPrice = $row['price'] - $row['discount'];								
+						if(mysqli_num_rows($result)>0){
+							$hasItems = true;
+							while($row=mysqli_fetch_assoc($result)){							
+								$subtotal = 0;
+								$description = substr($row['description'],0,100)."....";							
+								$totalDiscount = $totalDiscount + ($row['discount']*$row['quantity']);
+								$totalWithoutDiscount = $totalWithoutDiscount + ($row['quantity'] * $row['price']);
+								if($row['discount']!=0){
+									$updatedPrice = $row['price'] - $row['discount'];								
+								}
+								else{
+									$updatedPrice = $row['price'];								
+								}							
+								$subtotal = $row['quantity'] * $updatedPrice;							
+								$total = $total + $subtotal;							
+								echo'<tr id="tablerow'.$row['productcartid'].'">
+								<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
+								<td class="product-des" data-title="Description">
+									<p class="product-name"><a href="singleproduct.php?id='.$row['code'].'">'.$row['name'].'</a></p>
+									<p class="product-des">'.$description.'</p>
+								</td>
+								<td class="price" data-title="Price"><span>Rs </span>';
+								if($row['discount']!=0){								
+									echo'<span style="color:red;text-decoration: line-through;">'.$row['price'].'</span>';
+								}							
+								echo'<br><span>'.$updatedPrice.'</span></td>
+								<td class="price" hidden data-title="Price"><span>'.$updatedPrice.'</span></td>
+								<td class="qty" data-title="Qty"><!-- Input Order -->
+									<div class="input-group">
+										<div class="button minus" id="minus'.$row['productcartid'].'">
+											<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant['.$row['productcartid'].']">
+												<i class="ti-minus"></i>
+											</button>
+										</div>
+										<input type="text" value="'.$row['quantity_stock'].'" hidden id="stock'.$row['productcartid'].'">
+										<input type="text" id="quantity'.$row['productcartid'].'" name="quant['.$row['productcartid'].']" class="input-number"  data-min="1" data-max="'.$row['quantity_stock'].'" value="'.$row['quantity'].'">
+										<div class="button plus" id="plus'.$row['productcartid'].'">
+											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant['.$row['productcartid'].']">
+												<i class="ti-plus"></i>
+											</button>
+										</div>
+										<p style="margin-top:4px; display:none;" id="cartError'.$row['productcartid'].'">Error</p>
+									</div>
+									<!--/ End Input Order -->
+								</td>
+								<td class="total-amount" data-title="Total"><span id="subtotal'.$row['productcartid'].'">Rs '.$subtotal.'</span></td>
+								<td class="action" data-title="Remove"><p style="cursor:pointer;" id="remove'.$row['productcartid'].'"><i class="ti-trash remove-icon"></i></p></td>								
+							</tr>';
 							}
-							else{
-								$updatedPrice = $row['price'];								
-							}							
-							$subtotal = $row['quantity'] * $updatedPrice;							
-							$total = $total + $subtotal;							
-							echo'<tr id="tablerow'.$row['productcartid'].'">
-							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
-							<td class="product-des" data-title="Description">
-								<p class="product-name"><a href="singleproduct.php?id='.$row['code'].'">'.$row['name'].'</a></p>
-								<p class="product-des">'.$description.'</p>
-							</td>
-							<td class="price" data-title="Price"><span>Rs </span>';
-							if($row['discount']!=0){								
-								echo'<span style="color:red;text-decoration: line-through;">'.$row['price'].'</span>';
-							}							
-							echo'<br><span>'.$updatedPrice.'</span></td>
-							<td class="price" hidden data-title="Price"><span>'.$updatedPrice.'</span></td>
-							<td class="qty" data-title="Qty"><!-- Input Order -->
-								<div class="input-group">
-									<div class="button minus" id="minus'.$row['productcartid'].'">
-										<button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="quant['.$row['productcartid'].']">
-											<i class="ti-minus"></i>
-										</button>
-									</div>
-									<input type="text" value="'.$row['quantity_stock'].'" hidden id="stock'.$row['productcartid'].'">
-									<input type="text" id="quantity'.$row['productcartid'].'" name="quant['.$row['productcartid'].']" class="input-number"  data-min="1" data-max="'.$row['quantity_stock'].'" value="'.$row['quantity'].'">
-									<div class="button plus" id="plus'.$row['productcartid'].'">
-										<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant['.$row['productcartid'].']">
-											<i class="ti-plus"></i>
-										</button>
-									</div>
-									<p style="margin-top:4px; display:none;" id="cartError'.$row['productcartid'].'">Error</p>
-								</div>
-								<!--/ End Input Order -->
-							</td>
-							<td class="total-amount" data-title="Total"><span id="subtotal'.$row['productcartid'].'">Rs '.$subtotal.'</span></td>
-							<td class="action" data-title="Remove"><p style="cursor:pointer;" id="remove'.$row['productcartid'].'"><i class="ti-trash remove-icon"></i></p></td>
-							<td>
-							</td>
-						</tr>';
 						}
+						else{
+							$hasItems = false;
+							echo'<tr>
+							<td>No Product</td>
+							<td>No Product</td>
+							<td>No Product</td>
+							<td>No Product</td>
+							<td>No Product</td>
+							<td>-</td>
+							</tr>';
+						}						
 						?>												
 						</tbody>
 					</table>
@@ -193,7 +205,11 @@ header("Location: index.php");
 										<li class="last">You Pay<span id="totalpayment">Rs <?php echo $total; ?></span></li>
 									</ul>
 									<div class="button5">
-										<a href="checkout.php" class="btn">Checkout</a>
+										<?php
+											if($hasItems){
+												echo'<a href="checkout.php" class="btn">Checkout</a>';
+											}
+										?>										
 										<a href="shop-grid.php" class="btn">Continue shopping</a>
 									</div>
 								</div>
@@ -406,7 +422,7 @@ header("Location: index.php");
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="js/bootstrap-show-notification.js"></script>
 	<!-- Color JS -->
-	<script src="js/colors.js"></script>
+	
 	<!-- Slicknav JS -->
 	<script src="js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->
@@ -433,6 +449,7 @@ header("Location: index.php");
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="js/active.js"></script>	
-	
+	<!--custom page js -->
+	<script src="js/cart.js"></script>
 </body>
 </html>

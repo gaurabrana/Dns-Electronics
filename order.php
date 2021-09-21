@@ -1,6 +1,6 @@
 <?php
 include('database/connect.php');
-if(!isset($_SESSION['email'])){
+if(!isset($_SESSION['id'])){
 header("Location: index.php");
 }
 if(isset($_GET['i'])){
@@ -25,6 +25,7 @@ if(isset($_GET['i'])){
         if($row['shipping_address_id'] != "-"){
             $shippingid = $row['shipping_address_id'];
         }
+
     }
 }
 else{
@@ -54,7 +55,7 @@ else{
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -125,7 +126,7 @@ else{
                     <div class="col">
                         <div class="row justify-content-start ">
                             <div class="col">                                                 
-                            <h2>Order id: <?php if($exist){echo $orderid;} ?></h2>
+                            <h3>ORDER ID: <?php if($exist){echo $orderid;} ?></h3>
                         </div>
                         </div>
                     </div>
@@ -135,18 +136,23 @@ else{
                     <div class="col-md-5">
                         <div class="card border-0">
                             <div class="card-header pb-0">
-                                <h2 class="card-title space ">Order placed</h2>
-                                <p class="card-text text-muted mt-4 space">ORDER DETAILS</p>
+                                <h3 class="card-title space ">Order placed</h3>
+                                <p class="card-text text-muted mt-2 space">ORDER DETAILS</p>
                                 <hr class="my-0">
                             </div>
                             <div class="card-body">
                                 <div class="row justify-content-between">
                                     <div class="col-auto mt-0">
-                                        <ul>
-                                        <li>Order Date: <?php echo $orderdate; ?></li>
-                                        <li>Payment Type: <?php echo $payment_type; ?></li>
-                                        <li>Order Payment: <?php echo $status; ?></li>
-                                        </ul>
+                                        <table class="table table-hover table-responsive">
+                                            <tr><th><i class="fas fa-calendar-alt"></i> Order Date</th><td>
+                                                <?php 
+                                                require('formatdate.php'); 
+                                                echo formatDate($orderdate).' at '.formatTime($orderdate); 
+                                                ?>
+                                            </td></tr>
+                                            <tr><th><i class="fas fa-money-check-alt"></i> Payment Type</th><td><?php echo $payment_type; ?></td></tr>
+                                            <tr><th><i class="fas fa-info-circle"></i> Order Status</th><td><?php echo $status; ?></td></tr>
+                                        </table>                                        
                                     </div>                                   
                                 </div>
                                 <div class="row mt-4">
@@ -165,22 +171,20 @@ else{
                                     </div>
                                 </div>
                                 <div class="row justify-content-between">
-                                    <div class="col-auto mt-0">
-                                        <ul>
+                                    <div class="col-auto mt-0">                                                                                                                                   
                                             <?php  
-                                            $getBillingDetails = "Select * from billing_info where info_id = '$billingid' and user_id = '$userid'";
+                                            $getBillingDetails = "Select * from order_billing_info where info_id = '$billingid'";
                                             $getBillingDetailsQuery = mysqli_query($conn, $getBillingDetails);
                                             while($row = mysqli_fetch_assoc($getBillingDetailsQuery)){
-                                                echo'<li>Customer Name: '.$row['firstname'].' '.$row['lastname'].'</li>';        
-                                                echo'<li>Phone Number: '.$row['phone_number'].'</li>';
-                                                echo'<li>Country: '.$row['country'].'</li>';
-                                                echo'<li>Address One: '.$row['address_one'].'</li>';
-                                                echo'<li>Address Two: '.$row['address_two'].'</li>';
-                                                echo'<li>Postal Code: '.$row['postal_code'].'</li>';
+                                                echo'<table class="table table-responsive table-hover">
+                                                <tr><th><i class="fas fa-user"></i> Name </th><td>'.$row['firstname'].' '.$row['lastname'].'</td></tr>
+                                                <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$row['email_address'].'</td></tr>
+                                                <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$row['phone_number'].'</td></tr>
+                                                <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$row['address_one'].', '.$row['address_two'].', '.$row['postal_code'].'</td></tr>
+                                                <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$row['country'].'&#160&#160<img src="img/flags/'.strtolower($row['country']).'.png"</td></tr>								                                                                                                  
+                                                </table>';
                                             }
-                                            ?>
-                                                                                
-                                        </ul>
+                                            ?>                                                                                                                    
                                     </div>                                   
                                 </div>
                                 <?php 
@@ -207,15 +211,16 @@ else{
                                 echo'<div class="row justify-content-between">
                                     <div class="col-auto mt-0">
                                         <ul>';                                                                                    
-                                            $getShippingInfo= "Select * from shipping_info where shipping_info_id = '$shippingid'";
+                                            $getShippingInfo= "Select * from order_shipping_info where shipping_info_id = '$shippingid'";
                                             $getShippingInfoQuery = mysqli_query($conn, $getShippingInfo);
                                             while($row = mysqli_fetch_assoc($getShippingInfoQuery)){
-                                                echo'<li>Customer Name: '.$row['fullname'].'</li>';        
-                                                echo'<li>Phone Number: '.$row['phone_number'].'</li>';
-                                                echo'<li>Country: '.$row['country'].'</li>';
-                                                echo'<li>Address One: '.$row['address_one'].'</li>';
-                                                echo'<li>Address Two: '.$row['address_two'].'</li>';
-                                                echo'<li>Postal Code: '.$row['postal_code'].'</li>';                                               
+                                                echo'<table class="table table-responsive table-hover">
+                                                <tr><th><i class="fas fa-user"></i> Name </th><td>'.$row['fullname'].'</td></tr>
+                                                <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$row['email_address'].'</td></tr>
+                                                <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$row['phone_number'].'</td></tr>
+                                                <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$row['address_one'].', '.$row['address_two'].', '.$row['postal_code'].'</td></tr>
+                                                <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$row['country'].'&#160&#160<img src="img/flags/'.strtolower($row['country']).'.png"</td></tr>								                                                                                                  
+                                                </table>';                                          
                                             }                                                                                                                                                                    
                                         echo'</ul>
                                     </div>                                   
@@ -251,7 +256,7 @@ else{
                                 <p class="card-text text-muted mt-md-4 mb-2 space">YOUR ORDER <span class=" small text-muted ml-2 cursor-pointer"></span> </p>
                                 <hr class="my-2">
                             </div>                      
-                            <div class="card-body pt-0">
+                            <div class="card-body pt-1">
                             <?php
                     $getOrderProducts = "Select p.name,p.image_name,p.sold_by, p.code, p.category, o.price, o.quantity, o.total_price FROM order_item o, product p where o.order_id = '$orderid' and o.product_id = p.id";                            
                     $getOrderProductsResult = mysqli_query($conn, $getOrderProducts);
@@ -263,8 +268,8 @@ else{
                             <div class="media flex-column flex-sm-row"> <img class=" img-fluid" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" width="62" height="62">
                                 <div class="media-body my-auto">
                                     <div class="row ">
-                                        <div class="col-auto">
-                                            <p class="mb-0"><b>'.$row['name'].'</b></p><small class="text-muted">Category: '.$row['category'].'</small>
+                                        <div class="col-md-12">
+                                            <p class="ml-2"><b>'.$row['name'].'</b></p><small class="text-muted">Category: '.$row['category'].'</small>
                                         </div>
                                     </div>
                                 </div>
@@ -361,7 +366,7 @@ else{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="js/bootstrap-show-notification.js"></script>
 	<!-- Color JS -->
-	<script src="js/colors.js"></script>
+	
 	<!-- Slicknav JS -->
 	<script src="js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->

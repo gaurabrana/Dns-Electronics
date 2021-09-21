@@ -1,6 +1,15 @@
 <?php
 include('database/connect.php');
-$asd = "1234567890qwertyuiopsdfghjkl;zxcvbnm,.1234!@#$%^&*()_)*&^%^YUIKL:?><M<>''{P{}{:}{P:LP{:>}</br>";
-echo $asd;
-echo mysqli_real_escape_string($conn, $asd);
+$date = date("Y-m-d H:i:s");
+$random = randomid().md5($date);
+echo $random;
+function randomid($length = 10) {
+    $characters = '0123456789';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
 ?>

@@ -76,6 +76,25 @@
                 " - Rs " + $("#slider-range").slider("values", 1));
         });
 
+        function loadProductsPriceSlider(range1, range2) {
+            $.ajax({
+                url: "database/sortProducts.php",
+                type: "POST",
+                data: { minPrice: range1, maxPrice: range2 },
+                cache: false,
+                success: function(result) {
+                    var gridData = result.split("<!--EndGridSection-->")[0];
+                    var listData = result.split("<!--EndGridSection-->")[1];
+                    $("#loadProducts").html(gridData);
+                    if ($("#toggle-list-style").hasClass("active")) {
+                        $("#loadProducts .single-product").css("display", "none");
+                    }
+                    $("#list-style-product-display").html(listData);
+                    $("#currentQuery").val("priceSlider");
+                    reInitializeCarousel();
+                }
+            });
+        }
         /*=======================
           Home Slider JS
         =========================*/
@@ -289,8 +308,10 @@
     /*====================================
     18. Nice Select JS
     ======================================*/
+
     $('select').niceSelect();
 
+    $(".star-rating").css("display", "none");
     /*=====================================
      Others JS
     ======================================*/
@@ -312,306 +333,344 @@
       Preloader JS
     ======================================*/
     //After 2s preloader is fadeOut
-    $('.preloader').delay(2000).fadeOut('slow');
+    $('.preloader').delay(500).fadeOut('slow');
     setTimeout(function() {
         //After 2s, the no-scroll class of the body will be removed
         $('body').removeClass('no-scroll');
-    }, 2000); //Here you can change preloader time
+    }, 500); //Here you can change preloader time
 
     /* Product Sorting Queries */
-    function loadProductsPriceSlider(range1, range2) {
-        $.ajax({
-            url: "database/sortProducts.php",
-            type: "POST",
-            data: { minPrice: range1, maxPrice: range2 },
-            cache: false,
-            success: function(result) {
-                $("#loadProducts").html(result);
-                $("#currentQuery").val("priceSlider");
-                reInitializeCarousel();
-            }
-        });
-    }
 
-    $(".check-box-list").on('change', function(e) {
-        var value = $("input[name='ranges']:checked").val();
-        $.ajax({
-            url: "database/sortProducts.php",
-            type: "POST",
-            data: { range: value },
-            cache: false,
-            success: function(result) {
-                $("#loadProducts").html(result);
-                $("#currentQuery").val("priceSlider");
-                reInitializeCarousel();
-            }
-        });
-    });
-
-    $(".brand-list li a").on("click", function(e) {
-        e.preventDefault();
-        var brand = $(this).attr('id');
-        $.ajax({
-            url: "database/sortProducts.php",
-            type: "POST",
-            data: { brandName: brand },
-            cache: false,
-            success: function(result) {
-                $("#loadProducts").html(result);
-                $("#currentQuery").val("brand:" + brand);
-                $('html, body').animate({
-                    scrollTop: $(".bread-inner").offset().top
-                }, 500);
-                reInitializeCarousel();
-            }
-        });
-    });
-
-    $(".categor-list li a").on("click", function(e) {
-        e.preventDefault();
-        var category = $(this).attr('id');
-        $.ajax({
-            url: "database/sortProducts.php",
-            type: "POST",
-            data: { categoryName: category },
-            cache: false,
-            success: function(result) {
-                $("#loadProducts").html(result);
-                $("#currentQuery").val("category:" + category);
-                reInitializeCarousel();
-            }
-        });
-    });
-
-    $("#sortType").on('change', function(e) {
-        var currentQuery = $("#currentQuery").val();
-        var sortType = this.value;
-        if (currentQuery.toLowerCase().indexOf("brand") >= 0 || currentQuery.toLowerCase().indexOf("category") >= 0 || currentQuery.indexOf("all") >= 0) {
-            $.ajax({
-                url: "database/sortProducts.php",
-                type: "POST",
-                data: { sortType: sortType, currentQuery: currentQuery },
-                cache: false,
-                success: function(result) {
-                    $("#loadProducts").html(result);
-                    reInitializeCarousel();
-                }
-            });
-        }
-    });
-
-    $(document).on("click", ".product-action p", function(e) {
-        e.preventDefault;
-        var id = $(this).attr("id");
-        var productID = null;
-        var resultID = null;
-        var url = null;
-        if (id.indexOf("favourite") >= 0 || id.indexOf("compare") >= 0) {
-            if (id.indexOf("favourite") >= 0) {
-                url = "database/addtowishlist.php";
-                var productID = id.split("favourite")[1];
-                var resultID = "#result" + productID;
-            } else if (id.indexOf("compare") >= 0) {
-                url = "database/addtocompare.php";
-                var productID = id.split("compare")[1];
-                var resultID = "#result" + productID;
-            }
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: { action: productID },
-                cache: false,
-                success: function(result) {
-                    var data = JSON.parse(result);
-                    $(resultID).css("visibility", "visible");
-                    if (id.indexOf("favourite") >= 0) {
-                        if (data.statusCode == 200) {
-                            $(resultID).html("Added to favourite");
-                            $(resultID).css("color", "green");
-                        } else if (data.statusCode == 201) {
-                            $(resultID).html("Failed to add");
-                            $(resultID).css("color", "#ed1c24");
-                        } else if (data.statusCode == 202) {
-                            $(resultID).html("Product not found");
-                            $(resultID).css("color", "#ed1c24");
-                        } else if (data.statusCode == 203) {
-                            $(resultID).html("Login first");
-                        } else if (data.statusCode == 204) {
-                            $(resultID).html("Already in favourite");
-                            $(resultID).css("color", "#ed1c24");
-                        }
-
-                    } else if (id.indexOf("compare") >= 0) {
-                        if (data.statusCode == 200) {
-                            $(resultID).html("Added to compare list");
-                            $(resultID).css("color", "green");
-                        } else if (data.statusCode == 201) {
-                            $(resultID).html("Failed to add");
-                            $(resultID).css("color", "#ed1c24");
-                        } else if (data.statusCode == 202) {
-                            $(resultID).html("Product not found");
-                            $(resultID).css("color", "#ed1c24");
-                        } else if (data.statusCode == 203) {
-                            $(resultID).html("Login first");
-                        } else if (data.statusCode == 204) {
-                            $(resultID).html("Already in compare list");
-                            $(resultID).css("color", "#ed1c24");
-                        }
-
-                    }
-                    $(resultID)
-                        .delay(3000)
-                        .queue(function(next) {
-                            $(this).css('visibility', 'hidden');
-                            next();
-                        });
-                    reInitializeCarousel();
-                }
-            });
-        }
-    });
 
     $(document).on("click", ".product-action-2 p", function(e) {
-        var id = $(this).attr("id");
-        var productID = id.split("cart")[1];
-        var resultID = null;
-        if (id.indexOf("explore") >= 0) {
-            resultID = "#exploreresult" + productID;
+        var a = $(this).attr("id");
+        var b = a.split("cart")[1];
+        var c = null;
+        var d = false;
+        if (a.indexOf("list") >= 0) {
+            c = "#liststyleResult" + b;
+            d = true;
         } else {
-            resultID = "#result" + productID;
+            c = "#result" + b;
+            d = false;
         }
-        alert(resultID);
+
         $.ajax({
             url: "database/addtocart.php",
             type: "POST",
-            data: { action: productID },
+            data: { action: b },
+            cache: false,
+            success: function(result) {
+                var data = JSON.parse(result);
+                $(c).css("display", "block");
+                if (data.statusCode == 200) {
+                    $(c).html("Added to cart");
+                    if (d) {
+                        addResultColor("list", c, "alert-success");
+                    } else {
+                        addResultColor("grid", c, "green");
+                    }
+                } else if (data.statusCode == 201) {
+                    $(c).html("Failed to add");
+                    if (d) {
+                        addResultColor("list", c, "alert-danger");
+                    } else {
+                        addResultColor("grid", c, "#ed1c24");
+                    }
+                } else if (data.statusCode == 202) {
+                    $(c).html("Product not found");
+                    if (d) {
+                        addResultColor("list", c, "alert-danger");
+                    } else {
+                        addResultColor("grid", c, "#ed1c24");
+                    }
+                } else if (data.statusCode == 203) {
+                    $(c).html("Login first");
+                    if (d) {
+                        addResultColor("list", c, "alert-danger");
+                    } else {
+                        addResultColor("grid", c, "#ed1c24");
+                    }
+                } else if (data.statusCode == 204) {
+                    $(c).html("Already in cart");
+                    if (d) {
+                        addResultColor("list", c, "alert-danger");
+                    } else {
+                        addResultColor("grid", c, "#ed1c24");
+                    }
+                }
+            }
+        });
+    });
+
+
+    $(document).on("click", ".product-action p", function(e) {
+        e.preventDefault;
+        var a = $(this).attr("id");
+        var b = null;
+        var c = null;
+        var f = null;
+        var d = false;
+        if (a.indexOf("favourite") >= 0 || a.indexOf("compare") >= 0) {
+            if (a.indexOf("favourite") >= 0) {
+                f = "database/addtowishlist.php";
+                b = a.split("favourite")[1];
+            } else if (a.indexOf("compare") >= 0) {
+                f = "database/addtocompare.php";
+                b = a.split("compare")[1];
+            }
+            if (a.indexOf("list") >= 0) {
+                c = "#liststyleResult" + b;
+                d = true;
+            } else {
+                c = "#result" + b;
+                d = false;
+            }
+            $.ajax({
+                url: f,
+                type: "POST",
+                data: { action: b },
+                cache: false,
+                success: function(result) {
+                    var data = JSON.parse(result);
+                    $(c).css("display", "block");
+                    if (id.indexOf("favourite") >= 0) {
+                        if (data.statusCode == 200) {
+                            $(c).html("Added to favourite");
+                            if (d) {
+                                addResultColor("list", c, "alert-success");
+                            } else {
+                                addResultColor("grid", c, "green");
+                            }
+
+                        } else if (data.statusCode == 201) {
+                            $(c).html("Failed to add");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 202) {
+                            $(c).html("Product not found");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 203) {
+                            $(c).html("Login first");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 204) {
+                            $(c).html("Already in favourite");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        }
+
+                    } else if (a.indexOf("compare") >= 0) {
+                        if (data.statusCode == 200) {
+                            $(c).html("Added to compare list");
+                            if (d) {
+                                addResultColor("list", c, "alert-success");
+                            } else {
+                                addResultColor("grid", c, "green");
+                            }
+                        } else if (data.statusCode == 201) {
+                            $(c).html("Failed to add");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 202) {
+                            $(c).html("Product not found");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 203) {
+                            $(c).html("Login first");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        } else if (data.statusCode == 204) {
+                            $(c).html("Already in compare list");
+                            if (d) {
+                                addResultColor("list", c, "alert-danger");
+                            } else {
+                                addResultColor("grid", c, "#ed1c24");
+                            }
+                        }
+
+                    }
+                }
+            });
+        }
+    });
+
+    function addResultColor(a, b, c) {
+        if (a == "list") {
+            $(b).addClass(c);
+        } else if (a == "grid") {
+            $(b).css("color", c);
+        }
+        $(b)
+            .delay(3000)
+            .queue(function(next) {
+                if (a == "list") {
+                    $(b).removeClass(c);
+                }
+                $(this).css('display', 'none');
+                next();
+            });
+    }
+
+    $(document).on("click", ".add-to-cart a", function(e) {
+        e.preventDefault();
+        let getClickedButtonID = $(this).attr("id");
+        let selectedAction = getClickedButtonID.split("fromModal")[1];
+        var pID;
+        if (selectedAction.indexOf("cart") >= 0) {
+            pID = selectedAction.split("cart")[1];
+            toCart(pID);
+        } else if (selectedAction.indexOf("wishlist") >= 0) {
+            pID = selectedAction.split("wishlist")[1];
+            toWishlist(pID);
+        } else if (selectedAction.indexOf("compare") >= 0) {
+            pID = selectedAction.split("compare")[1];
+            toCompare(pID);
+        }
+    });
+
+    function toCart(a) {
+        var resultID = "#fromModalResult" + a;
+        var productquantity = $("#amountOfproduct" + a).val();
+        let color;
+        $.ajax({
+            url: "database/addtocart.php",
+            type: "POST",
+            data: { action: a, quantityofproduct: productquantity },
             cache: false,
             success: function(result) {
                 var data = JSON.parse(result);
                 $(resultID).css("visibility", "visible");
                 if (data.statusCode == 200) {
+                    color = "alert-success";
                     $(resultID).html("Added to cart");
-                    $(resultID).css("color", "green");
                 } else if (data.statusCode == 201) {
+                    color = "alert-danger";
                     $(resultID).html("Failed to add");
-                    $(resultID).css("color", "#ed1c24");
                 } else if (data.statusCode == 202) {
+                    color = "alert-danger";
                     $(resultID).html("Product not found");
-                    $(resultID).css("color", "#ed1c24");
                 } else if (data.statusCode == 203) {
+                    color = "alert-danger";
                     $(resultID).html("Login first");
                 } else if (data.statusCode == 204) {
+                    color = "alert-danger";
                     $(resultID).html("Already in cart");
-                    $(resultID).css("color", "#ed1c24");
                 }
-
+                $(resultID).addClass(color);
                 $(resultID)
                     .delay(3000)
                     .queue(function(next) {
                         $(this).css('visibility', 'hidden');
+                        $(this).removeClass(color)
                         next();
                     });
 
 
             }
         });
-    });
+    }
 
-
-    $(".input-group .minus").on("click", function(e) {
-        var id = $(this).attr("id");
-        var productID = id.split("minus")[1];
-        var quantity = parseInt($("#quantity" + productID).val(), 10);
-        updatecartquantity("minus", productID, quantity);
-    });
-
-    function updatecartquantity(j, k, l) {
-        var m = $("#stock" + k).val();
-        var l_a = parseInt(l, 10);
-        var m_a = parseInt(m, 10);
-        var isCheckout = $("#placeorder").val();
-        if (l_a >= 1 && l_a <= m_a) {
-            $.ajax({
-                url: "database/updatecartquantity.php",
-                type: "POST",
-                data: { b: k, a: j, c: l },
-                cache: false,
-                success: function(result) {
-                    var data = JSON.parse(result);
-                    var total = data.total;
-                    $("#totalpayment").html("Rs " + total);
-                    var totalWithoutDiscount = data.totalWithoutDiscount;
-                    $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
-                    var subtotal = data.subtotal;
-                    $("#subtotal" + k).html("Rs " + subtotal);
-                    var totalDiscount = data.totalDiscount;
-                    $("#totalDiscount").html("Rs " + totalDiscount);
-                    if (isCheckout != null) {
-                        $("#subTotalCheckout").html("Rs " + total);
-                        $("#TotalCheckout").html("Rs " + total);
-                    }
-                }
-            });
-        } else {
-            $("#cartError" + k).html("Quantity available for this product is 1 - " + m + ".");
-            $("#cartError" + k).css('display', 'block');
-            $("#cartError" + k)
-                .delay(3000)
-                .queue(function(next) {
-                    $(this).css('display', 'none');
-                    next();
-                });
-            // $.bootstrapGrowl("Quantity available for this product is 1 - " + m + ".", {
-            //     type: "info",
-            //     offset: { from: "top", amount: parseInt(n, 10) },
-            //     align: "right",
-            //     delay: 6000,
-            //     allow_dismiss: true,
-            //     stackup_spacing: 10
-            // });
-
-        }
-
-    };
-
-    $(".action p").on("click", function(e) {
-        var id = $(this).attr("id");
-        var productID = id.split("remove")[1];
+    function toWishlist(a) {
+        var resultID = "#fromModalResult" + a;
+        let color;
         $.ajax({
-            url: "database/updatecartquantity.php",
+            url: "database/addtowishlist.php",
             type: "POST",
-            data: { a: "delete", b: productID },
+            data: { action: a },
             cache: false,
             success: function(result) {
                 var data = JSON.parse(result);
-                var total = data.total;
-                $("#tablerow" + productID).remove();
-                $("#totalpayment").html("Rs " + total);
-                var totalWithoutDiscount = data.totalWithoutDiscount;
-                $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
-                var totalDiscount = data.totalDiscount;
-                $("#totalDiscount").html("Rs " + totalDiscount);
+                $(resultID).css("visibility", "visible");
+                if (data.statusCode == 200) {
+                    color = "alert-success";
+                    $(resultID).html("Added to favourite");
+                } else if (data.statusCode == 201) {
+                    color = "alert-danger";
+                    $(resultID).html("Failed to add");
+                } else if (data.statusCode == 202) {
+                    color = "alert-danger";
+                    $(resultID).html("Product not found");
+                } else if (data.statusCode == 203) {
+                    color = "alert-danger";
+                    $(resultID).html("Login first");
+                } else if (data.statusCode == 204) {
+                    color = "alert-danger";
+                    $(resultID).html("Already in favourite");
+                }
+                $(resultID).addClass(color);
+                $(resultID)
+                    .delay(3000)
+                    .queue(function(next) {
+                        $(this).css('visibility', 'hidden');
+                        $(this).removeClass(color);
+                        next();
+                    });
             }
         });
-    });
+    }
 
+    function toCompare(a) {
+        var resultID = "#fromModalResult" + a;
+        let color;
+        $.ajax({
+            url: "database/addtocompare.php",
+            type: "POST",
+            data: { action: a },
+            cache: false,
+            success: function(result) {
+                var data = JSON.parse(result);
+                $(resultID).css("visibility", "visible");
+                if (data.statusCode == 200) {
+                    color = "alert-success";
+                    $(resultID).html("Added to compare list");
+                } else if (data.statusCode == 201) {
+                    color = "alert-danger";
+                    $(resultID).html("Failed to add");
+                } else if (data.statusCode == 202) {
+                    color = "alert-danger";
+                    $(resultID).html("Product not found");
+                } else if (data.statusCode == 203) {
+                    color = "alert-danger";
+                    $(resultID).html("Login first");
+                } else if (data.statusCode == 204) {
+                    color = "alert-danger";
+                    $(resultID).html("Already in compare list");
+                }
+                $(resultID).addClass(color);
+                $(resultID)
+                    .delay(3000)
+                    .queue(function(next) {
+                        $(this).css('visibility', 'hidden');
+                        $(this).removeClass(color);
+                        next();
+                    });
+            }
+        });
+    }
 
-    $('.input-group input').keypress(function(event) {
-        if (event.keyCode == 13) {
-            var id = $(this).attr("id");
-            var productID = id.split("quantity")[1];
-            var quantity = $("#quantity" + productID).val();
-            updatecartquantity("middle", productID, quantity);
-        }
-    });
-
-
-    $(".input-group .plus").on("click", function(e) {
-        var id = $(this).attr("id");
-        var productID = id.split("plus")[1];
-        var quantity = parseInt($("#quantity" + productID).val(), 10);
-        updatecartquantity("plus", productID, quantity);
-    });
 
 
     function reInitializeCarousel() {
@@ -632,139 +691,6 @@
     /*
 CHECKOUT PAGE
     */
-
-    $("#cbox").on("click", function(e) {
-        if ($(this).prop("checked") == true) {
-            $("#shippingInfo").css("display", "flex");
-            $("#shippingInfo input").prop("disabled", false);
-        } else {
-            $("#shippingInfo").css("display", "none");
-            $("#shippingInfo input").prop("disabled", true);
-        }
-    });
-
-
-
-    $(document).on("submit", "form", function(e) {
-        e.preventDefault();
-        //billing info
-        var radios = document.querySelectorAll('input[type="radio"]:checked');
-        var value = radios.length > 0 ? radios[0].value : null;
-        if (value == null) {
-            $("#paymenterror").html("Payment method not selected.");
-            $("#paymenterror").css("display", "block");
-            $("#paymenterror")
-                .delay(3000)
-                .queue(function(next) {
-                    $(this).css('display', 'none');
-                    next();
-                });
-            return;
-        } else {
-            $("#triggerConfirmation").click();
-            return false;
-        }
-    });
-
-    $("#placeorder").on("click", function(e) {
-        $("#submitButton").click();
-    });
-
-    $("#country").on("change", function() {
-        var country = $(this).val().toLowerCase();
-        $("#billingcountryflag").attr("src", "img/flags/" + country + ".png");
-    });
-
-    $("#shippingcountry").on("change", function() {
-        var country = $(this).val().toLowerCase();
-        $("#shippingcountryflag").attr("src", "img/flags/" + country + ".png");
-    });
-
-    $("#confirmOrder").on("click", function(e) {
-        var billingfname = $("#billingfname").val();
-        var billinglname = $("#billinglname").val();
-        var billingemail = $("#billingemail").val();
-        var billingphone = $("#billingphone").val();
-        var country = $("#country").val();
-        var billingaddressone = $("#billingaddressone").val();
-        var billingaddresstwo = $("#billingaddresstwo").val();
-        var billingpostalcode = $("#billingpostalcode").val();
-        var payment = $('input[type="radio"]:checked').val();
-        if ($(this).prop("checked") == true) {
-            var shippingname = $("#shippingname").val();
-            var shippingphone = $("#shippingphone").val();
-            var shippingemail = $("#shippingemail").val();
-            var shippingcountry = $("#shippingcountry").val();
-            var shippingaddressone = $("#shippingaddressone").val();
-            var shippingaddresstwo = $("#shippingaddresstwo").val();
-            var shippingpostalcode = $("#shippingpostalcode").val();
-            $.ajax({
-                url: "database/confirmorder.php",
-                type: "POST",
-                data: {
-                    info: "includeshipping",
-                    billingfname: billingfname,
-                    billinglname: billinglname,
-                    billingemail: billingemail,
-                    billingphone: billingphone,
-                    country: country,
-                    billingaddressone: billingaddressone,
-                    billingaddresstwo: billingaddresstwo,
-                    billingpostalcode: billingpostalcode,
-                    shippingname: shippingname,
-                    shippingphone: shippingphone,
-                    shippingemail: shippingemail,
-                    shippingcountry: shippingcountry,
-                    shippingaddressone: shippingaddressone,
-                    shippingaddresstwo: shippingaddresstwo,
-                    shippingpostalcode: shippingpostalcode,
-                    payment: payment
-                },
-                cache: false,
-                success: function(result) {
-                    // var data = JSON.parse(result);
-                    // var total = data.total;
-                    // $("#tablerow" + productID).remove();
-                    // $("#totalpayment").html("Rs " + total);
-                    // var totalWithoutDiscount = data.totalWithoutDiscount;
-                    // $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
-                    // var totalDiscount = data.totalDiscount;
-                    // $("#totalDiscount").html("Rs " + totalDiscount);
-                }
-            });
-        } else {
-            alert("working");
-            $.ajax({
-                url: "database/confirmorder.php",
-                type: "POST",
-                data: {
-                    info: "onlybilling",
-                    billingfname: billingfname,
-                    billinglname: billinglname,
-                    billingemail: billingemail,
-                    billingphone: billingphone,
-                    country: country,
-                    billingaddressone: billingaddressone,
-                    billingaddresstwo: billingaddresstwo,
-                    billingpostalcode: billingpostalcode,
-                    payment: payment
-                },
-                cache: false,
-                success: function(result) {
-                    // var data = JSON.parse(result);
-                    // var total = data.total;
-                    // $("#tablerow" + productID).remove();
-                    // $("#totalpayment").html("Rs " + total);
-                    // var totalWithoutDiscount = data.totalWithoutDiscount;
-                    // $("#totalWithoutDiscount").html("Rs " + totalWithoutDiscount);
-                    // var totalDiscount = data.totalDiscount;
-                    // $("#totalDiscount").html("Rs " + totalDiscount);
-                }
-            });
-        }
-
-    });
-
 
     $('#myTab a').on('click', function(e) {
         e.preventDefault()

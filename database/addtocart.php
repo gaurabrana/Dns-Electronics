@@ -20,7 +20,13 @@ if(isset($_SESSION['email'])){
         $checkProductCode = "Select product_code from product_in_cart where product_code = '$code' and cart_id = '$cart_id'";
         $checkProductCodeResult = mysqli_query($conn, $checkProductCode);
         if(mysqli_num_rows($checkProductCodeResult)==0){
-            $sql = "Insert into product_in_cart values ('$id', $cart_id, '$code', 1)";
+            if(isset($_POST['quantityofproduct'])){
+                $productquantity = $_POST['quantityofproduct'];
+            }
+            else{
+                $productquantity = 1;
+            }
+            $sql = "Insert into product_in_cart values ('$id', $cart_id, '$code', '$productquantity')";
             $cartResult = mysqli_query($conn, $sql);
             if($cartResult){
                 echo json_encode(array("statusCode"=>200));

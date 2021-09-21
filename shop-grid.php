@@ -24,7 +24,7 @@ require ('database/connect.php');
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -216,13 +216,37 @@ require ('database/connect.php');
 												$updatedPrice = $row['price'];																				
 											}									
 											echo'<p class="price">Rs '.$updatedPrice.'</p>';													
-											echo'<ul class="reviews">
-												<li class="yellow"><i class="ti-star"></i></li>
-												<li class="yellow"><i class="ti-star"></i></li>
-												<li class="yellow"><i class="ti-star"></i></li>
-												<li><i class="ti-star"></i></li>
-												<li><i class="ti-star"></i></li>
-											</ul>
+											echo'<ul class="reviews">';
+											$product_code = $row['code'];
+									$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+									$executegetRating = mysqli_query($conn, $getRating);									
+									$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+									$totalRating =  $getRatingDetail['rating'];								
+									$totalUsers = $getRatingDetail['totalratingsgiven'];
+									if($totalRating!=0)	{
+										$whole = (int) $totalRating;
+										$frac  = $totalRating - (int) $totalRating;
+										for($i=1;$i<6;$i++){
+											if($i<=$whole){										
+												echo'<i class="yellow fa fa-star"></i>';																														
+											}									
+											else{		
+												if($i==($whole+1)){
+													if($frac!=0){
+														echo'<i class="yellow fa fa-star-half-alt"></i>';
+													}
+													else{
+														echo'<i class="fa fa-star"></i>';
+													}	
+												}
+												else{
+													echo'<i class="fa fa-star"></i>';
+												}																																																																																								
+											}
+										}	
+									}
+																								
+											echo'</ul>
 										</div>
 									</div>';
 										}
@@ -257,13 +281,13 @@ require ('database/connect.php');
 										</div>
 									</div>
 									<ul class="view-mode">
-										<li class="active"><a href="shop-grid.php"><i class="fa fa-th-large"></i></a></li>
-										<li><a href="shop-list.html"><i class="fa fa-th-list"></i></a></li>
+										<li id="toggle-card-style" class="active"><a href="shop-grid.php"><i class="fa fa-th-large"></i></a></li>
+										<li id="toggle-list-style" ><a href="#"><i class="fa fa-th-list"></i></a></li>
 									</ul>
 								</div>
 								<!--/ End Shop Top -->
 							</div>
-						</div>
+						</div>						
 						<div id="loadProducts" class="row">
 							<?php
 							if(isset($_GET['type'])){
@@ -283,6 +307,7 @@ require ('database/connect.php');
 							}
 							
 							$result = mysqli_query($conn, $sql);
+							$result1 = mysqli_query($conn, $sql);
 							if(mysqli_num_rows($result) > 0){
 								while($row=mysqli_fetch_assoc($result)){
 									if($row['discount']!=0){
@@ -325,17 +350,54 @@ require ('database/connect.php');
 																<h2>'.$row['name'].'</h2>
 																<div class="quickview-ratting-review">
 																	<div class="quickview-ratting-wrap">
-																		<div class="quickview-ratting">
-																			<i class="yellow fa fa-star"></i>
-																			<i class="yellow fa fa-star"></i>
-																			<i class="yellow fa fa-star"></i>
-																			<i class="yellow fa fa-star"></i>
-																			<i class="fa fa-star"></i>
-																		</div>
-																		<a href="#"> (1 customer review)</a>
-																	</div>
-																	<div class="quickview-stock">
-																		<span><i class="fa fa-check-circle-o"></i> in stock</span>
+																		<div class="quickview-ratting">';
+																		$product_code = $row['code'];
+																		$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+																		$executegetRating = mysqli_query($conn, $getRating);									
+																		$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+																		$totalRating =  $getRatingDetail['rating'];								
+																		$totalUsers = $getRatingDetail['totalratingsgiven'];
+																		if($totalRating!=0)	{
+																			$whole = (int) $totalRating;
+																			$frac  = $totalRating - (int) $totalRating;
+																			for($i=1;$i<6;$i++){
+																				if($i<=$whole){										
+																					echo'<i class="yellow fa fa-star"></i>';																														
+																				}									
+																				else{		
+																					if($i==($whole+1)){
+																						if($frac!=0){
+																							echo'<i class="yellow fa fa-star-half-alt"></i>';
+																						}
+																						else{
+																							echo'<i class="fa fa-star"></i>';
+																						}	
+																					}
+																					else{
+																						echo'<i class="fa fa-star"></i>';
+																					}																																																																																								
+																				}
+																			}	
+																		}															
+																		echo'</div>';
+																		if($totalRating!=0){
+																			echo '<a href="#"> ('.$totalUsers.' customer review)</a>';
+																		}
+																		else{
+																			echo 'No reviews yet';
+																		}									
+																	echo'</div>
+																	<div class="quickview-stock">';									
+																		if($row['quantity_stock'] > 0){
+																			$outOfStock = false;
+																			echo'<span><i class="far fa-check-circle"></i>in stock ('.$row['quantity_stock'].')';
+																		}
+																		else{
+									
+																			$outOfStock = true;
+																			echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK';
+																		}
+																		echo'</span>
 																	</div>
 																</div>';
 																if($row['discount']!=0){
@@ -356,22 +418,7 @@ require ('database/connect.php');
 																<div class="size">
 																	<div class="row">
 																		<div class="col-lg-4 col-12">
-																			<a href="#" class="title">Category: '.$row['category'].'</a>
-																			<!------<select>
-																				<option selected="selected">s</option>
-																				<option>m</option>
-																				<option>l</option>
-																				<option>xl</option>
-																			</select>----!>
-																		</div>
-																		<div class="col-lg-4 col-12">
-																			<a href="#" class="title">Brand: '.$row['brand'].'</a>
-																			<!---	<select>
-																				<option selected="selected">orange</option>
-																				<option>purple</option>
-																				<option>black</option>
-																				<option>pink</option>
-																			</select>----!>
+																			<a href="#" class="title">Category: '.$row['category'].'</a>										
 																		</div>
 																		<div class="col-lg-4 col-12">
 																			<a class="title">Code: '.$row['code'].'</a>																		
@@ -386,7 +433,8 @@ require ('database/connect.php');
 																				<i class="ti-minus"></i>
 																			</button>
 																		</div>
-																		<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value="1">
+																		<input type="text" hidden id="quanitymaxofproduct'.$row['code'].'" value="'.$row['quantity_stock'].'">
+																		<input type="text" id="amountOfproduct'.$row['code'].'" name="quant[1]" class="input-number" data-min="1" data-max="'.$row['quantity_stock'].'" value="1">
 																		<div class="button plus">
 																			<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
 																				<i class="ti-plus"></i>
@@ -395,19 +443,24 @@ require ('database/connect.php');
 																	</div>
 																	<!--/ End Input Order -->
 																</div>
-																<div class="add-to-cart">
-																	<a href="#" id="cart'.$row['code'].'" class="btn">Add to cart</a>
-																	<a href="#" id="wishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
-																	<a href="#" id="compare'.$row['code'].'" class="btn min"><i class="fa fa-compress"></i></a>
+																<div class="add-to-cart">';
+																	if(!$outOfStock){
+																		echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to cart" id="fromModalcart'.$row['code'].'" class="btn"><i class="fas fa-cart-plus"></i></a>';
+																	}								
+																	echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to favourite" id="fromModalwishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
+																	<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to compare list" id="fromModalcompare'.$row['code'].'" class="btn min"><i class="ti-bar-chart-alt"></i></a>
 																</div>
 																<div class="default-social">
 																	<h4 class="share-now">Share:</h4>
 																	<ul>
-																		<li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-																		<li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-																		<li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-																		<li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
+																	<li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+																	<li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+																	<li><a class="youtube" href="#"><i class="fab fa-pinterest-p"></i></a></li>
+																	<li><a class="dribbble" href="#"><i class="fab fa-google-plus"></i></a></li>				
 																	</ul>
+																	<div  style="visibility:hidden;" id="fromModalResult'.$row['code'].'" class="alert" role="alert">
+																	  
+																	</div>
 																</div>
 															</div>
 														</div>
@@ -420,7 +473,7 @@ require ('database/connect.php');
 									$discount = 0;
 									echo'<div class="col-lg-4 col-md-6 col-12">								
 									<div class="single-product">
-									<p style="visibility: hidden; font-size:16px;" id="result'.$row['code'].'">Result</p>
+									<p style="display: none; font-size:16px;" id="result'.$row['code'].'">Result</p>
 										<div class="product-img">
 											<a href="singleproduct.php?i='.$row['code'].'">
 												<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
@@ -428,7 +481,7 @@ require ('database/connect.php');
 											</a>
 											<div class="button-head">
 												<div class="product-action">
-													<p data-bs-toggle="modal" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+													<p data-bs-toggle="modal" id="modalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
 													<p title="Favourite" id="favourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 													<p title="Compare" id="compare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 												</div>
@@ -454,43 +507,109 @@ require ('database/connect.php');
 							}
 							else{
 								echo"<h5>No Products Found.</h5>";
-							}
-							
+							}							
 							?> 																				
 						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--/ End Product Style 1  -->	
-
-		<!-- Start Shop Newsletter  -->
-		<section class="shop-newsletter section">
-			<div class="container">
-				<div class="inner-top">
-					<div class="row">
-						<div class="col-lg-8 offset-lg-2 col-12">
-							<!-- Start Newsletter Inner -->
-							<div class="inner">
-								<h4>Newsletter</h4>
-								<p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-								<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-									<input name="EMAIL" placeholder="Your email address" required="" type="email">
-									<button class="btn">Subscribe</button>
-								</form>
+						<div class="row" id="list-style-product-display">								
+								<?php
+								while($row=mysqli_fetch_assoc($result1)){		
+									echo'<!-- Start Single List -->
+									<div class="col-12">
+									<div class="row">
+										<div class="col-lg-4 col-md-6 col-sm-6">
+											<div class="single-product">
+												<div class="product-img">
+													<a href="singleproduct.php?i='.$row['code'].'">
+														<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+														<img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+													</a>
+													<div class="button-head">
+														<div class="product-action">
+														<p data-bs-toggle="modal" id="listmodalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+														<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
+														<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
+														</div>
+														<div class="product-action-2">
+														<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>
+														</div>
+													</div>
+												</div>												
+												<hr>
+												<div class="list-display-product-price">';
+											echo'<span style="margin-right:4px;">Rs</span>';
+											if($row['discount']!=0){
+													$discount = $row['discount'];
+													echo'<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
+											}
+												echo'<span style="font-size:large;"> '.($row['price']-$discount).'</span>
+												</div>	
+												<div style="display:none;" id="liststyleResult'.$row['code'].'" class="alert">				
+												sad								
+												</div>	
+											</div>
+										</div>
+										<div class="col-lg-8 col-md-6 col-12">
+											<div class="list-content">
+												<div class="product-content">													
+													<h4 class="title"><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h4>
+													<div class="review-inner">
+														<div class="ratings">';
+														$product_code = $row['code'];
+														$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+														$executegetRating = mysqli_query($conn, $getRating);									
+														$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+														$totalRating =  $getRatingDetail['rating'];								
+														$totalUsers = $getRatingDetail['totalratingsgiven'];
+														if($totalRating!=0)	{
+															$whole = (int) $totalRating;
+															$frac  = $totalRating - (int) $totalRating;
+															for($i=1;$i<6;$i++){
+																if($i<=$whole){										
+																	echo'<i class="yellow fa fa-star"></i>';																														
+																}									
+																else{		
+																	if($i==($whole+1)){
+																		if($frac!=0){
+																			echo'<i class="yellow fa fa-star-half-alt"></i>';
+																		}
+																		else{
+																			echo'<i class="fa fa-star"></i>';
+																		}	
+																	}
+																	else{
+																		echo'<i class="fa fa-star"></i>';
+																	}																																																																																								
+																}
+															}	
+														}																													
+														if($totalRating!=0){
+															echo '<a href="#"> ('.$totalUsers.' customer review)</a>';
+														}
+														else{
+															echo 'No reviews yet';
+														}																																					
+														echo'</div>
+													</div>
+												</div>';
+												$descriptions = explode('.', $row['description']);
+												foreach($descriptions as $var){
+													echo '<li>'.$var.'</li>';
+													}													
+												echo'																
+												<a style="color:white; margin-top:10px;" href="singleproduct.php?i='.$row['code'].'" class="btn">View more</a>																	
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- End Single List -->';
+								}									
+									?>																							
 							</div>
-							<!-- End Newsletter Inner -->
-						</div>
 					</div>
 				</div>
 			</div>
 		</section>
-		<!-- End Shop Newsletter -->
-		
-		
-		
-		
-		
+		<!--/ End Product Style 1  -->		
 		<!-- Start Footer Area -->
 		<?php
 	include"layouts/footer.php";
@@ -506,7 +625,7 @@ require ('database/connect.php');
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 	<!-- Color JS -->
-	<script src="js/colors.js"></script>
+	
 	<!-- Slicknav JS -->
 	<script src="js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->
@@ -533,5 +652,7 @@ require ('database/connect.php');
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="js/active.js"></script>
+	<!--custom page js -->
+	<script src="js/product.js"></script>
 </body>
 </html>

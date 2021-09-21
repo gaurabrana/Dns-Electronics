@@ -24,7 +24,7 @@ $show_collection = "homepage";
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -217,7 +217,7 @@ $show_collection = "homepage";
 													</a>
 													<div class="button-head">
 														<div class="product-action">
-															<p data-bs-toggle="modal" data-bs-target="#modalbox'.$row1['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+															<p data-bs-toggle="modal" id="modalboxdata'.$row1['code'].'" data-bs-target="#modalbox'.$row1['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
 															<p title="Favourite" id="favourite'.$row1['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row1['code'].'">Add to Favourite</span></p>
 															<p title="Compare" id="compare'.$row1['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row1['code'].'">Add to Compare</span></p>
 														</div>
@@ -382,17 +382,54 @@ echo'<!-- Modal -->
 							<h2>'.$row['name'].'</h2>
 							<div class="quickview-ratting-review">
 								<div class="quickview-ratting-wrap">
-									<div class="quickview-ratting">
-										<i class="yellow fa fa-star"></i>
-										<i class="yellow fa fa-star"></i>
-										<i class="yellow fa fa-star"></i>
-										<i class="yellow fa fa-star"></i>
-										<i class="fa fa-star"></i>
-									</div>
-									<a href="#"> (1 customer review)</a>
-								</div>
-								<div class="quickview-stock">
-									<span><i class="fa fa-check-circle-o"></i> in stock</span>
+									<div class="quickview-ratting">';
+									$product_code = $row['code'];
+									$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+									$executegetRating = mysqli_query($conn, $getRating);									
+									$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+									$totalRating =  $getRatingDetail['rating'];								
+									$totalUsers = $getRatingDetail['totalratingsgiven'];
+									if($totalRating!=0)	{
+										$whole = (int) $totalRating;
+										$frac  = $totalRating - (int) $totalRating;
+										for($i=1;$i<6;$i++){
+											if($i<=$whole){										
+												echo'<i class="yellow fa fa-star"></i>';																														
+											}									
+											else{		
+												if($i==($whole+1)){
+													if($frac!=0){
+														echo'<i class="yellow fa fa-star-half-alt"></i>';
+													}
+													else{
+														echo'<i class="fa fa-star"></i>';
+													}	
+												}
+												else{
+													echo'<i class="fa fa-star"></i>';
+												}																																																																																								
+											}
+										}	
+									}															
+									echo'</div>';
+									if($totalRating!=0){
+										echo '<a href="#"> ('.$totalUsers.' customer review)</a>';
+									}
+									else{
+										echo 'No reviews yet';
+									}									
+								echo'</div>
+								<div class="quickview-stock">';									
+									if($row['quantity_stock'] > 0){
+										$outOfStock = false;
+										echo'<span><i class="far fa-check-circle"></i>in stock ('.$row['quantity_stock'].')';
+									}
+									else{
+
+										$outOfStock = true;
+										echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK';
+									}
+									echo'</span>
 								</div>
 							</div>';
 							if($row['discount']!=0){
@@ -413,22 +450,7 @@ echo'<!-- Modal -->
 							<div class="size">
 								<div class="row">
 									<div class="col-lg-4 col-12">
-										<a href="#" class="title">Category: '.$row['category'].'</a>
-										<!------<select>
-											<option selected="selected">s</option>
-											<option>m</option>
-											<option>l</option>
-											<option>xl</option>
-										</select>----!>
-									</div>
-									<div class="col-lg-4 col-12">
-										<a href="#" class="title">Brand: '.$row['brand'].'</a>
-										<!---	<select>
-											<option selected="selected">orange</option>
-											<option>purple</option>
-											<option>black</option>
-											<option>pink</option>
-										</select>----!>
+										<a href="#" class="title">Category: '.$row['category'].'</a>										
 									</div>
 									<div class="col-lg-4 col-12">
 										<a class="title">Code: '.$row['code'].'</a>																		
@@ -443,7 +465,8 @@ echo'<!-- Modal -->
 											<i class="ti-minus"></i>
 										</button>
 									</div>
-									<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value="1">
+									<input type="text" hidden id="quanitymaxofproduct'.$row['code'].'" value="'.$row['quantity_stock'].'">
+									<input type="text" id="amountOfproduct'.$row['code'].'" name="quant[1]" class="input-number" data-min="1" data-max="'.$row['quantity_stock'].'" value="1">
 									<div class="button plus">
 										<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
 											<i class="ti-plus"></i>
@@ -452,19 +475,24 @@ echo'<!-- Modal -->
 								</div>
 								<!--/ End Input Order -->
 							</div>
-							<div class="add-to-cart">
-								<a href="#" id="cart'.$row['code'].'" class="btn">Add to cart</a>
-								<a href="#" id="wishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
-								<a href="#" id="compare'.$row['code'].'" class="btn min"><i class="fa fa-compress"></i></a>
+							<div class="add-to-cart">';
+								if(!$outOfStock){
+									echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to cart" id="fromModalcart'.$row['code'].'" class="btn"><i class="fas fa-cart-plus"></i></a>';
+								}								
+								echo'<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to favourite" id="fromModalwishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
+								<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to compare list" id="fromModalcompare'.$row['code'].'" class="btn min"><i class="ti-bar-chart-alt"></i></a>
 							</div>
 							<div class="default-social">
 								<h4 class="share-now">Share:</h4>
 								<ul>
-									<li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-									<li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-									<li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-									<li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
+								<li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+								<li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+								<li><a class="youtube" href="#"><i class="fab fa-pinterest-p"></i></a></li>
+								<li><a class="dribbble" href="#"><i class="fab fa-google-plus"></i></a></li>				
 								</ul>
+								<div  style="visibility:hidden;" id="fromModalResult'.$row['code'].'" class="alert" role="alert">
+  								
+								</div>
 							</div>
 						</div>
 					</div>
@@ -499,7 +527,7 @@ echo'<!-- Modal -->
 								<p class="text">Suspendisse massa leo, vestibulum cursus nulla sit amet, frungilla placerat lorem. Cars fermentum, sapien. </p>
 								<h1 class="price">Rs 70000 <s>Rs 100000</s></h1>
 								<div class="coming-time">
-									<div class="clearfix" data-countdown="2021/07/30"></div>
+									<div class="clearfix" data-countdown="2021/09/30"></div>
 								</div>
 							</div>
 						</div>	
@@ -591,8 +619,7 @@ echo'<!-- Modal -->
 
     <script src="js/jquery-migrate-3.0.0.js"></script>
 
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/popper.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>	
 	<!-- Popper JS -->
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>

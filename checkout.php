@@ -23,8 +23,7 @@ include('database/connect.php');
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
-	<!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+	<!-- Font Awesome -->    
 	<!-- Fancybox -->
 	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
 	<!-- Themify Icons -->
@@ -91,133 +90,204 @@ include('database/connect.php');
 					<div class="col-lg-8 col-12">
 						<div class="checkout-form">
 							<h2>Make Your Checkout Here</h2>
-							<p>Add Billing and Shipping Details</p>
-							<!-- Form -->
-							<form class="form" name="defaultaddress" method="post">
-								<div class="row">									
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>First Name<span>*</span></label>
-											<input type="text" id="billingfname" name="fname" placeholder="" required="required">
-										</div>
+							<?php
+							if(isset($_SESSION['id'])){
+								$userid = $_SESSION['id'];
+							}
+							else{
+								$userid = "notloggedin";
+							}
+							
+							$hasDefaultAddresses = "Select * from billing_info where user_id = '$userid' and active = 'Yes'";
+							$ExecutehasDefaultAddresses = mysqli_query($conn, $hasDefaultAddresses);
+							if(mysqli_num_rows($ExecutehasDefaultAddresses) > 0){
+								$getAddressDetails = mysqli_fetch_assoc($ExecutehasDefaultAddresses);
+								$hasAddresses = true;
+								echo'<p hidden id="newaddressbook">false</p>';
+								$sameShipping = $getAddressDetails['shipping_info'] == "Same" ? true : false;
+								echo '<p>You have set default billing and shipping details. See <a href="user/addressbook.php"><strong>Address Book</strong></a>.</p>';								
+								echo'<table class="table table-responsive table-hover">
+								<tr><th><i class="fas fa-user"></i> Name </th><td>'.$getAddressDetails['firstname'].' '.$getAddressDetails['lastname'].'</td></tr>
+								<tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$getAddressDetails['email_address'].'</td></tr>
+								<tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$getAddressDetails['phone_number'].'</td></tr>
+								<tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$getAddressDetails['address_one'].', '.$getAddressDetails['address_two'].', '.$getAddressDetails['postal_code'].'</td></tr>
+								<tr><th><i class="fas fa-flag"></i> Country </th><td>'.$getAddressDetails['country'].'&#160&#160<img src="img/flags/'.strtolower($getAddressDetails['country']).'.png"</td></tr>								                              
+								<tr><th><i class="fas fa-shipping-fast"></i> Shipping Detail </th><td>';
+								if($sameShipping){
+								  echo "Same as billing detail";
+							  }
+							  else{
+								  echo '<a data-bs-toggle="collapse" href="#showShipping'.$getAddressDetails['shipping_info'].'" role="button" aria-expanded="false" aria-controls="showShipping'.$getAddressDetails['shipping_info'].'" id="showShipping'.$getAddressDetails['info_id'].'" ><b>Expand more..</b></a>';
+							  }     							   
+								echo'</td></tr>                              
+								</table>';
+								if(!$sameShipping){
+									echo'<div class="collapse" id="showShipping'.$getAddressDetails['shipping_info'].'"> 
+									<table class="table table-responsive table-hover">';
+								  $shippingid = $getAddressDetails['shipping_info'];
+								  $getShippingDetail = "Select * from shipping_info where shipping_info_id = '$shippingid'";
+								  $getShippingDetailQuery = mysqli_query($conn, $getShippingDetail);
+								  while($getShippingDetailRows = mysqli_fetch_assoc($getShippingDetailQuery)){
+								  $shippingfullname = $getShippingDetailRows['fullname'];
+								  $shippingemail = $getShippingDetailRows['email_address'];
+								  $shippingphone = $getShippingDetailRows['phone_number'];
+								  $shippingcountry = $getShippingDetailRows['country'];
+								  $shippingaddressone = $getShippingDetailRows['address_one'];
+								  $shippingaddresstwo = $getShippingDetailRows['address_two'];
+								  $shippingpostalcode = $getShippingDetailRows['postal_code'];								  
+								}
+								  echo'<tr><th><i class="fas fa-user"></i> Name </th><td>'.$shippingfullname.'</td></tr>
+								  <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$shippingemail.'</td></tr>
+								  <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$shippingphone.'</td></tr>
+								  <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$shippingaddressone.', '.$shippingaddresstwo.', '.$shippingpostalcode.'</td></tr>
+								  <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$shippingcountry.'&#160&#160<img src="img/flags/'.strtolower($shippingcountry).'.png"</td></tr>								                                                                              
+								  </table>
 									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Last Name<span>*</span></label>
-											<input type="text" id="billinglname" name="lname" placeholder="" required="required">
+									';
+								}								
+							}
+							else{
+								$hasAddresses = false;
+								echo'<p hidden id="newaddressbook">true</p>';
+								if($userid != "notloggedin"){
+									echo '<p>You have not set default billing and shipping details. </br></br><label>Set these detail default for all orders ??</label>
+									<input type="checkbox" name="setdefault"> </p>';
+								}
+								else{
+									echo"<p>Add billing and shipping details.</p>";
+								}								
+								echo'	<!-- Form -->												
+								<form class="form" name="defaultaddress" method="post">
+									<div class="row">													
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>First Name<span>*</span></label>
+												<input type="text" id="billingfname" name="fname" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Email Address<span>*</span></label>
-											<input type="email" id="billingemail" name="email" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Last Name<span>*</span></label>
+												<input type="text" id="billinglname" name="lname" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Phone Number<span>*</span></label>
-											<input type="number" id="billingphone" name="number" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Email Address<span>*</span></label>
+												<input type="email" id="billingemail" name="email" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Country<span>&#160</span></label>
-											<img id="billingcountryflag" src="img/flags/np.png">
-											<select name="country_name" id="country">
-											<?php
-												$getCountries = "Select countries_iso_code, countries_name from countries";
-                                                $getCountriesQuery = mysqli_query($conn, $getCountries);
-                                                while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){                                                                                                   
-                                                        echo '<option'; if($getCountriesRows['countries_iso_code'] == "NP"){echo " selected";} echo' value='.$getCountriesRows['countries_iso_code'].'>'.$getCountriesRows['countries_name'].'</option>';                                                    
-                                                }
-												?>
-											</select>
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Phone Number<span>*</span></label>
+												<input type="number" id="billingphone" name="number" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Address Line 1<span>*</span></label>
-											<input type="text" id="billingaddressone" name="address" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Country<span>&#160</span></label>
+												<img id="billingcountryflag" src="img/flags/np.png">
+												<select name="country_name" id="country">';
+												
+													$getCountries = "Select countries_iso_code, countries_name from countries";
+													$getCountriesQuery = mysqli_query($conn, $getCountries);
+													while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){                                                                                                   
+															echo '<option'; if($getCountriesRows['countries_iso_code'] == "NP"){echo " selected";} echo' value='.$getCountriesRows['countries_iso_code'].'>'.$getCountriesRows['countries_name'].'</option>';                                                    
+													}
+													
+												echo'</select>
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Address Line 2<span>*</span></label>
-											<input type="text" id="billingaddresstwo" name="address" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Address Line 1<span>*</span></label>
+												<input type="text" id="billingaddressone" name="address" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Postal Code<span>*</span></label>
-											<input type="text" id="billingpostalcode" name="post" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Address Line 2<span>*</span></label>
+												<input type="text" id="billingaddresstwo" name="address" placeholder="" required="required">
+											</div>
 										</div>
-									</div>									
-									<div class="col-12">
-										<div class="form-group create-account">
-											<input id="cbox" type="checkbox">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Postal Code<span>*</span></label>
+												<input type="text" id="billingpostalcode" name="post" placeholder="" required="required">
+											</div>
+										</div>									
+										<div class="col-12">
+											<div class="form-group create-account">
 											<label>Different Shipping Details ?</label>
-										</div>
-									</div>		
-								</div>														
-								<div id="shippingInfo"  class="row">
-									<div style="margin:8px 0px;" class="col-lg-12 col-md-12 col-12">										
-											<h4>Add Shipping Details</h4>										
-									</div>	
+											<input data-bs-toggle="collapse" href="#shippingInfo" role="button" aria-expanded="false" aria-controls="shippingInfo" id="cbox" type="checkbox">
+												
+											</div>
+										</div>		
+									</div>														
+									
+									<div id="shippingInfo" class="collapse">
+									<div class="row">
 									<div class="col-lg-12 col-md-12 col-12">
-										<div class="form-group">
-											<label>Full Name<span>*</span></label>
-											<input type="text" id="shippingname" name="shippingname" placeholder="" required="required">
+									<h5 style="text-align:center";>Add Shipping Details</h5>
+									</div>									
+										<div class="col-lg-12 col-md-12 col-12">
+											<div class="form-group">
+												<label>Full Name<span>*</span></label>
+												<input type="text" id="shippingname" name="shippingname" placeholder="" required="required">
+											</div>
+										</div>				
+										<div class="col-lg-6 col-md-6 col-12">			
+										<div class="form-group">							
+										<label>Email Address<span>*</span></label>
+												<input type="text"id="shippingemail" name="shippingemail" placeholder="" required="required">			
+										</div>							
+										</div>															
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Phone Number<span>*</span></label>
+												<input type="number"id="shippingphone" name="shippingnumber" placeholder="" required="required">
+											</div>
 										</div>
-									</div>				
-									<div class="col-lg-6 col-md-6 col-12">			
-									<div class="form-group">							
-									<label>Email Address<span>*</span></label>
-											<input type="text"id="shippingemail" name="shippingemail" placeholder="" required="required">			
-									</div>							
-									</div>															
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Phone Number<span>*</span></label>
-											<input type="number"id="shippingphone" name="shippingnumber" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Country<span>&#160</span></label>
+												<img id="shippingcountryflag" src="img/flags/np.png">
+												<select name="shippingcountry_name" id="shippingcountry">';
+													
+													$getCountries = "Select countries_iso_code, countries_name from countries";
+													$getCountriesQuery = mysqli_query($conn, $getCountries);
+													while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){                                                                                                   
+															echo '<option'; if($getCountriesRows['countries_iso_code'] == "NP"){echo " selected";} echo' value='.$getCountriesRows['countries_iso_code'].'>'.$getCountriesRows['countries_name'].'</option>';                                                    
+													}
+													
+												echo'</select>
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Country<span>&#160</span></label>
-											<img id="shippingcountryflag" src="img/flags/np.png">
-											<select name="shippingcountry_name" id="shippingcountry">
-												<?php
-												$getCountries = "Select countries_iso_code, countries_name from countries";
-                                                $getCountriesQuery = mysqli_query($conn, $getCountries);
-                                                while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){                                                                                                   
-                                                        echo '<option'; if($getCountriesRows['countries_iso_code'] == "NP"){echo " selected";} echo' value='.$getCountriesRows['countries_iso_code'].'>'.$getCountriesRows['countries_name'].'</option>';                                                    
-                                                }
-												?>
-											</select>
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Address Line 1<span>*</span></label>
+												<input type="text" id="shippingaddressone" name="shippingaddressone" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Address Line 1<span>*</span></label>
-											<input type="text" id="shippingaddressone" name="shippingaddressone" placeholder="" required="required">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Address Line 2<span>*</span></label>
+												<input type="text" id="shippingaddresstwo" name="shippingaddresstwo" placeholder="" required="required">
+											</div>
 										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Address Line 2<span>*</span></label>
-											<input type="text" id="shippingaddresstwo" name="shippingaddresstwo" placeholder="" required="required">
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label>Postal Code<span>*</span></label>
-											<input type="text" id="shippingpostalcode" name="shippingpostalcode" placeholder="" required="required">
-										</div>
-									</div>																	
-								</div>								
-								<input type="submit" hidden name="submitDetail" id="submitButton">	
-							</form>
-							<!--/ End Form -->
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Postal Code<span>*</span></label>
+												<input type="text" id="shippingpostalcode" name="shippingpostalcode" placeholder="" required="required">
+											</div>
+										</div>																	
+									</div>		
+									</div> 														
+									<input type="submit" hidden name="submitDetail" id="submitButton">	
+								</form>							
+								<!--/ End Form -->';						
+							}
+							?>																							
 						</div>
 					</div>
 					<div class="col-lg-4 col-12">
@@ -290,7 +360,7 @@ include('database/connect.php');
 							if(!$no_item){
 								echo'<div class="single-widget get-button">
 								<div class="content">
-									<div class="button">
+									<div class="button">										
 										<p style="cursor:default;" id="placeorder" class="btn">place order</p>
 									</div>
 								</div>
@@ -298,7 +368,7 @@ include('database/connect.php');
 							}
 							?>							
 							<!--/ End Button Widget -->
-						</div>
+						</div>						
 					</div>
 				</div>
 				
@@ -355,18 +425,14 @@ include('database/connect.php');
 <button type="button" id="triggerConfirmation" style="display:none;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
   Launch static backdrop modal
 </button>
-
 <!-- Modal -->
 <div  class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div style="padding:0px; margin:0px;" class="modal-header">
-        <h5 class="modal-title" style="" id="staticBackdropLabel">Please confirm product and their quantity for your order.</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">     
+      <div class="modal-body shopping-cart">
 		  <div class="cart-data-in-checkout">
-	  <table class="table shopping-summery">
+			  <h5 class="modal-title">Please confirm product and their quantity for your order.</h5>
+	  <table class="table table-responsive shopping-summery">
 						<thead>
 							<tr class="main-hading">
 								<th>PRODUCT</th>
@@ -374,7 +440,7 @@ include('database/connect.php');
 								<th class="text-center">UNIT PRICE</th>
 								<th class="text-center">QUANTITY</th>
 								<th class="text-center">TOTAL</th> 
-								<th class="text-center"><i class="ti-trash remove-icon"></i></th>
+								<th class="text-center">REMOVE</i></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -425,15 +491,13 @@ include('database/connect.php');
 										<button style="background:transparent !important;color:black;" type="button" class="btn btn-number" data-type="plus" data-field="quant['.$row['productcartid'].']">
 											<i class="ti-plus"></i>
 										</button>
-									</div>
-									<p style="margin-top:4px; display:none;" id="cartError'.$row['productcartid'].'">Error</p>
+									</div>									
 								</div>
+								<p style="margin-top:4px; display:none;" id="cartError'.$row['productcartid'].'">Error</p>
 								<!--/ End Input Order -->
 							</td>
 							<td class="total-amount" data-title="Total"><span id="subtotal'.$row['productcartid'].'">Rs '.$subtotal.'</span></td>
-							<td class="action" data-title="Remove"><p style="cursor:pointer;" id="remove'.$row['productcartid'].'"><i class="ti-trash remove-icon"></i></p></td>
-							<td>
-							</td>
+							<td class="action" data-title="Remove"><p style="cursor:pointer;" id="remove'.$row['productcartid'].'"><i class="ti-trash remove-icon"></i></p></td>							
 						</tr>';
 						}
 						?>												
@@ -442,7 +506,7 @@ include('database/connect.php');
 	  </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Wait</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBox">Wait</button>
         <button type="button" id="confirmOrder" class="btn btn-primary">Looks good</button>
       </div>
     </div>
@@ -482,10 +546,9 @@ include('database/connect.php');
     <script src="js/jquery-migrate-3.0.0.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
 	<!-- Popper JS -->
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 	<!-- Color JS -->
-	<script src="js/colors.js"></script>
+	
 	<!-- Slicknav JS -->
 	<script src="js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->
@@ -512,5 +575,9 @@ include('database/connect.php');
 	<script src="js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="js/active.js"></script>
+	<!--custom page js -->
+	<script src="js/cart.js"></script>	
+	<script src="js/checkout.js"></script>
+						
 </body>
 </html>

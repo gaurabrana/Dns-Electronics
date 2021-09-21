@@ -39,8 +39,64 @@ $active = "address";
       ?>      
       <div class="content">
         <div class="container-fluid">
-                    <?php
-                    
+          <div class="row">
+            <div class="col-md-2">              
+                  <button data-toggle="collapse" href="#newAddress" role="button" aria-expanded="false" aria-controls="newAddress" class='btn btn-rose'><i class="fas fa-plus"></i> New Address Book               
+            </div>
+          </div>
+            <div class="row">            
+            <div class="col-md-12">
+              <div class="collapse" id="newAddress">
+              <div class="card">
+                <form>
+                <div class="row">
+                <div class="col-md-6">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Fill Billing Detail</h4>
+                </div>
+                <div class="card-body">                  
+                    <div class="row">
+                      <div class="col-md-6">
+                      <div class="form-group">
+                      <label class="bmd-label-floating">First Name</label>                      
+                      <input type="text" name ="billingfname" class="form-control" required>
+                      </div>
+                      </div>
+                      <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="bmd-label-floating">Last Name</label>
+                                        <input type="text" name ="billinglname" class="form-control" required>
+                                      </div>
+                                    </div>
+                    </div>                  
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Fill Shipping Detail</h4>
+                </div>
+                <div class="card-body">                  
+                    <div class="row">
+                      <div class="col-md-6">
+                      <div class="form-group">
+                      <label class="bmd-label-floating">First Name</label>                      
+                      <input type="text" name ="billingfname" class="form-control" required>
+                      </div>
+                      </div>
+                      <div class="col-md-6">
+
+                      </div>
+                    </div>                  
+                </div>
+                </div>
+                </div>
+                </form>             
+              </div>
+              </div>
+            </div>
+            <div class="col-md-6"></div>            
+          </div>
+                    <?php                    
                         $userid = $_SESSION['id'];
                     $sql = "Select * from billing_info where user_id = '$userid' order by active desc";
                     $result = mysqli_query($conn, $sql);
@@ -51,39 +107,66 @@ $active = "address";
                         $billingid = $row['info_id'];     
                           echo'<div class="row">
                           <div class="col-md-6">
-                            <div class="card">
-                              <div class="card-header card-header-primary">';
+                            <div class="card">';
                               if($isActive){
-                                echo'<h4 class="card-title">Your Current Billing Detail</h4>';
+                                echo'<div class="card-header card-header-primary"><h4 class="card-title">Your Current Billing Detail</h4>';
                               }
                               else{
-                                echo'<h4 class="card-title">Previous Billing Detail</h4>';
+                                echo'<div class="card-header card-header-success"><h4 class="card-title">Previous Billing Detail</h4>';
                               }
                                 
                                 echo'<p class="card-category"></p>
                               </div>
                               <div class="card-body">
                               <div class="row">  
-                              <div class="col-md-8">
-                              <ul style="list-style-type:none;">
-                              <li><i class="fas fa-user"></i> Name: '.$row['firstname'].' '.$row['lastname'].'</li>
-                              <li><i class="fas fa-envelope"></i> Email Address: '.$row['email_address'].'</li>
-                              <li><i class="fas fa-phone-alt"></i> Contact: '.$row['phone_number'].'</li>
-                              <li><i class="fas fa-street-view"></i> Address: '.$row['address_one'].', '.$row['address_two'].', '.$row['postal_code'].'</li>
-                              <li><i class="fas fa-flag"></i> Country: '.$row['country'].'<img src="../img/flags/'.$row['country'].'.png"></li>
-                              <li><i class="fas fa-calendar-alt"></i> Updated Date: '.$row['added_date'].'</li>';
+                              <div class="col-md-12">
+                              <table class="table table-responsive table-hover">
+                              <tr><th><i class="fas fa-user"></i> Name </th><td>'.$row['firstname'].' '.$row['lastname'].'</td></tr>
+                              <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$row['email_address'].'</td></tr>
+                              <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$row['phone_number'].'</td></tr>
+                              <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$row['address_one'].', '.$row['address_two'].', '.$row['postal_code'].'</td></tr>
+                              <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$row['country'].'&#160&#160<img src="../img/flags/'.strtolower($row['country']).'.png"</td></tr>
+                              <tr><th><i class="fas fa-calendar-alt"></i> Updated Date </th><td>'.$row['added_date'].'</td></tr>                              
+                              <tr><th><i class="fas fa-shipping-fast"></i> Shipping Detail </th><td>';
                               if($sameShipping){
-                                  echo'<li><i class="fas fa-shipping-fast"></i> Shipping Detail: Same as billing detail</li>';
-                              }
-                              else{
-                                  echo'<li><i class="fas fa-shipping-fast"></i> Shipping Detail: '.$row['shipping_info'].'</li>';
-                              }                        
-                              echo'                                      
-                              </ul>
+                                echo "Same as billing detail";
+                            }
+                            else{
+                                echo '<a data-toggle="collapse" href="#showShipping'.$row['shipping_info'].'" role="button" aria-expanded="false" aria-controls="showShipping'.$row['shipping_info'].'" id="showShipping'.$row['info_id'].'" >Expand more..</a>';
+                            }     
+                             
+                              echo'</td></tr>                              
+                              </table>                              
                               </div>               
-                              <div class="col-md-4">                                                    
+                              <div class="col-md-12">  
+                              <div class="collapse" id="showShipping'.$row['shipping_info'].'"> 
+                              <h5>Shipping Details</h5>
+                              <table class="table table-responsive table-hover">';
+                              $shippingid = $row['shipping_info'];
+                              $getShippingDetail = "Select * from shipping_info where shipping_info_id = '$shippingid'";
+                              $getShippingDetailQuery = mysqli_query($conn, $getShippingDetail);
+                              while($getShippingDetailRows = mysqli_fetch_assoc($getShippingDetailQuery)){
+                              $shippingfullname = $getShippingDetailRows['fullname'];
+                              $shippingemail = $getShippingDetailRows['email_address'];
+                              $shippingphone = $getShippingDetailRows['phone_number'];
+                              $shippingcountry = $getShippingDetailRows['country'];
+                              $shippingaddressone = $getShippingDetailRows['address_one'];
+                              $shippingaddresstwo = $getShippingDetailRows['address_two'];
+                              $shippingpostalcode = $getShippingDetailRows['postal_code'];
+                              $shippingdate = $getShippingDetailRows['added_date'];
+                            }
+                              echo'<tr><th><i class="fas fa-user"></i> Name </th><td>'.$shippingfullname.'</td></tr>
+                              <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$shippingemail.'</td></tr>
+                              <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$shippingphone.'</td></tr>
+                              <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$shippingaddressone.', '.$shippingaddresstwo.', '.$shippingpostalcode.'</td></tr>
+                              <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$shippingcountry.'&#160&#160<img src="../img/flags/'.strtolower($shippingcountry).'.png"</td></tr>
+                              <tr><th><i class="fas fa-calendar-alt"></i> Updated Date </th><td>'.$shippingdate.'</td></tr>                                                                                   
+                              </table>
+                              </div>
+                              </div>
+                              <div class="col-md-12">                                                    
                               <a data-toggle="collapse" href="#changeDetails'.$row['info_id'].'" role="button" aria-expanded="false" aria-controls="changeDetails'.$row['info_id'].'" id="updatebillingdetail'.$row['info_id'].'" class="btn btn-success text-light">Update</a>                            
-                              <a id="deletebillingdetail'.$row['info_id'].'" class="btn btn-danger text-light">Delete</a>';
+                              <a id="deletebillingdetail'.$row['info_id'].'" class="btn btn-info text-light deletebilling">Delete</a>';
                               if(!$isActive){
                                 echo'<a id="statusbillingdetail'.$row['info_id'].'" class="btn btn-inverse text-light">Set Active</a>';
                               }      
@@ -95,24 +178,30 @@ $active = "address";
                                                    
                           <div class="col-md-6">
                           <div class="collapse" id="changeDetails'.$row['info_id'].'"> 
-                            <div class="card">
-                              <div class="card-header card-header-primary">
-                                <h4 class="card-title">Update Billing Detail</h4>
+                            <div class="card">';
+                            if($isActive){
+                              echo'<div class="card-header card-header-primary">';
+                            }
+                            else{
+                              echo'<div class="card-header card-header-success">';
+                            }
+                                echo'<h4 class="card-title">Update Billing Detail</h4>
                                 <p class="card-category"></p>
                               </div>
                               <div class="card-body">
-                                <form>                                                                                                              
+                                <form action="updateaddressbook.php" method="POST">                                                                                                                                              
                                   <div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label class="bmd-label-floating">First Name</label>
-                                        <input type="text" class="form-control" value="'.$row['firstname'].'">
+                                        <input type="text" name="billingid" hidden class="form-control" value="'.$billingid.'">                                        
+                                        <input type="text" name ="billingfname" class="form-control" required value="'.$row['firstname'].'">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label class="bmd-label-floating">Last Name</label>
-                                        <input type="text" class="form-control" value="'.$row['lastname'].'">
+                                        <input type="text" name ="billinglname" class="form-control" required value="'.$row['lastname'].'">
                                       </div>
                                     </div>
                                   </div>                    
@@ -120,37 +209,43 @@ $active = "address";
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label class="bmd-label-floating">Email Address</label>                                        
-                                        <input type="text" class="form-control" value="'.$row['email_address'].'">
+                                        <input type="text" name ="billingemail" class="form-control" required value="'.$row['email_address'].'">
                                       </div>
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                         <label class="bmd-label-floating">Phone Number</label>            
-                                        <input type="text" class="form-control" value="'.$row['phone_number'].'">                            
+                                        <input type="text" name ="billingphone" class="form-control" required value="'.$row['phone_number'].'">                            
                                       </div>
                                     </div>                            
                                   </div>
                                   <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                       <div class="form-group">
                                       <label class="bmd-label-floating">Address One</label>
-                                      <input type="text" class="form-control" value="'.$row['address_one'].'">
+                                      <input type="text" name ="billingaddressone" class="form-control" required value="'.$row['address_one'].'">
                                       </div>
                                     </div>          
                                     <div class="col-md-6">
                                     <div class="form-group">
                                     <label class="bmd-label-floating">Address Two</label>
-                                    <input type="text" class="form-control" value="'.$row['address_two'].'">
+                                    <input type="text" name ="billingaddresstwo" class="form-control" required value="'.$row['address_two'].'">
                                     </div>
-                                  </div>                    
+                                  </div>        
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label class="bmd-label-floating">Postal Code</label>
+                                    <input type="text" name ="billingpostalcode" class="form-control" required value="'.$row['postal_code'].'">
+                                    </div>
+                                  </div>            
                                   </div>         
                                   <div class="row">
-                                  <div class="col-md-8">
+                                  <div class="col-md-6">
                                 <div class="form-group">
                                   <label class="bmd-label-floating">Country</label>
-                                  <img id ="countryflag">                                  
-                                  <select name="country_name" class="form-control" id="country">';
-												$getCountries = "Select countries_iso_code, countries_name from countries";
+                                  <img id ="countryflag'.$billingid.'" src="../img/flags/'.strtolower($row['country']).'.png">                                  
+                                  <select name="country_name" class="form-control billingcountry" id="country'.$billingid.'">';
+												          $getCountries = "Select countries_iso_code, countries_name from countries";
                                                 $getCountriesQuery = mysqli_query($conn, $getCountries);
                                                 while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){
                                                    
@@ -168,37 +263,25 @@ $active = "address";
                               <div class="col-md-12">
                                 <div class="form-group">                                  
                                 <label class="bmd-label-floating">Same Shipping Detail ??</label>
-                                <input data-toggle="collapse" href="#showShippingDetail'.$row['info_id'].'" role="button" aria-expanded="'; if(!$sameShipping){echo "true";} else { echo "false";} echo'" aria-controls="showShippingDetail'.$row['info_id'].'" type="checkbox" id="sameshipping"'; if($sameShipping){echo "checked ";} echo'name="sameshipping" value="same">                                  
+                                <input data-toggle="collapse" href="#showShippingDetail'.$row['info_id'].'" role="button" class="checksameshipping" aria-expanded="'; if(!$sameShipping){echo "true";} else { echo "false";} echo'" aria-controls="showShippingDetail'.$row['info_id'].'" type="checkbox" id="sameshipping'.$billingid.'"'; if($sameShipping){echo "checked ";} echo'name="sameshipping" value="same">                                  
                                 </div>
                               </div>                             
                                   </div>
                                   <div class="collapse';if(!$sameShipping){echo " show";}echo'" id="showShippingDetail'.$row['info_id'].'">
-                                  <div id="containsShippingDetail">';                                  
-                                  $shippingid = $row['shipping_info'];
-                                  $getShippingDetail = "Select * from shipping_info where shipping_info_id = '$shippingid'";
-                                  $getShippingDetailQuery = mysqli_query($conn, $getShippingDetail);
-                                  while($getShippingDetailRows = mysqli_fetch_assoc($getShippingDetailQuery)){
-                                  $shippingfullname = $getShippingDetailRows['fullname'];
-                                  $shippingemail = $getShippingDetailRows['email_address'];
-                                  $shippingphone = $getShippingDetailRows['phone_number'];
-                                  $shippingcountry = $getShippingDetailRows['country'];
-                                  $shippingaddressone = $getShippingDetailRows['address_one'];
-                                  $shippingaddresstwo = $getShippingDetailRows['address_two'];
-                                  $shippingpostalcode = $getShippingDetailRows['postal_code'];
-                                  $shippingdate = $getShippingDetailRows['added_date'];
-                                }
+                                  <div id="containsShippingDetail'.$billingid.'">';                                                                   
                                     echo'<div class="row">
                                     <div class="col-md-6">
                                       <div class="form-group">
                                       <label class="bmd-label-floating">Fullname</label>
-                                      <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingfullname\"";} else{echo "value=\"\"";}
+                                      <input type="text" name="shippingid" hidden class="form-control" value="'.$shippingid.'">
+                                      <input type="text" name ="shippingfullname" class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingfullname\"";} else{echo "value=\"\"";}
                                       echo'>
                                       </div>
                                     </div>  
                                     <div class="col-md-6">
                                     <div class="form-group">
                                     <label class="bmd-label-floating">Email Address</label>
-                                    <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingemail\"";} else{echo "value=\"\"";}
+                                    <input type="text" name ="shippingemail" class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingemail\"";} else{echo "value=\"\"";}
                                       echo'>
                                     </div>
                                   </div>                                                              
@@ -207,14 +290,14 @@ $active = "address";
                                     <div class="col-md-6">
                                       <div class="form-group">
                                       <label class="bmd-label-floating">Phone Number</label>
-                                      <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingphone\"";} else{echo "value=\"\"";}
+                                      <input type="text" name ="shippingphone" class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingphone\"";} else{echo "value=\"\"";}
                                       echo'>
                                       </div>
                                     </div>          
                                     <div class="col-md-6">
                                     <div class="form-group">
                                     <label class="bmd-label-floating">Address One</label>
-                                    <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingaddressone\"";} else{echo "value=\"\"";}
+                                    <input type="text" name ="shippingaddressone" class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingaddressone\"";} else{echo "value=\"\"";}
                                     echo'>
                                     </div>
                                   </div>           
@@ -223,14 +306,14 @@ $active = "address";
                                     <div class="col-md-6">
                                     <div class="form-group">
                                     <label class="bmd-label-floating">Address Two</label>
-                                    <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingaddresstwo\"";} else{echo "value=\"\"";}
+                                    <input type="text" name ="shippingaddresstwo" class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingaddresstwo\"";} else{echo "value=\"\"";}
                                       echo'>
                                     </div>
                                   </div>     
                                   <div class="col-md-6">
                                     <div class="form-group">
                                     <label class="bmd-label-floating">Postal Code</label>
-                                    <input type="text" class="form-control"';if(!$sameShipping){echo "value=\"$shippingpostalcode\"";} else{echo "value=\"\"";}
+                                    <input type="text"  name ="shippingpostalcode"   class="form-control" required ';if(!$sameShipping){echo "value=\"$shippingpostalcode\"";} else{echo "value=\"\"";}
                                       echo'>
                                     </div>
                                   </div>                
@@ -239,19 +322,36 @@ $active = "address";
                                   <div class="col-md-12">
                                   <div class="form-group">
                                   <label class="bmd-label-floating">Country</label>
-                                  <img id ="countryflag">                                  
-                              <select name="country_name" class="form-control" id="country">';
+                                  <img id ="shippingcountryflag'.$billingid.'"'; 
+                                  if($sameShipping){
+                                      echo 'src="../img/flags/'.strtolower($row['country']).'.png"';
+                                  }else{ 
+                                    echo 'src="../img/flags/'.strtolower($shippingcountry).'.png"';
+                                  } 
+                                  echo'>                                  
+                              <select name="shipping_country_name" class="form-control shippingcountry" id="shippingcountry'.$billingid.'">';
                                             $getCountries = "Select countries_iso_code, countries_name from countries";
                                             $getCountriesQuery = mysqli_query($conn, $getCountries);
-                                            while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){
-                                               
+                                            while($getCountriesRows = mysqli_fetch_assoc($getCountriesQuery)){  
+                                              if($sameShipping){
                                                 if($row['country'] == $getCountriesRows['countries_iso_code']){
                                                     
-                                                    echo '<option selected value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
-                                                }
-                                                else{
-                                                    echo '<option value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
-                                                }
+                                                  echo '<option selected value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
+                                              }
+                                              else{
+                                                  echo '<option value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
+                                              }
+                                              }
+                                              else{
+                                                if($shippingcountry == $getCountriesRows['countries_iso_code']){
+                                                    
+                                                  echo '<option selected value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
+                                              }
+                                              else{
+                                                  echo '<option value='.$getCountriesRows['countries_iso_code'].'>&#160&#160'.$getCountriesRows['countries_name'].'</option>';
+                                              }
+                                              }
+                                                
                                             }
                                         echo'</select>
                                   </div>
@@ -259,7 +359,7 @@ $active = "address";
                                   </div>                                                       
                                     </div>
                                     </div> 
-                                  <button type="submit" class="btn btn-primary pull-right">Update</button>
+                                  <button type="submit" name="submit" class="btn btn-primary pull-right">Update</button>
                                   <div class="clearfix"></div>
                                 </form>
                               </div>

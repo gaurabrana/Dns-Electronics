@@ -22,7 +22,7 @@
     <!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    
     <!-- Fancybox -->
     <link rel="stylesheet" href="css/jquery.fancybox.min.css">
     <!-- Themify Icons -->

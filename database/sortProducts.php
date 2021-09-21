@@ -69,136 +69,166 @@ if(isset($_POST['sortType']) && isset($_POST['currentQuery'])){
     
 }
 $result = mysqli_query($conn, $query);
+$result1 = mysqli_query($conn, $query);
 if(mysqli_num_rows($result)>0){
-    $output = "";
+    $data = "";	
     while($row = mysqli_fetch_assoc($result)){        		
-        $output .= '<!-- Modal -->
-							<div class="modal fade" id="modalbox'.$row['code'].'" tabindex="-1" role="dialog">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span class="ti-close" aria-hidden="true"></span></button>
+        $data .= '<!-- Modal for '.$row['code'].'-->
+		<div class="modal fade" id="modalbox'.$row['code'].'" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span class="ti-close" aria-hidden="true"></span></button>
+					</div>
+					<div class="modal-body">
+						<div class="row no-gutters">
+							<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+								<!-- Product Slider -->
+									<div class="product-gallery">
+										<div class="quickview-slider-active">
+											<div class="single-slider">
+												<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
 											</div>
-											<div class="modal-body">
-												<div class="row no-gutters">
-												<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-												<!-- Product Slider -->
-													<div class="product-gallery">
-														<div class="quickview-slider-active owl-carousel owl-theme owl-loaded">
-															<div class="single-slider">
-																<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-															</div>
-															<div class="single-slider">
-																<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-															</div>
-															<div class="single-slider">
-																<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-															</div>
-															<div class="single-slider">
-																<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-															</div>
-														</div>
-													</div>
-														<!-- End Product slider -->
-													</div>
-													<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-														<div class="quickview-content">
-														<h2>'.$row['name'].'</h2>
-															<div class="quickview-ratting-review">
-																<div class="quickview-ratting-wrap">
-																	<div class="quickview-ratting">
-																		<i class="yellow fa fa-star"></i>
-																		<i class="yellow fa fa-star"></i>
-																		<i class="yellow fa fa-star"></i>
-																		<i class="yellow fa fa-star"></i>
-																		<i class="fa fa-star"></i>
-																	</div>
-																	<a href="#"> (1 customer review)</a>
-																</div>
-																<div class="quickview-stock">
-																	<span><i class="fa fa-check-circle-o"></i> in stock</span>
-																</div>
-															</div>';
-															if($row['discount']!=0){
-																$updatedPrice = $row['price'] - $row['discount'];
-																$output.='<h3>Rs <span style="color:#ed1c24; text-decoration: line-through;">'.$row['price'].'</span> '.$updatedPrice.'</h3>';								
-															}
-															else{
-																$updatedPrice = $row['price'];	
-																$output.='<h3>Rs'.$updatedPrice.'</h3>';							
-															}																														
-															$output .= '<div class="quickview-peragraph">';
-															$description = explode('.', $row['description']);								
-															foreach($description as $var){
-															$output .= '<li>'.$var.'</li>';
-															}	
-															$output .= '</div>
-															<div class="size">
-																<div class="row">
-																<div class="col-lg-4 col-12">
-																<a href="#" class="title">Category: '.$row['category'].'</a>
-																<!------<select>
-																	<option selected="selected">s</option>
-																	<option>m</option>
-																	<option>l</option>
-																	<option>xl</option>
-																</select>----!>
-															</div>
-															<div class="col-lg-4 col-12">
-																<a href="#" class="title">Brand: '.$row['brand'].'</a>
-																<!---	<select>
-																	<option selected="selected">orange</option>
-																	<option>purple</option>
-																	<option>black</option>
-																	<option>pink</option>
-																</select>----!>
-															</div>
-															<div class="col-lg-4 col-12">
-																<a class="title">Code: '.$row['code'].'</a>																		
-															</div>
-																</div>
-															</div>
-															<div class="quantity">
-																<!-- Input Order -->
-																<div class="input-group">
-																	<div class="button minus">
-																		<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-																			<i class="ti-minus"></i>
-																		</button>
-																	</div>
-																	<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value="1">
-																	<div class="button plus">
-																		<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-																			<i class="ti-plus"></i>
-																		</button>
-																	</div>
-																</div>
-																<!--/ End Input Order -->
-															</div>
-															<div class="add-to-cart">
-															<a href="#" id="cart'.$row['code'].'" class="btn">Add to cart</a>
-															<a href="#" id="wishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
-															<a href="#" id="compare'.$row['code'].'" class="btn min"><i class="fa fa-compress"></i></a>
-															</div>
-															<div class="default-social">
-																<h4 class="share-now">Share:</h4>
-																<ul>
-																	<li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-																	<li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-																	<li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
-																	<li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
-																</ul>
-															</div>
-														</div>
-													</div>
-												</div>
+											<div class="single-slider">
+												<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+											</div>
+											<div class="single-slider">
+												<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+											</div>
+											<div class="single-slider">
+												<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
 											</div>
 										</div>
 									</div>
+								<!-- End Product slider -->
+							</div>
+							<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+								<div class="quickview-content">
+									<h2>'.$row['name'].'</h2>
+									<div class="quickview-ratting-review">
+										<div class="quickview-ratting-wrap">
+											<div class="quickview-ratting">';
+											$product_code = $row['code'];
+											$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+											$executegetRating = mysqli_query($conn, $getRating);									
+											$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+											$totalRating =  $getRatingDetail['rating'];								
+											$totalUsers = $getRatingDetail['totalratingsgiven'];
+											if($totalRating!=0)	{
+												$whole = (int) $totalRating;
+												$frac  = $totalRating - (int) $totalRating;
+												for($i=1;$i<6;$i++){
+													if($i<=$whole){										
+														$data .='<i class="yellow fa fa-star"></i>';																														
+													}									
+													else{		
+														if($i==($whole+1)){
+															if($frac!=0){
+																$data .='<i class="yellow fa fa-star-half-alt"></i>';
+															}
+															else{
+																$data .='<i class="fa fa-star"></i>';
+															}	
+														}
+														else{
+															$data .='<i class="fa fa-star"></i>';
+														}																																																																																								
+													}
+												}	
+											}															
+											$data .='</div>';
+											if($totalRating!=0){
+												$data .= '<a href="#"> ('.$totalUsers.' customer review)</a>';
+											}
+											else{
+												$data .= 'No reviews yet';
+											}									
+										$data .='</div>
+										<div class="quickview-stock">';									
+											if($row['quantity_stock'] > 0){
+												$outOfStock = false;
+												$data .='<span><i class="far fa-check-circle"></i>in stock ('.$row['quantity_stock'].')';
+											}
+											else{
+		
+												$outOfStock = true;
+												$data .='<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK';
+											}
+											$data .='</span>
+										</div>
+									</div>';
+									if($row['discount']!=0){
+										$updatedPrice = $row['price'] - $row['discount'];
+										$data .='<h3>Rs <span style="color:#ed1c24; text-decoration: line-through;">'.$row['price'].'</span> '.$updatedPrice.'</h3>';								
+									}
+									else{
+										$updatedPrice = $row['price'];	
+										$data .='<h3>Rs'.$updatedPrice.'</h3>';							
+									}																														
+									$data .='<div class="quickview-peragraph">';															
+									$description = explode('.', $row['description']);								
+									foreach($description as $var){
+									$data .= '<li>'.$var.'</li>';
+									}	
+									
+									$data .='</div>
+									<div class="size">
+										<div class="row">
+											<div class="col-lg-4 col-12">
+												<a href="#" class="title">Category: '.$row['category'].'</a>										
+											</div>
+											<div class="col-lg-4 col-12">
+												<a class="title">Code: '.$row['code'].'</a>																		
+											</div>
+										</div>
+									</div>
+									<div class="quantity">
+										<!-- Input Order -->
+										<div class="input-group">
+											<div class="button minus">
+												<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+													<i class="ti-minus"></i>
+												</button>
+											</div>
+											<input type="text" hidden id="quanitymaxofproduct'.$row['code'].'" value="'.$row['quantity_stock'].'">
+											<input type="text" id="amountOfproduct'.$row['code'].'" name="quant[1]" class="input-number" data-min="1" data-max="'.$row['quantity_stock'].'" value="1">
+											<div class="button plus">
+												<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+													<i class="ti-plus"></i>
+												</button>
+											</div>
+										</div>
+										<!--/ End Input Order -->
+									</div>
+									<div class="add-to-cart">';
+										if(!$outOfStock){
+											$data .='<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to cart" id="fromModalcart'.$row['code'].'" class="btn"><i class="fas fa-cart-plus"></i></a>';
+										}								
+										$data .='<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to favourite" id="fromModalwishlist'.$row['code'].'" class="btn min"><i class="ti-heart"></i></a>
+										<a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to compare list" id="fromModalcompare'.$row['code'].'" class="btn min"><i class="ti-bar-chart-alt"></i></a>
+									</div>
+									<div class="default-social">
+										<h4 class="share-now">Share:</h4>
+										<ul>
+										<li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+										<li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+										<li><a class="youtube" href="#"><i class="fab fa-pinterest-p"></i></a></li>
+										<li><a class="dribbble" href="#"><i class="fab fa-google-plus"></i></a></li>				
+										</ul>
+										<div  style="visibility:hidden;" id="fromModalResult'.$row['code'].'" class="alert" role="alert">
+										  
+										</div>
+									</div>
 								</div>
-								<!-- Modal end -->';
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal end -->';
 								$discount = 0;
-								$output.='<div class="col-lg-4 col-md-6 col-12">
+								$data.='<div class="col-lg-4 col-md-6 col-12">
 								<div class="single-product">
 								<p style="visibility: hidden; font-size:16px;" id="result'.$row['code'].'">Result</p>
 									<div class="product-img">
@@ -208,7 +238,7 @@ if(mysqli_num_rows($result)>0){
 										</a>
 										<div class="button-head">
 										<div class="product-action">
-										<p data-bs-toggle="modal" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+										<p data-bs-toggle="modal" id="modalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
 										<p title="Favourite" id="favourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 										<p title="Compare" id="compare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 									</div>
@@ -220,19 +250,111 @@ if(mysqli_num_rows($result)>0){
 									<div class="product-content">
 										<h3><a href="product-details.html">'.$row['name'].'</a></h3>
 										<div class="product-price">';
-										$output.='<span style="margin-right:4px;">Rs</span>';
+										$data.='<span style="margin-right:4px;">Rs</span>';
 										if($row['discount']!=0){
 												$discount = $row['discount'];
-												$output .= '<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
+												$data .= '<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
 										}
-											$output .= '<span> '.($row['price']-$discount).'</span>
+											$data .= '<span> '.($row['price']-$discount).'</span>
 										</div>
 									</div>
 								</div>
-							</div>';
+							</div>';							
     }
-    echo $output;
+	$data .= "<!--EndGridSection-->";
+	while($row = mysqli_fetch_assoc($result1)){
+		$data .= '<!-- Start Single List -->
+							<div class="col-12">
+							<div class="row">
+								<div class="col-lg-4 col-md-6 col-sm-6">
+									<div class="single-product">
+										<div class="product-img">
+											<a href="singleproduct.php?i='.$row['code'].'">
+												<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+												<img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+												<p data-bs-toggle="modal" id="listmodalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+												<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
+												<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
+												</div>
+												<div class="product-action-2">
+												<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>
+												</div>
+											</div>
+										</div>												
+										<hr>
+										<div class="list-display-product-price">';
+										$data .= '<span style="margin-right:4px;">Rs</span>';
+									if($row['discount']!=0){
+											$discount = $row['discount'];
+											$data .='<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
+									}
+										$data .='<span style="font-size:large;"> '.($row['price']-$discount).'</span>
+										</div>	
+										<div style="display:none;" id="liststyleResult'.$row['code'].'" class="alert">				
+										sad								
+										</div>	
+									</div>
+								</div>
+								<div class="col-lg-8 col-md-6 col-12">
+									<div class="list-content">
+										<div class="product-content">													
+											<h4 class="title"><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h4>
+											<div class="review-inner">
+												<div class="ratings">';
+												$product_code = $row['code'];
+												$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
+												$executegetRating = mysqli_query($conn, $getRating);									
+												$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
+												$totalRating =  $getRatingDetail['rating'];								
+												$totalUsers = $getRatingDetail['totalratingsgiven'];
+												if($totalRating!=0)	{
+													$whole = (int) $totalRating;
+													$frac  = $totalRating - (int) $totalRating;
+													for($i=1;$i<6;$i++){
+														if($i<=$whole){										
+															$data .='<i class="yellow fa fa-star"></i>';																														
+														}									
+														else{		
+															if($i==($whole+1)){
+																if($frac!=0){
+																	$data .='<i class="yellow fa fa-star-half-alt"></i>';
+																}
+																else{
+																	$data .='<i class="fa fa-star"></i>';
+																}	
+															}
+															else{
+																$data .='<i class="fa fa-star"></i>';
+															}																																																																																								
+														}
+													}	
+												}																													
+												if($totalRating!=0){
+													$data .= '<a href="#"> ('.$totalUsers.' customer review)</a>';
+												}
+												else{
+													$data .= 'No reviews yet';
+												}																																					
+												$data .='</div>
+											</div>
+										</div>';
+										$descriptions = explode('.', $row['description']);
+										foreach($descriptions as $var){
+											$data .= '<li>'.$var.'</li>';
+											}													
+										$data .='																
+										<a style="color:white; margin-top:10px;" href="singleproduct.php?i='.$row['code'].'" class="btn">View more</a>																	
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End Single List -->';
+	}
+			echo $data;
 }
 else{
-
+echo "<h4 class='title'>No products found with this filters</h4>";
 }

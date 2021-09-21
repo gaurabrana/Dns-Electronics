@@ -85,7 +85,7 @@ p {
 #msform .action-button:focus {
     background-color: #ffffff;
     color: #ed1c24;
-    border:1px solid #ed1c24;
+    border: 1px solid #ed1c24;
 }
 
 #msform .action-button-previous {
@@ -105,7 +105,7 @@ p {
 #msform .action-button-previous:focus {
     background-color: #ffffff;
     color: #000000;
-    border:1px solid #000000;
+    border: 1px solid #000000;
 }
 
 .card {
@@ -221,16 +221,19 @@ p {
     object-fit: cover
 }
 
-.choose_gender{
+.choose_gender {
     display: none;
 }
-.hide{
+
+.hide {
     display: none !important;
 }
-#error-msg{
+
+#error-msg {
     color: #ed1c24;
 }
-#valid-msg{
+
+#valid-msg {
     color: #27AE60;
 }
 
@@ -239,8 +242,9 @@ p {
     text-align: center;
     position: relative;
     margin-bottom: 20px;
-    }
-    #imgArea {
+}
+
+#imgArea {
     display: inline-block;
     margin: 0 auto;
     width: 150px;
@@ -248,15 +252,17 @@ p {
     position: relative;
     background-color: #eee;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;    
-    }
-    #imgArea img {
+    font-size: 13px;
+}
+
+#imgArea img {
     outline: medium none;
     vertical-align: middle;
     width: 100%;
-    }
-    #imgChange {
-        background-color: #000000;    
+}
+
+#imgChange {
+    background-color: #000000;
     bottom: 0;
     color: #FFFFFF;
     display: block;
@@ -266,8 +272,9 @@ p {
     position: absolute;
     text-align: center;
     width: 100%;
-    }
-    #imgChange input[type="file"] {
+}
+
+#imgChange input[type="file"] {
     bottom: 0;
     cursor: pointer;
     height: 100%;
@@ -278,10 +285,12 @@ p {
     position: absolute;
     width: 100%;
     z-index: 0;
-    }
-    
-    /* Progressbar */
-    .progressBarImageUpload {
+}
+
+
+/* Progressbar */
+
+.progressBarImageUpload {
     background: none repeat scroll 0 0 #E0E0E0;
     left: 0;
     padding: 3px 0;
@@ -289,23 +298,23 @@ p {
     top: 50%;
     width: 100%;
     display: none;
-    }
-    .progressBarImageUpload .bar {
+}
+
+.progressBarImageUpload .bar {
     background-color: #ed1c24;
     width: 0%;
     height: 14px;
-    }
-    .progressBarImageUpload .percent {
+}
+
+.progressBarImageUpload .percent {
     display: inline-block;
     left: 0;
     position: absolute;
     text-align: center;
     top: 2px;
     width: 100%;
-    }
+}
 
-    .imageLoading{
-        width:auto;
-    }
-
-    
+.imageLoading {
+    width: auto;
+}

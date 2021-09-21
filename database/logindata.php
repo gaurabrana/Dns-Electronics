@@ -4,6 +4,7 @@ require("connect.php");
 if(isset($_POST['type'])){
 $email = strtolower($_POST['email']);
 $password = $_POST['password'];
+$rememberuser = $_POST['rememberuser'];
 
 //check if user exists
 $sql = "Select * from customer where email = '$email'";
@@ -16,7 +17,8 @@ if(mysqli_num_rows($result) > 0){
         $login_password = $row['password'];
         $login_id = $row['id'];
     }
-    if(md5($password) == $login_password){    
+    if(md5($password) == $login_password){          
+        
         $_SESSION['name'] = strtoupper($login_name);
         $_SESSION['email'] = $login_email;        
         $_SESSION['id'] = $login_id;
