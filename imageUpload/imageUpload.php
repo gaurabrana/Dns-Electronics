@@ -45,10 +45,7 @@ if (createThumb($path[0], $path[1], $fileType, IMAGE_MEDIUM_SIZE, IMAGE_MEDIUM_S
 if (createThumb($path[1], $path[2],"$desiredExt", IMAGE_SMALL_SIZE, IMAGE_SMALL_SIZE,IMAGE_SMALL_SIZE)) {
 $output['status']=TRUE;
 $output['image_medium']= $pathmedium;
-$output['image_small']= $pathsmall;
-if(isset($fileNameMediumFile)){    
-    $_SESSION['imagename'] = $fileNameMediumFile;
-    }
+$output['imageName'] = $fileNameMediumFile;
 }
 }
 }

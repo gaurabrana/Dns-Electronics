@@ -160,7 +160,7 @@ if(isset($_POST['defaultaddress'])){
                 $resultOrder = mysqli_query($conn,$orderSql);
                 if($resultOrder){
                     // insert product ids of the order
-                    $orderitemSql = "Select p.id, p.quantity_stock, p.price, p.discount, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
+                    $orderitemSql = "Select p.code, p.quantity_stock, p.price, p.discount, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
                     $resultOrderItem = mysqli_query($conn, $orderitemSql);                
                     if(mysqli_num_rows($resultOrderItem)>0){
                         while($row = mysqli_fetch_assoc($resultOrderItem)){
@@ -174,8 +174,8 @@ if(isset($_POST['defaultaddress'])){
                             }
                             $quantity = $row['quantity'];
                             $total = $updatePrice * $quantity;
-                            $productid = $row['id'];
-                            $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productid','$orderid','$updatePrice','$quantity','$total')";
+                            $productcode = $row['code'];
+                            $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productcode','$orderid','$updatePrice','$quantity','$total')";
                             $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);                        
                         }                    
                     }                                  

@@ -136,7 +136,7 @@ $active = "orders";
                                     <th>Quantity</th>
                                     </thead>
                                     <tbody>';                      
-                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_id = p.id and o.id = '$orderid' LIMIT 4";
+                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid' LIMIT 4";
                                     $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
                                     if(mysqli_num_rows($getOrderedProductsResult) > 0){
                                         while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){

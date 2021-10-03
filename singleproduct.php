@@ -566,16 +566,16 @@ include('database/connect.php');
 							<div class="product-gallery">
 								<div class="quickview-slider-active">
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 								</div>
 							</div>

@@ -467,7 +467,7 @@ include('database/connect.php');
 							$subtotal = $row['quantity'] * $updatedPrice;							
 							$total = $total + $subtotal;							
 							echo'<tr id="tablerow'.$row['productcartid'].'">
-							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#"></td>
+							<td class="image" data-title="No"><img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#"></td>
 							<td class="product-des" data-title="Description">
 								<p class="product-name"><a href="singleproduct.php?id='.$row['id'].'">'.$row['name'].'</a></p>
 								<p class="product-des">'.$description.'</p>

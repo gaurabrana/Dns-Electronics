@@ -47,8 +47,8 @@ else{
 }
 $username = strtolower($fname[0].rand(0,10000));
 
-if(isset($_SESSION['imagename'])){
-    $imageLink = $_SESSION['imagename'];
+if(isset($_POST['imageName'])){
+    $imageLink = $_POST['imageName'];
 }
 else{
     $imageLink = "notset";
@@ -61,25 +61,37 @@ $phone = $_POST['phone'];
 $password = md5($_POST['password']);
     $email = strtolower(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
     $name = mysqli_real_escape_string($conn, $name);
-    $email = mysqli_real_escape_string($conn, $email);
-    $exists = false;
+    $email = mysqli_real_escape_string($conn, $email);    
     $email_query = "Select * from customer where email = '$email'";    
     $email_result = mysqli_query($conn, $email_query);
-    if(mysqli_num_rows($email_result) > 0){
-        $exists = true;
-    }    
     $password = mysqli_real_escape_string($conn, $password);
-    if(!$exists){
+    if(mysqli_num_rows($email_result) == 0){
         $sql = "Insert into customer values('$newUserID',$userUniqueKey,'$username','$name','$password','$email','$phone','$age','$gender','$date','$imageLink','NO','NO', '$verificationkey')";
         $result = mysqli_query($conn, $sql);
         if($result){
             $sql1 = "Insert into cart values ('$newCartID','$newUserID')";
             $result1 = mysqli_query($conn, $sql1);
-            include('sendmail.php');        
-            $output['statusCode'] = 201;                        
+            include('sendmail.php');
+            if(isset($output['statusCode'])){
+                if($output['statusCode'] == 202){
+                    //error in email so revert data
+                    $deletesql = "Delete from customer where id = '$newUserID'";
+                    $deletecartsql = "Delete from cart where customer_id = '$newUserID'";
+                    $executedeletesql = mysqli_query($conn, $deletesql);
+                    $executedeletecartsql = mysqli_query($conn, $deletecartsql);
+                    if($executedeletecartsql && $executedeletesql){
+                        $output['statusCode'] = 203; 
+                    }
+                    else{
+                        $output['statusCode'] = 204; 
+                    }
+                }                
+            }
+            else{
+                $output['statusCode'] = 201; 
+            }                                               
         }
-        
-    }
+    }            
     else{
         $output['statusCode'] = 200;   
     }    

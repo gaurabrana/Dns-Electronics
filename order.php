@@ -258,14 +258,14 @@ else{
                             </div>                      
                             <div class="card-body pt-1">
                             <?php
-                    $getOrderProducts = "Select p.name,p.image_name,p.sold_by, p.code, p.category, o.price, o.quantity, o.total_price FROM order_item o, product p where o.order_id = '$orderid' and o.product_id = p.id";                            
+                    $getOrderProducts = "Select p.name,p.image_name,p.sold_by, p.code, p.category, o.price, o.quantity, o.total_price FROM order_item o, product p where o.order_id = '$orderid' and o.product_code = p.code";                            
                     $getOrderProductsResult = mysqli_query($conn, $getOrderProducts);
                     $subtotal = 0;
                     while($row = mysqli_fetch_assoc($getOrderProductsResult)){
                         $subtotal = $subtotal + $row['total_price'];
                         echo'<div class="row justify-content-between">
                         <div class="col-auto col-md-7">
-                            <div class="media flex-column flex-sm-row"> <img class=" img-fluid" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" width="62" height="62">
+                            <div class="media flex-column flex-sm-row"> <img class=" img-fluid" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" width="62" height="62">
                                 <div class="media-body my-auto">
                                     <div class="row ">
                                         <div class="col-md-12">

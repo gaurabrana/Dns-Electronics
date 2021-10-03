@@ -41,10 +41,10 @@ include("database/connect.php");
 									echo '<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
 										Login
 									</a>
-									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" ria-labelledby="loginbutton">
+									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="loginbutton">
 										<div class="form-fields">
 											<div class="loginform">										
-												<form id="login" method="" action="" role="form">
+												
 													<i class="ti-power-off"></i><label for="email">Email Address</label>
 													<input type="email" id="email_log" name="email" required>
 													<i class="ti-power-off"></i><label for="password">Password</label>
@@ -52,7 +52,7 @@ include("database/connect.php");
 												
 												<div class="form-group login-btn">
 													<button class="btn navbarlogin">Login</button>
-													<button class="btn navbarregister" onclick="window.location.href=\'register.php\'">Register</button>
+													<button class="btn navbarregister">Register</button>
 												</div>
 												<div class="alert alert-danger alert-dismissible" id="error" style="display:none;">
 													<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
@@ -61,7 +61,7 @@ include("database/connect.php");
 											<div class="checkbox">
 												<label class="check" for="2"><input name="rememberme" id="rememberme" type="checkbox">Remember me</label>
 											</div>
-											</form>
+											
 											<a href="#" class="lost-pass">Lost your password?</a>
 										</div>';
 								}
@@ -215,7 +215,7 @@ include("database/connect.php");
 									<li class="main-mega">
 										<a href="#">best selling <i class="fa fa-angle-right" aria-hidden="true"></i></a>
 										<ul class="mega-menu">';
-							$sql = "Select name, code, image_name, sold_by from product p , order_item o where o.product_id = p.id order by count(product_id) DESC";
+							$sql = "Select name, code, image_name, sold_by from product p , order_item o where o.product_code = p.code order by count(product_code) DESC";
 							$result = mysqli_query($conn, $sql);
 							while ($row = mysqli_fetch_assoc($result)) {
 								echo '<li class="single-menu">
@@ -301,6 +301,7 @@ include("database/connect.php");
 <script>
 	$(document).ready(function() {
 		$(".navbarregister").click(function() {
+			alert("ok");
 			window.location.href = "./register.php";
 		});
 		$(".navbarlogin").click(function() {

@@ -41,6 +41,7 @@ try {
     $mail->AltBody = 'Plain text message body for non-HTML email client. Gmail SMTP email body.';
     $mail->send();    
 } catch (Exception $e) {
-    echo json_encode(array("statusCode"=>"emailfailed"));
+    $output['statusCode'] = 202;
+    
 }
 ?>

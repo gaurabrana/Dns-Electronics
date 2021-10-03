@@ -1,40 +1,70 @@
 <?php
-//give $target_dir = "file path";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$imagename = basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-// Check if image file is a actual image or fake image
-  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-  if($check !== false) {    
-    $uploadOk = 1;
-  } else {    
-    $uploadOk = 0;
-  }
-
-// Check if file already exists
-if (file_exists($target_file)) {
-  echo "Sorry, file already exists.";
-  $uploadOk = 0;
+// (A) FILE CHECK
+$result['imagePath'] = "";
+$hasError = false;
+if (!isset($_FILES['imageSub']['tmp_name'])) {
+  $result['error'] = "No file uploaded.";
+  $result['code'] = 201;
+  $hasError = true;
 }
 
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-  echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-  $uploadOk = 0;
-}
-
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-  echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
-} else {
-  if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    
-  } else {
-    echo "Sorry, there was an error uploading your file.";
+// (B) IS THIS A VALID IMAGE?
+if (!$hasError) {
+  $allowed = ["bmp", "gif", "jpg", "jpeg", "png", "webp"];
+  $ext = strtolower(pathinfo($_FILES["imageSub"]["name"], PATHINFO_EXTENSION));
+  if (!in_array($ext, $allowed)) {
+    $result["error"] = "$ext file type not allowed - " . $_FILES["imageSub"]["name"];
+    $hasError = true;
+    $result['code'] = 201;
   }
 }
+
+// (C) MOVE UPLOADED FILE OUT OF TEMP FOLDER
+if (!$hasError) {
+  if(isset($_POST['code']))  {
+    $code = $_POST['code'];
+  }
+  else{
+    $code = "notset";
+  }    
+  $directorypath = "images/products/DNS ELECTRONICS/".$code;
+  $path = createDir($directorypath);  
+  $source = $_FILES["imageSub"]["tmp_name"];
+  if(isset($_POST['type'])){
+    $name = "mainimage.".$ext;
+  }
+  else{
+    $name = md5($source.time()).".".$ext;
+  }
+  $result['imagename'] = $name;
+  $result['name'] =  md5(time().$source);
+
+  $destination = $directorypath."/".$name;  
+  if(file_exists($destination)){
+    unlink($destination);
+  }
+  if(move_uploaded_file($source, $destination)){
+    $result['imagePath'] .= $destination; 
+    $result['code'] = 200;
+  }
+  else{
+    $result["error"] = "Failed to upload file ".$source.". Please try again";
+    $result['code'] = 201;
+  }
+}
+ 
+// (D) SERVER RESPONSE
+echo json_encode($result);
+function createDir($path){
+  if (!file_exists($path)) {
+  $old_mask = umask(0);
+  mkdir($path, 0777, TRUE);
+  umask($old_mask);
+  return true;
+  }
+  else{
+    return false;
+  }
+  
+  }
 ?>

@@ -22,7 +22,8 @@
     <!-- Magnific Popup -->
     <link rel="stylesheet" href="css/magnific-popup.min.css">
     <!-- Font Awesome -->
-    
+    <link rel="stylesheet" href="css/font-awesome.css">
+
     <!-- Fancybox -->
     <link rel="stylesheet" href="css/jquery.fancybox.min.css">
     <!-- Themify Icons -->
@@ -172,14 +173,16 @@
                                                 <div class="percent">0%</div>
                                             </div>
                                             <div id="imgChange"><span>Change Photo</span>
-                                                <input type="file" accept="image/*" name="image_upload_file" id="image_upload_file">                                                
+                                                <input type="file" accept="image/*" name="image_upload_file" id="image_upload_file">      
+                                                <input id="profileimage" type="text" hidden name="imagename">
                                                 <input id="finalsubmit" hidden type="submit" name="sumbit" value="submit" />
                                             </div>
                                         </div>
 
                                         <p style="color:black;margin:8px 0px; font-size:medium;cursor:pointer;" id="reset" onclick="resetUpload()">Reset</p>                                                                                
                                     </div>                                                                        
-                                </div><button type="button" hidden id="nextstep"  name="skipped" class="next action-button">Next Step</button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />                                                    
+                                </div>
+                                <button type="button" style="display:none;" id="proceedtofinal"  name="skipped" class="next action-button">Next Step</button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />                                                    
                                 <br/> <br/>
                                 <div class="imageLoading">
                                
@@ -271,8 +274,7 @@
 
     <script>
         $(document).ready(function() {
-            $("#submitForm").click(function() {
-                $("#submitForm").prop('disabled', true);
+            $("#submitForm").click(function() {                
                 var email = $('#email_register').val();
                 var password = $('#password_register').val();
                 var fullname = $('#fullname').val();
@@ -280,6 +282,7 @@
                 var gender = $('#gender').val();
                 var full_number = intl.getNumber(intlTelInputUtils.numberFormat.E164);
                 var phone_number = $('#phone').val();
+                var imageName = $('#imageName').val();
                         
                 if (email != "" && password != "" && age != "" && phone_number != "" && fullname != "" && gender!="notselected") {
                     $.ajax({
@@ -292,13 +295,15 @@
                             submit: "submit",
                             age: age,
                             phone: full_number,
-                            gender: gender
+                            gender: gender,
+                            imageName: imageName
                         },
                         cache: false,
                         success: function(dataResult) {
-                            var dataResult = JSON.parse(dataResult);                           
+                            var dataResult = JSON.parse(dataResult);    
+                            console.log(dataResult);
                            if (dataResult.statusCode == 201) {           
-                               $("#nextstep").click();                                                                         
+                               $("#proceedtofinal").click();                                                                         
                                 var delay = 3000; 
                             setTimeout(function(){ window.location = "index.php"; }, delay);
                             }
@@ -310,10 +315,21 @@
                                 $("#errormessage").css("display", "block");
                                 $("#submitForm").removeAttr("disabled");                                
                             }
+                            else if(dataResult.statusCode == 203){
+                                $("#errormsg").html("Email verification link");
+                                $("#errordetail").html("We failed to send an email verification link to the " + email + ". Are you sure you entered the correct email??");
+                                $("#errormessage").css("display", "block");
+                                $("#submitForm").removeAttr("disabled");        
+                            }
+                            else if(dataResult.statusCode == 204){
+                                $("#errormsg").html("Error Occured.");
+                                $("#errordetail").html("We ran into an unknown problem. We request you to refresh the page and try again. Sorry for the inconvenience.");
+                                $("#errormessage").css("display", "block");
+                                $("#submitForm").removeAttr("disabled");  
+                            }
                         }
                     });
-                } else {
-                    console.log("eror");
+                } else {                    
                     $("#errormsg").html('Empty fields found.');
                     $("#errormessage").css("display", "block");
                     $("#errordetail").html("Please make sure the details are entered correctly.");
@@ -332,9 +348,9 @@
 
     <script>
         $(document).on('change', '#image_upload_file', function() {            
-                var progressBar = $('.progressBar'),
-                bar = $('.progressBar .bar'),
-                percent = $('.progressBar .percent');
+                var progressBar = $('.progressBarImageUpload'),
+                bar = $('.progressBarImageUpload .bar'),
+                percent = $('.progressBarImageUpload .percent');
 
             $('#image_upload_file').ajaxForm({
                 beforeSend: function() {
@@ -343,18 +359,21 @@
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
-                uploadProgress: function(event, position, total, percentComplete) {
+                uploadProgress: function(event, position, total, percentComplete) {                    
                     var percentVal = percentComplete + '%';
+                    console.log(percentVal);
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
                 success: function(html, statusText, xhr, $form) {
                     obj = $.parseJSON(html);
+                    console.log(obj);
                     if (obj.status) {
                         var percentVal = '100%';
                         bar.width(percentVal)                        
                         percent.html(percentVal);
                         $("#imgArea>img").prop('src', obj.image_medium);
+                        $("#profileimage").val(obj.imageName);
                     } else {
                         alert(obj.error);
                     }
@@ -414,12 +433,12 @@
             var val = values.toString();
             if (val.length > 0) {
                 var regEx = /^[A-Za-z\s]+$/;
-                if (val.match(regEx)) {
-                    document.getElementById("errorname").innerHTML = "Valid Name";
-                    document.getElementById("errorname").style.color = "#27AE60";
-                } else {
+                if (!val.match(regEx)) {
                     document.getElementById("errorname").innerHTML = "Please enter letters and space only";
                     document.getElementById("errorname").style.color = "#ed1c24";
+                }
+                else{
+                    document.getElementById("errorname").innerHTML = "";
                 }
             } else {
                 document.getElementById("errorname").innerHTML = "Empty field.";
@@ -434,12 +453,12 @@
             values.push(elements);
             var val = values.toString();
             if (val.length > 0) {
-                if (val.length > 7 && val.length < 20) {
-                    document.getElementById("errorpass").innerHTML = "Valid Password";
-                    document.getElementById("errorpass").style.color = "#27AE60";
-                } else {
+                if (!(val.length > 7 && val.length < 20)) {
                     document.getElementById("errorpass").innerHTML = "Invalid Password (8-20 characters.)";
                     document.getElementById("errorpass").style.color = "#ed1c24";
+                } 
+                else{
+                    document.getElementById("errorpass").innerHTML = "";
                 }
             }
             return val;
@@ -451,12 +470,12 @@
             values.push(data);
             var val = values.toString();
             if (val.length > 0) {
-                if (validateEmail(val)) {
-                    $("#errormail").text("Valid email address.");
-                    $("#errormail").css("color", "#27AE60");
-                } else {
+                if (!validateEmail(val)) {
                     $("#errormail").text("Invalid email address");
                     $("#errormail").css("color", "#ed1c24");
+                } 
+                else{
+                    $("#errormail").text("");
                 }
             } else {
                 $("#errormail").text("Empty email address");
@@ -475,13 +494,13 @@
             values.push(data);
             var val = values.toString();
             if (val.length != 0 && val.length == 2) {
-                if (val > 15 && val < 99) {
-                    document.getElementById("errorage").innerHTML = "Valid age.";
-                    document.getElementById("errorage").style.color = "#27AE60";
-                } else {
+                if (!(val > 15 && val < 99)) {
                     //show error
                     document.getElementById("errorage").innerHTML = "Between 16 and 99.";
                     document.getElementById("errorage").style.color = "#ed1c24";
+                } 
+                else{
+                    document.getElementById("errorage").innerHTML = "";
                 }
             } else {
                 document.getElementById("errorage").innerHTML = "Between 16 and 99.";

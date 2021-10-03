@@ -120,16 +120,16 @@ header("Location: index.php");
                             <div class="product-gallery">
                               <div class="quickview-slider-active">
                                 <div class="single-slider">
-                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
                                 </div>
                                 <div class="single-slider">
-                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
                                 </div>
                                 <div class="single-slider">
-                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
                                 </div>
                                 <div class="single-slider">
-                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+                                  <img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
                                 </div>
                               </div>
                             </div>
@@ -238,8 +238,8 @@ header("Location: index.php");
               <button type="button" id="removeFav'.$row['code'].'" class="close fav-del" aria-label="Close"><span class="ti-close" aria-hidden="true"></span></button>            
                 <div class="product-img">
                   <a href="singleproduct.php?i='.$row['code'].'">
-                    <img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-                    <img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+                    <img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
+                    <img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
                   </a>
                   <div class="button-head">
                     <div class="product-action">

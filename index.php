@@ -315,8 +315,8 @@ $show_collection = "homepage";
 								<div class="single-product">
 									<div class="product-img">
 										<a href="singleproduct.php?i='.$row['code'].'">
-											<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
-											<img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+											<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
+											<img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 										</a>
 										
 									</div>
@@ -362,16 +362,16 @@ echo'<!-- Modal -->
 							<div class="product-gallery">
 								<div class="quickview-slider-active">
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 									<div class="single-slider">
-										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_name'].'" alt="#">
+										<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 									</div>
 								</div>
 							</div>

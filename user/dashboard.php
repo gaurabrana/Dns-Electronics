@@ -396,7 +396,7 @@ $active = "dashboard";
                     </thead>
                     <tbody>
                       <?php
-                      $sql = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_id = p.id LIMIT 4";
+                      $sql = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code LIMIT 4";
                       $result = mysqli_query($conn, $sql);
                       if(mysqli_num_rows($result) > 0){
                         while($row = mysqli_fetch_assoc($result)){

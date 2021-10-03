@@ -1,15 +1,18 @@
 <?php
 include('database/connect.php');
-$date = date("Y-m-d H:i:s");
-$random = randomid().md5($date);
-echo $random;
-function randomid($length = 10) {
-    $characters = '0123456789';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
+
+$directory = "admin/images/products/DNS ELECTRONICS/e13d43c8094f5804c8b72f4884ac6e23/";
+
+// Returns array of files
+$files = scandir($directory);
+foreach($files as $images){
+    if(str_contains($images, "subimage")){
+        echo $images."<br>";
     }
-    return $randomString;
+    
 }
+// Count number of files and store them to variable..
+$num_files = count($files)-2;
+
+echo $num_files;
 ?>
