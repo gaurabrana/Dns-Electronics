@@ -34,10 +34,12 @@
         resultHolder.append("OOPS!! Please fix these errors. <br> ======================== <br>");
         let pName = $("#val-productname" + pid).val();
         let pPrice = $("#val-price" + pid).val();
+        let pType = $("#val-type" + pid).val();
         let pDiscountprice = $("#val-discountprice" + pid).val();
         let pDescription = $("#val-description" + pid).val();
         let pBrand = $("#val-brand" + pid).val();
         let pBrandName;
+        let pMoreImages = $("#val-hasMoreImages" + pid).prop("checked") == true ? true : false;
         let isBrandNew = false;
         if (pBrand == "new") {
             isBrandNew = true;
@@ -56,12 +58,20 @@
             pCategoryName = pCategory;
         }
         let pMainImage = $("#holdMainImageName" + pid).val();
-        let pSubImages = $("#upstat" + pid + " :input");
         var imageSrc = [];
-        var no_of_sub_images = 0;
-        for (let i of pSubImages) {
-            no_of_sub_images++;
-            imageSrc.push(i.value);
+        if (pMoreImages) {
+            var pSubImages = $("#upstat" + pid + " :input");
+            var no_of_sub_images = 0;
+            for (let i of pSubImages) {
+                no_of_sub_images++;
+                imageSrc.push(i.value);
+            }
+            if (no_of_sub_images <= 0) {
+                no_of_errors++;
+                showInfo("Empty product sub images.<br>", "alert-danger");
+            }
+        } else {
+            imageSrc.push("noimages");
         }
 
         //validate fields
@@ -115,10 +125,6 @@
             no_of_errors++;
             showInfo("Empty product main image.<br>", "alert-danger");
         }
-        if (no_of_sub_images <= 0) {
-            no_of_errors++;
-            showInfo("Empty product sub images.<br>", "alert-danger");
-        }
 
         if (no_of_errors == 0) {
             let imageKey = $("#productimagekey" + pid).val();
@@ -135,7 +141,14 @@
                     if (result.statusCode == 200) {
                         //add successful
                         showInfo("Product updated successfully", "alert-success");
-                        //remove all values
+                        let imageShow = '<img class="image-in-table" src="' + $("#mainImage" + pid).attr("src") + '" alt="#"></img>';
+                        console.log(imageShow);
+                        let row = $("#rowforproduct" + pid).get(0);
+                        let button = '<a data-toggle="modal" data-target="#modalforproduct' + pid + '" title="Update Product"><i class="ti-pencil-alt2"></i></a>&nbsp;&nbsp;&nbsp;' +
+                            '<a data-toggle = "modal" data-target = "#modalforproductdelete' + pid + '" title = "Delete Product"><i class = "ti-trash"> </i></a>';
+                        var table = $("#listproducts").DataTable();
+                        let data = [imageShow, pName, pPrice, pDiscountprice, (pDescription.slice(0, 100) + "..."), pid, pBrandName, pStock, pType, pCategoryName, button];
+                        table.row(row).data(data).draw();
 
                     } else if (result.statusCode == 201) {
 
@@ -165,6 +178,48 @@
                     next();
                 });
         }
+    });
+
+    $(".deletebuttonforproduct").on("click", function() {
+        let id = $(this).attr("id");
+        let pcode = id.split("deleteproceed")[1];
+        alert(pcode);
+        $.ajax({
+            url: "database/deleteproduct.php",
+            method: "POST",
+            data: { "delete": pcode },
+            cache: false,
+            success: function(response) {
+                let result = JSON.parse(response);
+                let resultholder = $("#showdeleteresult" + pcode);
+                resultholder.removeClass("hide-element");
+                let color;
+                if (result.statusCode == 200) {
+                    color = "alert-success";
+                    resultholder.text("Product deleted successfully.");
+                    let row = $("#rowforproduct" + pcode).get(0);
+                    var table = $(".zero-configuration").dataTable();
+                    table.fnDeleteRow(table.fnGetPosition(row));
+                    $("#rowforproduct" + pcode).remove();
+                    $("#modalforproductdelete" + pcode).modal('hide');
+                } else if (result.statusCode == 201) {
+                    color = "alert-danger";
+                    resultholder.text("Failed to delete product.");
+                } else if (result.statusCode == 202) {
+                    color = "alert-danger";
+                    resultholder.text("Error delete this product. Product data exist in " + result.existance + " tables.");
+                }
+                resultholder.addClass(color);
+                resultholder
+                    .delay(3000)
+                    .queue(function(next) {
+                        resultholder.removeClass(color);
+                        resultholder.addClass("hide-element");
+                        next();
+                    });
+
+            }
+        });
     });
 
     var ajaxup = {

@@ -158,46 +158,7 @@
         }
     };
 
-    $(".deletebuttonforproduct").on("click", function() {
-        let id = $(this).attr("id");
-        let pcode = id.split("deleteproceed")[1];
-        $.ajax({
-            url: "database/deleteproduct.php",
-            method: "POST",
-            data: { "delete": pcode },
-            cache: false,
-            success: function(response) {
-                let result = JSON.parse(response);
-                let resultholder = $("#showdeleteresult" + pcode);
-                resultholder.removeClass("hide-element");
-                let color;
-                if (result.statusCode == 200) {
-                    color = "alert-success";
-                    resultholder.text("Product deleted successfully.");
-                    let row = $("#rowforproduct" + pcode).get(0);
-                    var table = $(".zero-configuration").dataTable();
-                    table.fnDeleteRow(table.fnGetPosition(row));
-                    $("#rowforproduct" + pcode).remove();
-                    $("#modalforproductdelete" + pcode).modal('hide');
-                } else if (result.statusCode == 201) {
-                    color = "alert-danger";
-                    resultholder.text("Failed to delete product.");
-                } else if (result.statusCode == 202) {
-                    color = "alert-danger";
-                    resultholder.text("Error delete this product. Product data exist in " + result.existance + " tables.");
-                }
-                resultholder.addClass(color);
-                resultholder
-                    .delay(3000)
-                    .queue(function(next) {
-                        resultholder.removeClass(color);
-                        resultholder.addClass("hide-element");
-                        next();
-                    });
 
-            }
-        });
-    });
 
     $("#resetFields").on("click", function() {
         resetFields();
@@ -292,8 +253,9 @@
             showInfo("Empty product main image.<br>", "alert-danger");
         }
         if (no_of_sub_images <= 0) {
-            no_of_errors++;
-            showInfo("Empty product sub images.<br>", "alert-danger");
+            imageSrc.push("noimages");
+            // no_of_errors++;
+            // showInfo("Empty product sub images.<br>", "alert-danger");
         }
 
         if (no_of_errors == 0) {

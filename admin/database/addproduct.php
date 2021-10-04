@@ -12,14 +12,16 @@ if(isset($_POST['addProduct'])){
     if($executeAddProduct){        
         $error = 0;
         foreach($subImage as $imageName){  
-            $getIDCount = "Select id from product_images";
-            $newID = mysqli_num_rows(mysqli_query($conn, $getIDCount));
-            $newID++;          
-            $sql1 = "Insert into product_images values('$newID','$code', '$imageName')";            
-            $executeAddProductImages = mysqli_query($conn, $sql1);
-            if(!$executeAddProductImages){
-                $error++;                
-            }            
+            if($imageName != "noimages"){
+                $getIDCount = "Select id from product_images";
+                $newID = mysqli_num_rows(mysqli_query($conn, $getIDCount));
+                $newID++;          
+                $sql1 = "Insert into product_images values('$newID','$code', '$imageName')";            
+                $executeAddProductImages = mysqli_query($conn, $sql1);
+                if(!$executeAddProductImages){
+                    $error++;                
+                }      
+            }                  
         }
         if($error==0){
             echo json_encode(array("statusCode" => 200));

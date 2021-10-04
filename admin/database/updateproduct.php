@@ -7,14 +7,16 @@ if(isset($_POST['updateProduct'])){
     if($executeUpdateProduct){        
         $error = 0;
         foreach($subImage as $imageName){  
-            $checkdata = "Select folder_key from product_images where folder_key='$imagekey' and image_name='$imageName'";            
-            if(mysqli_num_rows(mysqli_query($conn, $checkdata))==0){
-                $insertimagename = "Insert into product_images values('$imagekey','$imageName')";       
-                $executeinsertimagename = mysqli_query($conn, $insertimagename);
-                if(!$executeinsertimagename){
-                    $error++;
-                }
-            }                                       
+            if($imageName != "noimages"){
+                $checkdata = "Select folder_key from product_images where folder_key='$imagekey' and image_name='$imageName'";            
+                if(mysqli_num_rows(mysqli_query($conn, $checkdata))==0){
+                    $insertimagename = "Insert into product_images values('$imagekey','$imageName')";       
+                    $executeinsertimagename = mysqli_query($conn, $insertimagename);
+                    if(!$executeinsertimagename){
+                        $error++;
+                    }
+                }                                       
+            }            
         }
         if($error==0){
             echo json_encode(array("statusCode" => 200));

@@ -11,8 +11,7 @@ include("connect.php");
     <title>Products</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
-    <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <!-- Custom Stylesheet -->    
     <link href="./plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
@@ -67,7 +66,7 @@ include("connect.php");
                             <div class="card-body">
                                 <h4 class="card-title">All Products</h4>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered zero-configuration">
+                                    <table id="listproducts" class="table table-bordered zero-configuration">
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
@@ -103,7 +102,8 @@ include("connect.php");
                                                 <td>' . $row['category'] . '</td>                                                
                                                 <td class="action-for-products">                                                
                                                 <a data-toggle="modal" data-target="#modalforproduct' . $row['code'] . '" title="Update Product"><i class="ti-pencil-alt2"></i></a>&nbsp;&nbsp;&nbsp;
-                                                <a data-toggle="modal" data-target="#modalforproductdelete' . $row['code'] . '" title="Delete Product"><i class="ti-trash"></i></a></td>                                                
+                                                <a data-toggle="modal" data-target="#modalforproductdelete' . $row['code'] . '" title="Delete Product"><i class="ti-trash"></i></a>
+                                                </td>                                                
                                                 </tr>';
                                             }
                                             ?>
@@ -182,6 +182,7 @@ include("connect.php");
                                                             <label class="col-lg-4 col-form-label" for="val-category">Category<span class="text-danger">*</span>
                                                             </label>
                                                             <div class="col-lg-3">
+                                                                <input type="hidden" class="form-control" id="val-type' . $row['code'] . '" name="val-type" value="' . $row['type'] . '" readonly>
                                                                 <select class="form-control select-category" id="val-category' . $row['code'] . '" name="val-category">
                                                                 <option value="new">Choose New Category</option>';
                     $getallCategory = "Select DISTINCT category from product";
@@ -237,30 +238,39 @@ include("connect.php");
                     echo '</label>                                                                                                                     
                                                             </div>                                                            
                                                         </div>
-                                                        <hr>
+                                                        <div class="form-group row">';
+                                                        $folderkey = $row['image_folder_key'];
+                                                        $getSubImages = "Select image_name from product_images where folder_key='$folderkey'";
+                                                        $executegetSubImages = mysqli_query($conn, $getSubImages);
+                                                        $hasMoreImages = mysqli_num_rows($executegetSubImages) > 0 ? true : false;                                                        
+                                                        echo'<label class="col-lg-4 col-form-label" for="val-image">More Product Images<span class="text-danger">*</span>
+                                                            </label>
+                                                            <label class="css-control css-control-primary css-checkbox" for="val-terms">
+                                                            <input '; if($hasMoreImages){echo "checked";} echo' data-toggle="collapse" href="#MoreProductImage'.$row['code'].'" role="button" aria-expanded="'; if($hasMoreImages){echo "true";} else { echo "false";} echo'" aria-controls="MoreProductImage'.$row['code'].'" type="checkbox" class="css-control-input" id="val-hasMoreImages'.$row['code'].'" name="val-hasMoreImages"> <span class="css-control-indicator"></span>&nbsp; Add more ??</label>
+                                                        </div>
+                                                        <div class="collapse';if($hasMoreImages){echo " show";}echo'" id="MoreProductImage'.$row['code'].'">
+                                                        <hr>                                                    
                                                         <div class="form-group row">
                                                             <label class="col-lg-12 col-form-label" for="val-image">More Images<span class="text-danger"></span>
                                                             </label>
-                                                            <div class="col-lg-3" id="imageHold' . $row['code'] . '">                                                          
+                                                            <div class="col-lg-3" id="imageHold'.$row['code'].'">                                                          
                                                             <label for="image" title="Click to change">
                                                             <input type="file" class="holdImageForSubProduct" name="subimages[]" id="imageSub' . $row['code'] . '" multiple style="display:none;" />
                                                             <img class="updateSubImages" id="subimagefor' . $row['code'] . '" src="images/addimages.png" alt="#">                                                                                                                                                                                                                                                                                          
-                                                            </label></div>                                                            ;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                        </div>
-                                                        <div class="row mb-3" id="upstat' . $row['code'] . '">';
-                    $folderkey = $row['image_folder_key'];
-                    $getSubImages = "Select image_name from product_images where folder_key='$folderkey'";
-                    $executegetSubImages = mysqli_query($conn, $getSubImages);
-                    if (mysqli_num_rows($executegetSubImages) > 0) {
-                        while ($getImages = mysqli_fetch_assoc($executegetSubImages)) {
-                            $imagename = $getImages['image_name'];
-                            echo '<div id="imageIdentifier' . $imagename . '" class="col-lg-3 col-md-4 col-sm-6 mb-2 uploaded-images">
-                                                                <img src = "images/products/' . $row['sold_by'] . '/' . $row['image_folder_key'] . '/' . $getImages['image_name'] . '" alt = "uploaded product image">
-                                                                <div class="deleteImage"><input type="hidden" value="'.$getImages['image_name'].'">
-                                                                <i id="SameimageIdentifier' . $imagename . '" class="fas fa-minus-circle fa-2x"></i></div></div>';
-                        }
-                    }
-                    echo '</div>
+                                                            </label></div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                        </div> 
+                                                        <div class="row mb-3" id="upstat' . $row['code'] . '">';                                                        
+                                                        if ($hasMoreImages) {
+                                                            while ($getImages = mysqli_fetch_assoc($executegetSubImages)) {
+                                                                $imagename = $getImages['image_name'];
+                                                                echo '<div id="imageIdentifier' . $imagename . '" class="col-lg-3 col-md-4 col-sm-6 mb-2 uploaded-images">
+                                                                                                    <img src = "images/products/' . $row['sold_by'] . '/' . $row['image_folder_key'] . '/' . $getImages['image_name'] . '" alt = "uploaded product image">
+                                                                                                    <div class="deleteImage"><input type="hidden" value="'.$getImages['image_name'].'">
+                                                                                                    <i id="SameimageIdentifier' . $imagename . '" class="fas fa-minus-circle fa-2x"></i></div></div>';
+                                                            }
+                                                        }
+                                                        echo '</div>                                                  
+                                                        </div>                                                                                                                
                                                         <div style="display:none;" id="hold-image-result' . $row['code'] . '" class="alert" role="alert">
                                                         
                                                         </div>
