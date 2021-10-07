@@ -1,5 +1,5 @@
 <?php
-include("connect.php");
+include("database/connect.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +53,7 @@ include("connect.php");
                 <div class="col p-md-0">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">All Products</a></li>
                     </ol>
                 </div>
             </div>
@@ -64,7 +64,7 @@ include("connect.php");
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">All Products</h4>
+                                <h4 class="card-title">Products</h4>
                                 <div class="table-responsive">
                                     <table id="listproducts" class="table table-bordered zero-configuration">
                                         <thead>
@@ -321,7 +321,7 @@ include("connect.php");
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018</p>
+                <p>Copyright &copy; Designed & Developed by <a href="#">Gaurab Rana</a> 2021</p>
             </div>
         </div>
         <!--**********************************

@@ -1,6 +1,6 @@
 <?php
 if(isset($_POST['addProduct'])){
-    include("../connect.php");
+    include("connect.php");
     extract($_POST);
     $getIDCount = "Select id from product";
     $newID = mysqli_num_rows(mysqli_query($conn, $getIDCount));

@@ -473,7 +473,7 @@ require ('database/connect.php');
 									$discount = 0;
 									echo'<div class="col-lg-4 col-md-6 col-12">								
 									<div class="single-product">
-									<p style="display: none; font-size:16px;" id="result'.$row['code'].'">Result</p>
+									<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 										<div class="product-img">
 											<a href="singleproduct.php?i='.$row['code'].'">
 												<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
@@ -543,8 +543,8 @@ require ('database/connect.php');
 											}
 												echo'<span style="font-size:large;"> '.($row['price']-$discount).'</span>
 												</div>	
-												<div style="display:none;" id="liststyleResult'.$row['code'].'" class="alert">				
-												sad								
+												<div id="liststyleResult'.$row['code'].'" class="alert hide-element">				
+																				
 												</div>	
 											</div>
 										</div>

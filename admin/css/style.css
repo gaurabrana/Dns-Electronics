@@ -262,7 +262,7 @@ a {
 }
 
 a:hover {
-    color: #2e28f6;
+    color: #ed1c24;
     text-decoration: underline;
 }
 
@@ -2633,8 +2633,8 @@ fieldset:disabled a.btn {
 
 .btn-info {
     color: #fff;
-    background-color: #4d7cff;
-    border-color: #4d7cff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
 }
 
 .btn-info:hover {
@@ -20940,6 +20940,16 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
     top: 8px;
     right: 46px;
     color: #ed1c24;
+}
+
+.modalUserImage,
+.autoimageSize {
+    max-width: 100%;
+    height: auto;
+}
+
+.small-size img {
+    width: 60%;
 }
 
 

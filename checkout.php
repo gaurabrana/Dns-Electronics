@@ -111,7 +111,7 @@ include('database/connect.php');
 								<tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$getAddressDetails['email_address'].'</td></tr>
 								<tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$getAddressDetails['phone_number'].'</td></tr>
 								<tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$getAddressDetails['address_one'].', '.$getAddressDetails['address_two'].', '.$getAddressDetails['postal_code'].'</td></tr>
-								<tr><th><i class="fas fa-flag"></i> Country </th><td>'.$getAddressDetails['country'].'&#160&#160<img src="img/flags/'.strtolower($getAddressDetails['country']).'.png"</td></tr>								                              
+								<tr><th><i class="fas fa-flag"></i> Country </th><td>'.$getAddressDetails['country'].'&#160&#160<img src="img/flags/'.strtolower($getAddressDetails['country']).'.png"></td></tr>								                              
 								<tr><th><i class="fas fa-shipping-fast"></i> Shipping Detail </th><td>';
 								if($sameShipping){
 								  echo "Same as billing detail";
@@ -140,7 +140,7 @@ include('database/connect.php');
 								  <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$shippingemail.'</td></tr>
 								  <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$shippingphone.'</td></tr>
 								  <tr><th><i class="fas fa-street-view"></i> Address </th><td>'.$shippingaddressone.', '.$shippingaddresstwo.', '.$shippingpostalcode.'</td></tr>
-								  <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$shippingcountry.'&#160&#160<img src="img/flags/'.strtolower($shippingcountry).'.png"</td></tr>								                                                                              
+								  <tr><th><i class="fas fa-flag"></i> Country </th><td>'.$shippingcountry.'&#160&#160<img src="img/flags/'.strtolower($shippingcountry).'.png"></td></tr>								                                                                              
 								  </table>
 									</div>
 									';

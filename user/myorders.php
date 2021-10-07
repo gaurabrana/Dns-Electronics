@@ -136,12 +136,12 @@ $active = "orders";
                                     <th>Quantity</th>
                                     </thead>
                                     <tbody>';                      
-                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid' LIMIT 4";
+                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid' LIMIT 4";
                                     $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
                                     if(mysqli_num_rows($getOrderedProductsResult) > 0){
                                         while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
                                         echo'<tr>
-                                        <td width="120px" class="small-size"><img src="../admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
+                                        <td width="120px" class="small-size"><img src="../admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_folder_key'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
                                         <td><a href="singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>
                                         <td>Rs '.$orderedProduct['price'].'</td>
                                         <td>'.$orderedProduct['quantity'].'</td>

@@ -211,8 +211,8 @@ header("Location: index.php");
                               <!--/ End Input Order -->
                             </div>
                             <div class="add-to-cart">
-                              <a href="#" id="cart'.$row['code'].'" class="btn">Add to cart</a>                              
-                              <a href="#" id="compare'.$row['code'].'" class="btn min"><i class="fa fa-compress"></i></a>
+                              <a href="#" id="fromModalcart'.$row['code'].'" class="btn">Add to cart</a>                              
+                              <a href="#" id="fromModalcompare'.$row['code'].'" class="btn min"><i class="fa fa-compress"></i></a>
                             </div>
                             <div class="default-social">
                               <h4 class="share-now">Share:</h4>
@@ -222,6 +222,9 @@ header("Location: index.php");
                                 <li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
                                 <li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
                               </ul>
+                              <div  style="visibility:hidden;" id="fromModalResult'.$row['code'].'" class="alert" role="alert">
+										  
+									        	</div>
                             </div>
                           </div>
                         </div>
@@ -234,7 +237,7 @@ header("Location: index.php");
               $discount = 0;
               echo'<div class="col-lg-4 col-md-6 col-12" id="favItem'.$row['code'].'">								
               <div class="single-product">
-              <p style="visibility: hidden; font-size:16px;" id="result'.$row['code'].'">Result</p>              
+              <p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>              
               <button type="button" id="removeFav'.$row['code'].'" class="close fav-del" aria-label="Close"><span class="ti-close" aria-hidden="true"></span></button>            
                 <div class="product-img">
                   <a href="singleproduct.php?i='.$row['code'].'">

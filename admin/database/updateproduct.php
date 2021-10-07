@@ -1,6 +1,6 @@
 <?php
 if(isset($_POST['updateProduct'])){
-    include("../connect.php");
+    include("connect.php");
     extract($_POST);            
     $sql = "Update product set name='$name', price='$price', discount='$discount', description='$description', brand='$brand', quantity_stock='$stock',category='$category',image_name='$mainImage' where code='$code'";
     $executeUpdateProduct = mysqli_query($conn, $sql);

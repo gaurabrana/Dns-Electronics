@@ -1,5 +1,5 @@
 <?php
-include('connect.php');
+include('database/connect.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -189,7 +189,7 @@ include('connect.php');
         ***********************************-->
     <div class="footer">
         <div class="copyright">
-            <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018</p>
+            <p>Copyright &copy; Designed & Developed by <a href="#">Gaurab Rana</a> 2021</p>
         </div>
     </div>
     <!--**********************************

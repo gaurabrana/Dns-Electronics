@@ -209,11 +209,11 @@ $show_collection = "homepage";
 											$discount = 0;
 											echo'<div class="col-xl-3 col-lg-4 col-md-4 col-12">
 											<div class="single-product">
-											<p style="visibility: hidden; font-size:16px;" id="result'.$row1['code'].'">Result</p>
+											<p class="hide-element" style="font-size:16px;" id="result'.$row1['code'].'">Result</p>
 												<div class="product-img">
 													<a href="singleproduct.php?i='.$row1['code'].'">
-														<img class="default-img" src="admin/images/products/'.$row1['sold_by'].'/'.$row1['image_name'].'" alt="#">
-														<img class="hover-img" src="admin/images/products/'.$row1['sold_by'].'/'.$row1['image_name'].'" alt="#">
+														<img class="default-img" src="admin/images/products/'.$row1['sold_by'].'/'.$row1['image_folder_key'].'/'.$row1['image_name'].'" alt="#">
+														<img class="hover-img" src="admin/images/products/'.$row1['sold_by'].'/'.$row1['image_folder_key'].'/'.$row1['image_name'].'" alt="#">
 													</a>
 													<div class="button-head">
 														<div class="product-action">

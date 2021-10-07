@@ -28,7 +28,7 @@
     <!--*******************
         Preloader end
     ********************-->
-    <div class="login-form-bg h-100">
+    <div id="loginform"  class="login-form-bg h-100">
         <div class="container h-100">
             <div class="row justify-content-center h-100">
                 <div class="col-xl-6">
@@ -44,9 +44,9 @@
                                     <div class="form-group">
                                         <input type="password" id="password" class="form-control" placeholder="Password">
                                     </div>
-                                    <button id="login" class="btn login-form__btn submit w-100">Sign In</button>
+                                    <button id="login" class="btn btn-info submit w-100">Sign In</button>
                                 </form>
-								<div id="error" class="alert alert-danger" role="alert">  								
+								<div id="error" class="alert alert-danger hide-element" role="alert">  								
 								</div>                                
                             </div>
                         </div>
@@ -64,9 +64,6 @@
     ***********************************-->
     <script src="plugins/common/common.min.js"></script>
     <script src="js/custom.min.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/gleek.js"></script>
-    <script src="js/styleSwitcher.js"></script>
 	<script>
 	$(document).ready(function() {			
 		$("#login").click(function() {
@@ -74,12 +71,11 @@
 
 			var email = $('#email').val();
 
-			var password = $('#password').val();
-			console.log(email + "//" + password);
+			var password = $('#password').val();			
 
 			if (email != "" && password != "") {
 				$.ajax({
-					url: "logindata.php",
+					url: "database/logindata.php",
 					type: "POST",
 					data: {
 						type: "login",
@@ -92,20 +88,22 @@
 						if (dataResult.statusCode != null) {
 							console.log(dataResult.statusCode);
 							if (dataResult.statusCode != 202) {
-								$("#error").show();                                
+								$("#error").removeClass("hide-element");          
+                                $("#error").delay(5000).queue(function(next){
+                                    $("#error").addClass("hide-element");
+                                    next();
+                                });
 							}
 						}
 						if (dataResult.statusCode == 200) {
 							$('#error').text('Admin not found.');							
-							//$("#error").slideUp(300).delay(8000).fadeOut(400);
-							$(".navbarlogin").removeAttr('disabled');
+							$("#login").removeAttr('disabled');
 						} else if (dataResult.statusCode == 201) {
 							$('#error').text('Invalid Password !');
 							$("#error").fadeOut(4300);
-							//$("#error").slideUp(300).delay(8000).fadeOut(400);	
-							$(".navbarlogin").removeAttr('disabled');
+							$("#").removeAttr('disabled');
 						} else if (dataResult.statusCode == 202) {
-							location.href = "index.php";
+							location.href = "./";
 						}
 					}
 				});

@@ -1,5 +1,5 @@
 <?php
-include("../connect.php");
+include("connect.php");
 if(isset($_POST['delete'])){
     $code = $_POST['delete'];
     $exist = 0;

@@ -230,7 +230,7 @@ if(mysqli_num_rows($result)>0){
 								$discount = 0;
 								$data.='<div class="col-lg-4 col-md-6 col-12">
 								<div class="single-product">
-								<p style="visibility: hidden; font-size:16px;" id="result'.$row['code'].'">Result</p>
+								<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 									<div class="product-img">
 										<a href="product-details.html">
 											<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
@@ -293,7 +293,7 @@ if(mysqli_num_rows($result)>0){
 									}
 										$data .='<span style="font-size:large;"> '.($row['price']-$discount).'</span>
 										</div>	
-										<div style="display:none;" id="liststyleResult'.$row['code'].'" class="alert">				
+										<div id="liststyleResult'.$row['code'].'" class="alert hide-element">				
 										sad								
 										</div>	
 									</div>

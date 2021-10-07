@@ -111,16 +111,16 @@ include('database/connect.php');
 				<div class="product-gallery">
 					<div class="quickview-slider-active">
 						<div class="single-slider">
-							<img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+							<img src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
 						</div>
 						<div class="single-slider">
-							<img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+							<img src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
 						</div>
 						<div class="single-slider">
-							<img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+							<img src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
 						</div>
 						<div class="single-slider">
-							<img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+							<img src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
 						</div>
 					</div>
 				</div>
@@ -403,22 +403,27 @@ include('database/connect.php');
 										<?php
 										$getQuestions = "Select c.name,c.profile_picture,c.uniquekey, p.added_date, p.replied_date, p.question, p.adminreply from product_queries p, customer c where p.product_code = '$product_code' and p.customer_id = c.id";
 										$executegetQuestions = mysqli_query($conn, $getQuestions);
-										if(mysqli_num_rows($executegetQuestions)>0){
+										if(mysqli_num_rows($executegetQuestions) > 0){
 											$no_of_questions = mysqli_num_rows($executegetQuestions);
 											echo'<h3 class="comment-title">Questions ('.$no_of_questions.')</h3>';
 											while($row = mysqli_fetch_assoc($executegetQuestions)){
+												require('formatdate.php');												
+												$formatteddate1 = formatDate($row['added_date']);
+												$formattedtime1 = formatTime($row['added_date']);												
 												echo'<div class="single-comment">
 												<img src="img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'" alt="userimage">
 												<div class="content">
-													<h4>'.$row['name'].'<span>'.$row['added_date'].'</span></h4>
+													<h4>'.$row['name'].'<span>'.$formatteddate1.' at '.$formattedtime1.'</span></h4>
 													<p>'.$row['question'].'</p>   
 												</div>
 											</div>';
 											if($row['adminreply']!="-"){
+												$formatteddate2 = formatDate($row['replied_date']);
+												$formattedtime2 = formatTime($row['replied_date']);
 												echo'<div class="single-comment left">
 												<img src="img/logored.png" alt="adminimage">
 												<div class="content">
-													<h4>Dns Electronics<span>'.$row['replied_date'].'</span></h4>
+													<h4>Dns Electronics<span>'.$formatteddate2.' at '.$formattedtime2.'</span></h4>
 													<p>'.$row['adminreply'].'</p>                    
 												</div>
 											</div>';
@@ -441,7 +446,7 @@ include('database/connect.php');
 											<h2 class="reply-title">Leave a Question</h2>
 											<h7 id="resultmsg"></h7>
 											<!-- Comment Form -->
-											<form class="form" action="#">
+											
 												<div class="row">													
 													<div class="col-12">
 														<div class="form-group">
@@ -457,7 +462,7 @@ include('database/connect.php');
 														
 													</div>
 												</div>
-											</form>
+											
 											<!-- End Comment Form -->
 										</div>
 									</div>			
@@ -509,8 +514,8 @@ include('database/connect.php');
 								<p style="visibility: hidden; font-size:16px;" id="result' . $row['code'] . '">Result</p>
 									<div class="product-img">
 										<a href="singleproduct.php?i=' . $row['code'] . '">
-											<img class="default-img" src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
-											<img class="hover-img" src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+											<img class="default-img" src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
+											<img class="hover-img" src="admin/images/products/' . $row['sold_by'] .'/'.$row['image_folder_key'].'/'.$row['image_name'] . '" alt="#">
 										</a>
 										<div class="button-head">
 											<div class="product-action">

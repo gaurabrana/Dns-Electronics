@@ -1,5 +1,5 @@
 <?php
-include("../connect.php");
+include("connect.php");
 if(isset($_POST['datatype'])){
 $datatype = $_POST['datatype'];
 if($datatype=="CategoryBrand"){    

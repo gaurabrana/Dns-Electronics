@@ -362,7 +362,6 @@
             cache: false,
             success: function(result) {
                 var data = JSON.parse(result);
-                $(c).css("display", "block");
                 if (data.statusCode == 200) {
                     $(c).html("Added to cart");
                     if (d) {
@@ -433,8 +432,7 @@
                 cache: false,
                 success: function(result) {
                     var data = JSON.parse(result);
-                    $(c).css("display", "block");
-                    if (id.indexOf("favourite") >= 0) {
+                    if (a.indexOf("favourite") >= 0) {
                         if (data.statusCode == 200) {
                             $(c).html("Added to favourite");
                             if (d) {
@@ -518,6 +516,7 @@
     });
 
     function addResultColor(a, b, c) {
+        $(b).removeClass("hide-element");
         if (a == "list") {
             $(b).addClass(c);
         } else if (a == "grid") {
@@ -529,13 +528,14 @@
                 if (a == "list") {
                     $(b).removeClass(c);
                 }
-                $(this).css('display', 'none');
+                $(b).addClass("hide-element");
                 next();
             });
     }
 
     $(document).on("click", ".add-to-cart a", function(e) {
         e.preventDefault();
+
         let getClickedButtonID = $(this).attr("id");
         let selectedAction = getClickedButtonID.split("fromModal")[1];
         var pID;

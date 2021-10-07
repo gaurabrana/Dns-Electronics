@@ -1,6 +1,14 @@
  <!--**********************************
             Nav header start
         ***********************************-->
+        <?php
+        if(!isset($_SESSION)){
+            session_start();
+        }
+        if(!isset($_SESSION['adminemail'])){
+            echo'<script>window.location.href="login.php"</script>';
+        }
+        ?>
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
         <div class="nav-header">
             <div class="brand-logo">
@@ -83,14 +91,14 @@
                     </li>  
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">                        
-                            <i class="fas fa-users menu-icon"></i><span class="nav-text">Orders</span>
+                        <i class="fas fa-clipboard-list"></i><span class="nav-text">Orders</span>
                         </a>
                         <ul aria-expanded="false">                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Ongoing Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Completed Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Returns</a></li>
+                            <li><a href="./listorders.php"><i class="fas fa-stream"></i>All Orders</a></li>
+                            <li><a href="./ongoingorders.php"><i class="fas fa-person-carry"></i>Ongoing Orders</a></li>
+                            <li><a href="./completedorders.php"><i class="fal fa-clipboard-check"></i>Completed Orders</a></li>
+                            <li><a href="#"><i class="fas fa-times-circle"></i>Failed Orders</a></li>
+                            <li><a href="#"><i class="fas fa-undo-alt"></i>Returns</a></li>
                         </ul>
                     </li> 
                     <li class="mega-menu mega-menu-sm">
@@ -106,18 +114,16 @@
                     </li>   
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">                        
-                            <i class="fas fa-users menu-icon"></i><span class="nav-text">Product Ratings</span>
+                        <i class="fas fa-star"></i><span class="nav-text">Ratings/Queries</span>
                         </a>
                         <ul aria-expanded="false">                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Unpaid Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Paid Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>                            
+                            <li><a href="./productrating.php"><i class="fas fa-star-exclamation"></i>Product Rating</a></li>
+                            <li><a href="./productqueries.php"><i class="fas fa-question-square"></i>Product Queries</a></li>                            
                         </ul>
                     </li> 
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">                        
-                            <i class="fas fa-users menu-icon"></i><span class="nav-text">Messages from users</span>
+                            <i class="fas fa-envelope menu-icon"></i><span class="nav-text">Messages from users</span>
                         </a>
                         <ul aria-expanded="false">                            
                             <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>

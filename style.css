@@ -5106,3 +5106,7 @@
 .list-display-product-price {
     text-align: center;
 }
+
+.hide-element {
+    display: none;
+}
