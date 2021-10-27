@@ -7,9 +7,9 @@
     <title>Payment</title>
 </head>
 <body>
-<script src="js/jquery.min.js"></script>
+<script src="assets/js/jquery.min.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=AewYHDSh-Vue_sRKeDe4kY7L7eK24L91m-WPqggZUcZtoCXYE9fs-QEUL-ndGql21tvXKUIeD3nurkbX&disable-funding=credit,card"></script>
-<script src="js/payment.js"></script>
+<script src="assets/js/payment.js"></script>
 
 </body>
 </html>

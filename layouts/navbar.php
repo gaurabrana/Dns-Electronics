@@ -27,16 +27,16 @@ include("database/connect.php");
 								<?php
 								if (isset($_SESSION['name'])) {
 									echo '<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
-										' . $_SESSION['name'] . '</a>
-										<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuLink">
-												<li class="userProfile"><i class="fa fa-user-circle"></i><a class="dropdown-item" href="user/user.php">UserProfile</a></li>
-												<li class="userProfile"><i class="fa fa-list-alt" aria-hidden="true"></i>
-												<a class="dropdown-item" href="user/myorders.php">Orders</a></li>
-												<li class="userProfile"><i class="fa fa-credit-card" aria-hidden="true"></i><a class="dropdown-item" href="user/mypayments.php">Payments</a></li>
-												<li class="userProfile"><i class="fa fa-shopping-cart"></i><a class="dropdown-item" href="cart.php">Cart</a></li>
-												<li class="userProfile"><div><i class="far fa-heart" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
-												<li class="userProfile"><i class="ti-power-off"></i><a class="dropdown-item" href="database/logout.php">Logout</a></li>
-											</ul>';
+										' . $_SESSION['name'] . '</a>										
+											<ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="dropdownMenuLink">
+											<li class="userProfile"><i class="fa fa-user-circle"></i><a class="dropdown-item" href="profile.php">UserProfile</a></li>
+											<li class="userProfile"><i class="fa fa-list-alt" aria-hidden="true"></i>
+											<a class="dropdown-item" href="myorders.php">Orders</a></li>
+											<li class="userProfile"><i class="fa fa-credit-card" aria-hidden="true"></i><a class="dropdown-item" href="mypayments.php">Payments</a></li>
+											<li class="userProfile"><i class="fa fa-shopping-cart"></i><a class="dropdown-item" href="cart.php">Cart</a></li>
+											<li class="userProfile"><div><i class="far fa-heart" aria-hidden="true"></i><a class="dropdown-item" href="favourite.php">Favourites</a></li>
+											<li class="userProfile"><i class="ti-power-off"></i><a class="dropdown-item" href="database/logout.php">Logout</a></li>
+										</ul>';																				
 								} else {
 									echo '<div class="btn-group"><a style="cursor:pointer;" id="loginbutton" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-auto-close="false" aria-expanded="false">
 										Login
@@ -89,7 +89,7 @@ include("database/connect.php");
 				<div class="col-lg-2 col-md-2 col-12">
 					<!-- Logo -->
 					<div class="logo">
-						<a href="index.php"><img src="img/logored.png" alt="logo"></a>
+					<a href="./"><img src="img/logored.png" alt="logo"></a>						
 					</div>
 					<!--/ End Logo -->
 					<!-- Search Form -->
@@ -97,7 +97,7 @@ include("database/connect.php");
 						<div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
 						<!-- Search Form -->
 						<div class="search-top">
-							<form class="search-form" id="searchProductSmall" action="shop-grid.php" method="POST">
+							<form class="search-form" id="searchProductSmall" action="products.php" method="POST">
 								<input type="text" placeholder="Search here..." name="search">
 								<button value="search" type="submit"><i class="ti-search"></i></button>
 							</form>
@@ -121,7 +121,7 @@ include("database/connect.php");
 								?>
 
 							</select>		
-							<form id="searchProductShow" action="shop-grid.php" method="POST">
+							<form id="searchProductShow" action="products.php" method="POST">
 								<input id="searchProduct" name="search" placeholder="Search Products Here....." type="search">
 								<button class="btnn" name="searchbtn" id="SearchProductPage"><i class="ti-search"></i></button>
 							</form>							
@@ -139,7 +139,7 @@ include("database/connect.php");
 						<?php
 						if (isset($_SESSION['name'])) {
 							$cartid = $_SESSION['cartid'];
-							$getcartitem = "Select p.id, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
+							$getcartitem = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
 							$cartquery = mysqli_query($conn, $getcartitem);
 							$totalItems = mysqli_num_rows($cartquery);
 							echo '<div class="sinlge-bar">
@@ -165,7 +165,7 @@ include("database/connect.php");
 								$total = $total + $subtotal;
 								echo '<li>
 										
-										<a class="cart-img" href="singleproduct.php?i=' . $row['code'] . '"><img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#"></a>
+										<a class="cart-img" href="singleproduct.php?i=' . $row['code'] . '"><img src="admin/images/products/' . $row['sold_by'] . '/'.$row['image_folder_key'].'/' . $row['image_name'] . '" alt="#"></a>
 										<h4><a href="singleproduct.php?i=' . $row['code'] . '">' . $row['name'] . '</a></h4>
 										<p class="quantity">' . $row['quantity'] . 'x - <span class="amount">Rs ' . $subtotal . '</span></p>
 									</li>';
@@ -215,13 +215,13 @@ include("database/connect.php");
 									<li class="main-mega">
 										<a href="#">best selling <i class="fa fa-angle-right" aria-hidden="true"></i></a>
 										<ul class="mega-menu">';
-							$sql = "Select name, code, image_name, sold_by from product p , order_item o where o.product_code = p.code order by count(product_code) DESC";
+							$sql = "Select name, code, image_folder_key, image_name, sold_by from product p , order_item o where o.product_code = p.code order by count(product_code) DESC";
 							$result = mysqli_query($conn, $sql);
 							while ($row = mysqli_fetch_assoc($result)) {
 								echo '<li class="single-menu">
 												
 											<div class="image">
-												<img src="admin/images/products/' . $row['sold_by'] . '/' . $row['image_name'] . '" alt="#">
+												<img src="admin/images/products/' . $row['sold_by'] . '/'.$row['image_folder_key'].'/'. $row['image_name'] . '" alt="#">
 											</div>
 											<div class="inner-link">
 												<a href="singleproduct.php?i='.$row['code'].'">' . $row['name'] . '</a>
@@ -237,14 +237,14 @@ include("database/connect.php");
 							$sql = "select distinct brand from product ";
 							$result = mysqli_query($conn, $sql);
 							while ($row = mysqli_fetch_assoc($result)) {
-								echo '<li><a href="shop-grid.php?qb='.$row['brand'].'">' . $row['brand'] . '</a></li>';
+								echo '<li><a href="products.php?qb='.$row['brand'].'">' . $row['brand'] . '</a></li>';
 							}
 							echo '</ul>
 									</li>';
 							$sql = "select distinct category from product";
 							$result = mysqli_query($conn, $sql);
 							while ($row = mysqli_fetch_assoc($result)) {
-								echo '<li><a href="shop-grid.php?qc='.$row['category'].'">' . $row['category'] . '</a></li>';
+								echo '<li><a href="products.php?qc='.$row['category'].'">' . $row['category'] . '</a></li>';
 							}
 							echo '</ul>
 							</div>
@@ -259,31 +259,35 @@ include("database/connect.php");
 								<div class="navbar-collapse">
 									<div class="nav-inner">
 										<ul class="nav main-menu menu navbar-nav">
-											<li class="active"><a href="index.php">Home</a></li>
-											<li><a href="shop-grid.php">Product</a></li>
-											<li><a href="#">Service</a></li>
+											<li class="active"><a href="./">Home</a></li>		
+											<li><a href="#">Services</a></li>																															
 											<li>
 												<a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
 												<ul class="dropdown">
-
-													<li><a href="shop-grid.php">Shop Grid</a></li>
-
+												<li><a href="products.php">Product</a></li>												
 													<li><a href="cart.php">Cart</a></li>
 													<li><a href="checkout.php">Checkout</a></li>
 												</ul>
 											</li>
-											<li><a href="#">Pages<i class="ti-angle-down"></i></a>
+											<li><a href="#">Trade With Us<i class="ti-angle-down"></i></a>
 												<ul class="dropdown">
-													<li><a href="traders/login.php">Sell my products</a></li>
+													<li><a href="traders/">Sell my products</a></li>
 												</ul>
-											</li>
-											<li>
-												<a href="#">Blog<i class="ti-angle-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="blog-single-sidebar.php">Blog Single Sidebar</a></li>
-												</ul>
-											</li>
+											</li>											
 											<li><a href="contact.php">Contact Us</a></li>
+											<?php
+											if(isset($_SESSION['email'])){
+												echo'<li>
+												<a href="#">Account<i class="ti-angle-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="profile.php">My Profile</a></li>
+													<li><a href="myorders.php">My Orders</a></li>													
+													<li><a href="addressbook.php">My Address Book</a></li>
+													<li><a href="mypayments.php">My Payments</a></li>
+												</ul>
+											</li>';
+											}
+											?>											
 										</ul>
 									</div>
 								</div>
@@ -297,11 +301,11 @@ include("database/connect.php");
 	</div>
 	<!--/ End Header Inner -->
 </header>
-<script src="js/jquery.min.js"></script>
+<script src="assets/js/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$(".navbarregister").click(function() {
-			alert("ok");
+		
+		$(".navbarregister").click(function() {			
 			window.location.href = "./register.php";
 		});
 		$(".navbarlogin").click(function() {

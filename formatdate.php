@@ -21,4 +21,14 @@ function formatTime($value){
         return ($e -> getMessage());
     }
 }
+
+function checkDateTime($value){
+    if ( strtotime($value) > strtotime(date("Y-m-d h:i:s A")) ) {
+        $isValid = true;                             
+      }
+      else{
+        $isValid = false;
+      }
+      return $isValid;
+}
 ?>

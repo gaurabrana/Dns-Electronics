@@ -232,7 +232,7 @@ if(mysqli_num_rows($result)>0){
 								<div class="single-product">
 								<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 									<div class="product-img">
-										<a href="product-details.html">
+										<a href="singleproduct.php?i='.$row['code'].'">
 											<img class="default-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 											<img class="hover-img" src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 										</a>
@@ -248,7 +248,7 @@ if(mysqli_num_rows($result)>0){
 										</div>
 									</div>
 									<div class="product-content">
-										<h3><a href="product-details.html">'.$row['name'].'</a></h3>
+										<h3><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h3>
 										<div class="product-price">';
 										$data.='<span style="margin-right:4px;">Rs</span>';
 										if($row['discount']!=0){

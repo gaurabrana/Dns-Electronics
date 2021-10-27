@@ -1,8 +1,6 @@
 <?php
-include('connect.php');
-if(!isset($_SESSION['email'])){
-header("Location: login.php");
-}
+include('database/connect.php');
+
 ?>
 <div class="sidebar" data-color="purple" data-background-color="white" data-image="assets/img/sidebar-1.jpg">
       <!--
@@ -48,7 +46,7 @@ header("Location: login.php");
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="../shop-grid.php">
+            <a class="nav-link" href="../products.php">
               <i class="material-icons">shop_two</i>
               <p>Back to shopping</p>
             </a>

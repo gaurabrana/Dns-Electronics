@@ -66,7 +66,7 @@ if(isset($_POST['submit'])){
         mkdir('images/products/'.$sold_by, 0755, true);
     }
     $target_dir = "images/products/".$sold_by."/";
-    include('imageupload.php');
+    include('database/imageupload.php');
     //validate
     $sql = "Insert into product (name,price,discount,description,code,sold_by,brand,shop_id,quantity_stock,type,category,gender_preference,image_name,added_date) values ('$name','$price','$discount','$description','$code','$sold_by','$brand','$shop_id','$quantity_stock','$type','$category','$gender_preference','$imagename','$added_date')";
     $result = mysqli_query($conn, $sql);

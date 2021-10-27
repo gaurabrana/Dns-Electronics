@@ -9,7 +9,7 @@
 						<!-- Single Widget -->
 						<div class="single-footer about">
 							<div class="logo">
-								<a href="index.html"><img src="img/logowhite.png" alt="#"></a>
+							<a href="./"><img src="img/logowhite.png" alt="#"></a>													
 							</div>
 							<p class="text">This is an example. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa massa ultricies mi quis. Dictum sit amet justo donec enim diam vulputate ut. Pharetra et ultrices neque ornare aenean euismod elementum nisi.  </p>
 							<p class="call">Got Question? Call us 24/7<span><a href="tel:123456789">+9771234567890</a></span></p>

@@ -16,12 +16,14 @@ if(mysqli_num_rows($result) > 0){
         $login_email = $row['email'];
         $login_password = $row['password'];
         $login_id = $row['id'];
+        $uniquekey  = $row['uniquekey'];
     }
     if(md5($password) == $login_password){          
         
         $_SESSION['name'] = strtoupper($login_name);
         $_SESSION['email'] = $login_email;        
         $_SESSION['id'] = $login_id;
+        $_SESSION['uniquekey'] = $uniquekey;
         $sql1 = "Select cart_id from cart where customer_id = '$login_id'";
         $result1 = mysqli_query($conn, $sql1);
         while($row = mysqli_fetch_assoc($result1)){

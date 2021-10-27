@@ -16,7 +16,7 @@ if(isset($_FILES['image_upload_file'])){
     $_SESSION['imagename'] = null;
     $userUniqueKey = rand(100, 500).time();
     $_SESSION['uniquekey'] = $userUniqueKey;
-    include('../imageUpload/imageUpload.php');    
+    include('imageupload.php');    
 }
 if(isset($_POST['submit'])){    
 $newUserID = getData("customer", $conn);
@@ -71,6 +71,12 @@ $password = md5($_POST['password']);
         if($result){
             $sql1 = "Insert into cart values ('$newCartID','$newUserID')";
             $result1 = mysqli_query($conn, $sql1);
+            $message = "
+            <h2>Thank you for Registering With Dns Electronics.</h2>    
+            <p>Please click the link below to activate your account.</p>
+            <a href='http://localhost/ecommerceproject/database/verifyemail.php?vkey=$verificationkey'>Activate Account!</a>
+        ";
+        $subject = "Registered Successfully.";
             include('sendmail.php');
             if(isset($output['statusCode'])){
                 if($output['statusCode'] == 202){

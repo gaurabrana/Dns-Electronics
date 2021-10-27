@@ -128,7 +128,7 @@
             // data.append("KEY", "VALUE");
             // (B3) AJAX REQUEST
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "imageupload.php");
+            xhr.open("POST", "database/imageupload.php");
             xhr.onload = function() {
                 var path = JSON.parse(this.response);
                 if (path.code == 200) {

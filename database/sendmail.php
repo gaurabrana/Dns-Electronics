@@ -26,22 +26,23 @@ try {
     // Sender and recipient settings
     $mail->setFrom($sendingFrom, 'Dns Electronics');
     $mail->addAddress($email, $name);
-    //$mail->addReplyTo('example@gmail.com', 'Sender Name'); // to set the reply to
-
-    $message = "
-    <h2>Thank you for Registering With Dns Electronics.</h2>    
-    <p>Please click the link below to activate your account.</p>
-    <a href='http://localhost/ecommerceproject/database/verifyemail.php?vkey=$verificationkey'>Activate Account!</a>
-";
+    //$mail->addReplyTo('example@gmail.com', 'Sender Name'); // to set the reply to    
 
     // Setting the email content
     $mail->IsHTML(true);
-    $mail->Subject = "Registered Successfully.";
+    $mail->Subject = $subject;
     $mail->Body = $message;
     $mail->AltBody = 'Plain text message body for non-HTML email client. Gmail SMTP email body.';
-    $mail->send();    
+    if($mail->send()){
+        $emailSent = true;
+    }    
 } catch (Exception $e) {
-    $output['statusCode'] = 202;
+    if(isset($isUpdateProfile)){
+        echo json_encode(array("statusCode" => 202));
+    }
+    else{
+        $output['statusCode'] = 202;
+    }    
     
 }
 ?>

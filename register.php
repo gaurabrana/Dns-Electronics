@@ -1,3 +1,11 @@
+<?php
+if(!isset($_SESSION)){
+session_start();
+if(isset($_SESSION['email'])){
+header("Location: index.php");
+}
+}
+?>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -18,33 +26,33 @@
     <!-- StyleSheet -->
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
     <!-- Magnific Popup -->
-    <link rel="stylesheet" href="css/magnific-popup.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
 
-    <!-- Fancybox -->
-    <link rel="stylesheet" href="css/jquery.fancybox.min.css">
+    
+    <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- Themify Icons -->
-    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
     <!-- Nice Select CSS -->
-    <link rel="stylesheet" href="css/niceselect.css">
+    <link rel="stylesheet" href="assets/css/niceselect.css">
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
     <!-- Flex Slider CSS -->
-    <link rel="stylesheet" href="css/flex-slider.min.css">
+    <link rel="stylesheet" href="assets/css/flex-slider.min.css">
     <!-- Owl Carousel -->
-    <link rel="stylesheet" href="css/owl-carousel.css">
+    <link rel="stylesheet" href="assets/css/owl-carousel.css">
     <!-- Slicknav -->
-    <link rel="stylesheet" href="css/slicknav.min.css">
+    <link rel="stylesheet" href="assets/css/slicknav.min.css">
 
     <!-- custom StyleSheet -->
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="register.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/intlTelInput.css">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/register.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/intlTelInput.css">
 
 
 
@@ -77,7 +85,7 @@
                     <div class="bread-inner">
                         <ul class="bread-list">
                             <li><a href="index.php">Home<i class="ti-arrow-right"></i></a></li>
-                            <li class="active"><a href="login.php">Login</a></li>
+                            <li class="active"><a href="register.php">Register</a></li>
                         </ul>
                     </div>
                 </div>
@@ -145,7 +153,7 @@
                                     <span id="error-msg" class="hide"></span>
                                     <input type="tel" name="phone_number[main]" id="phone" required autocomplete="off" />
                                     <label style="margin-top: 25px;" class="fieldlabels">Gender: *</label> <br>
-                                    <select name="gender" id="gender" aria-placeholder="Choose gender" required>
+                                    <select name="gender" id="genderFromRegister" aria-placeholder="Choose gender" required>
                                         <option value="notselected" disabled="" selected="">Choose Gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
@@ -228,41 +236,41 @@
     ?>
 
     <!-- Jquery -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.0.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery-migrate-3.0.0.js"></script>
+    <script src="assets/js/jquery-ui.min.js"></script>
     <!-- Popper JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
     <!-- Slicknav JS -->
-    <script src="js/slicknav.min.js"></script>
+    <script src="assets/js/slicknav.min.js"></script>
     <!-- Owl Carousel JS -->
-    <script src="js/owl-carousel.js"></script>
+    <script src="assets/js/owl-carousel.js"></script>
     <!-- Magnific Popup JS -->
-    <script src="js/magnific-popup.js"></script>
+    <script src="assets/js/magnific-popup.js"></script>
     <!-- Fancybox JS -->
-    <script src="js/facnybox.min.js"></script>
+    <script src="assets/js/facnybox.min.js"></script>
     <!-- Waypoints JS -->
-    <script src="js/waypoints.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
     <!-- Countdown JS -->
-    <script src="js/finalcountdown.min.js"></script>
+    <script src="assets/js/finalcountdown.min.js"></script>
     <!-- Nice Select JS -->
-    <script src="js/nicesellect.js"></script>
+    <script src="assets/js/nicesellect.js"></script>
     <!-- Ytplayer JS -->
-    <script src="js/ytplayer.min.js"></script>
+    <script src="assets/js/ytplayer.min.js"></script>
     <!-- Flex Slider JS -->
-    <script src="js/flex-slider.js"></script>
+    <script src="assets/js/flex-slider.js"></script>
     <!-- ScrollUp JS -->
-    <script src="js/scrollup.js"></script>
+    <script src="assets/js/scrollup.js"></script>
     <!-- Onepage Nav JS -->
-    <script src="js/onepage-nav.min.js"></script>
+    <script src="assets/js/onepage-nav.min.js"></script>
     <!-- Easing JS -->
-    <script src="js/easing.js"></script>
+    <script src="assets/js/easing.js"></script>
     <!-- Active JS -->
-    <script src="js/active.js"></script>
+    <script src="assets/js/active.js"></script>
 
-    <script src="register.js"></script>
-    <script src="js/intlTelInput.min.js"></script>
+    <script src="assets/js/register.js"></script>
+    <script src="assets/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.js" integrity="sha512-RTxmGPtGtFBja+6BCvELEfuUdzlPcgf5TZ7qOVRmDfI9fDdX2f1IwBq+ChiELfWt72WY34n0Ti1oo2Q3cWn+kw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
@@ -279,7 +287,7 @@
                 var password = $('#password_register').val();
                 var fullname = $('#fullname').val();
                 var age = $('#age').val();
-                var gender = $('#gender').val();
+                var gender = $('#genderFromRegister').val();
                 var full_number = intl.getNumber(intlTelInputUtils.numberFormat.E164);
                 var phone_number = $('#phone').val();
                 var imageName = $('#imageName').val();
@@ -361,13 +369,11 @@
                 },
                 uploadProgress: function(event, position, total, percentComplete) {                    
                     var percentVal = percentComplete + '%';
-                    console.log(percentVal);
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
                 success: function(html, statusText, xhr, $form) {
-                    obj = $.parseJSON(html);
-                    console.log(obj);
+                    obj = $.parseJSON(html);                    
                     if (obj.status) {
                         var percentVal = '100%';
                         bar.width(percentVal)                        
@@ -398,7 +404,7 @@
             separateDialCode: true,
             initialCountry: "np",
             hiddenInput: "full",
-            utilsScript: "js/utils.js"
+            utilsScript: "assets/js/utils.js"
         });
 
         var reset = function() {

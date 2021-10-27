@@ -1,5 +1,6 @@
 <?php
 include('database/connect.php');
+$active = "checkout";
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
@@ -20,29 +21,29 @@ include('database/connect.php');
 	<!-- StyleSheet -->
 	
 	<!-- Bootstrap -->
-	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="assets/css/bootstrap.css">
 	<!-- Magnific Popup -->
-    <link rel="stylesheet" href="css/magnific-popup.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
 	<!-- Font Awesome -->    
-	<!-- Fancybox -->
-	<link rel="stylesheet" href="css/jquery.fancybox.min.css">
+	
+	
 	<!-- Themify Icons -->
-    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
 	<!-- Nice Select CSS -->
-    <link rel="stylesheet" href="css/niceselect.css">
+    <link rel="stylesheet" href="assets/css/niceselect.css">
 	<!-- Animate CSS -->
-    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
 	<!-- Flex Slider CSS -->
-    <link rel="stylesheet" href="css/flex-slider.min.css">
+    <link rel="stylesheet" href="assets/css/flex-slider.min.css">
 	<!-- Owl Carousel -->
-    <link rel="stylesheet" href="css/owl-carousel.css">
+    <link rel="stylesheet" href="assets/css/owl-carousel.css">
 	<!-- Slicknav -->
-    <link rel="stylesheet" href="css/slicknav.min.css">
+    <link rel="stylesheet" href="assets/css/slicknav.min.css">
 	
 	<!-- custom StyleSheet -->
-	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+	<link rel="stylesheet" href="assets/css/reset.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 
 	
 	
@@ -448,7 +449,7 @@ include('database/connect.php');
 						if(isset($_SESSION['cartid'])){
 							$cart_id = 	$_SESSION['cartid'];							
 						}						
-						$sql = "Select p.id, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
+						$sql = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
 						$result = mysqli_query($conn, $sql);
 						$total = 0;
 						$totalDiscount = 0;
@@ -542,42 +543,42 @@ include('database/connect.php');
 		<!-- /End Footer Area -->
  
 	<!-- Jquery -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery-migrate-3.0.0.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery-migrate-3.0.0.js"></script>
+	<script src="assets/js/jquery-ui.min.js"></script>
 	<!-- Popper JS -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 	<!-- Color JS -->
 	
 	<!-- Slicknav JS -->
-	<script src="js/slicknav.min.js"></script>
+	<script src="assets/js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->
-	<script src="js/owl-carousel.js"></script>
+	<script src="assets/js/owl-carousel.js"></script>
 	<!-- Magnific Popup JS -->
-	<script src="js/magnific-popup.js"></script>
+	<script src="assets/js/magnific-popup.js"></script>
 	<!-- Fancybox JS -->
-	<script src="js/facnybox.min.js"></script>
+	<script src="assets/js/facnybox.min.js"></script>
 	<!-- Waypoints JS -->
-	<script src="js/waypoints.min.js"></script>
+	<script src="assets/js/waypoints.min.js"></script>
 	<!-- Countdown JS -->
-	<script src="js/finalcountdown.min.js"></script>
+	<script src="assets/js/finalcountdown.min.js"></script>
 	<!-- Nice Select JS -->
-	<script src="js/nicesellect.js"></script>
+	<script src="assets/js/nicesellect.js"></script>
 	<!-- Ytplayer JS -->
-	<script src="js/ytplayer.min.js"></script>
+	<script src="assets/js/ytplayer.min.js"></script>
 	<!-- Flex Slider JS -->
-	<script src="js/flex-slider.js"></script>
+	<script src="assets/js/flex-slider.js"></script>
 	<!-- ScrollUp JS -->
-	<script src="js/scrollup.js"></script>
+	<script src="assets/js/scrollup.js"></script>
 	<!-- Onepage Nav JS -->
-	<script src="js/onepage-nav.min.js"></script>
+	<script src="assets/js/onepage-nav.min.js"></script>
 	<!-- Easing JS -->
-	<script src="js/easing.js"></script>
+	<script src="assets/js/easing.js"></script>
 	<!-- Active JS -->
-	<script src="js/active.js"></script>
+	<script src="assets/js/active.js"></script>
 	<!--custom page js -->
-	<script src="js/cart.js"></script>	
-	<script src="js/checkout.js"></script>
+	<script src="assets/js/cart.js"></script>	
+	<script src="assets/js/checkout.js"></script>
 						
 </body>
 </html>
