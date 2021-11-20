@@ -305,124 +305,121 @@ include("database/connect.php");
                                 <div class="card-body">
                                     <div class="active-member">
                                         <div class="table-responsive">
-                                            <table class="table table-xs mb-0">
+                                            <table class="table table-xs mb-0 table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>Customers</th>
                                                         <th>Product</th>
                                                         <th>Country</th>
-                                                        <th>Status</th>
-                                                        <th>Payment Method</th>
-                                                        <th>Activity</th>
+                                                        <th>Order Status</th>
+                                                        <th>Payment Status</th>                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/1.jpg" class=" rounded-circle mr-3" alt="">Sarah Smith</td>
-                                                        <td>iPhone X</td>
-                                                        <td>
-                                                            <span>United States</span>
-                                                        </td>
+                                                    <?php
+                                                    $getRecentCustomerOrder  = "Select * from orders order by order_date ASC";
+                                                    $executegetRecentCustomerOrder = mysqli_query($conn, $getRecentCustomerOrder);
+                                                    while($row = mysqli_fetch_assoc($executegetRecentCustomerOrder)){
+                                                        $orderid = $row['id'];
+                                                        echo' <tr>';
+                                                        //get user detail
+                                                        $userid = $row['user_id'];
+                                                        $getUserDetail = "Select name, uniquekey, gender, profile_picture from customer where id= '$userid' ";
+                                                        $executegetUserDetail = mysqli_query($conn, $getUserDetail);
+                                                        while($row1 = mysqli_fetch_assoc($executegetUserDetail)){
+                                                            if($row1['profile_picture']=="notset"){
+                                                                if($row1['gender']=="Male"){
+                                                                    $imagesrc =  '../img/maleuser.png';
+                                                                }
+                                                                else{
+                                                                    $imagesrc =  '../img/femaleuser.png';
+                                                                }  
+                                                               }
+                                                               else{
+                                                                if(file_exists('../img/UserProfile/'.$row1['uniquekey'].'/'.$row1['profile_picture'].'')){
+                                                                    $imagesrc =  '../img/UserProfile/'.$row1['uniquekey'].'/'.$row1['profile_picture'].'';   
+                                                                }
+                                                                else{
+                                                                    if($row1['gender']=="Male"){
+                                                                        $imagesrc =  '../img/maleuser.png';
+                                                                    }
+                                                                    else{
+                                                                        $imagesrc =  '../img/femaleuser.png';
+                                                                    }                                                    
+                                                                }
+                                                                
+                                                               } 
+                                                            echo'<td><img src="'.$imagesrc.'" class=" rounded-circle mr-3" alt="">'.$row1['name'].'</td>';                                                            
+                                                        }
+                                                        //get product detail
+                                                        $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name,p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
+                                                        $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
+                                                        if(mysqli_num_rows($getOrderedProductsResult) > 0){
+                                                            if(mysqli_num_rows($getOrderedProductsResult) > 1){
+                                                                echo'<td style="cursor:pointer;" data-toggle="modal" data-target="#orderedproduct'.$orderid.'" role="button">View Products                                                                                                                              
+                                                                <div class="modal fade" id="orderedproduct'.$orderid.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Ordered Products</h5>         
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                          <span aria-hidden="true">&times;</span>        
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                    <table class="table table-hover">
+                                                                    <thead>
+                                                                    <th>Image</th>
+                                                                    <th>Name</th>
+                                                                    <th>Price</th>
+                                                                    <th>Quantity</th>
+                                                                    </thead>
+                                                                    <tbody>';                                          
+                                                                        while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
+                                                                        echo'<tr>
+                                                                        <td width="120px" class="small-size"><img src="../admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_folder_key'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
+                                                                        <td><a target="_blank" href="../singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>
+                                                                        <td>Rs '.$orderedProduct['price'].'</td>
+                                                                        <td>'.$orderedProduct['quantity'].'</td>
+                                                                        </tr>';
+                                                                        }                                                                                                 
+                                                                    echo'</tbody>
+                                                                </table>                                                                   
+                                                                    </div>                                                                    
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                                </td>';
+                                                            }
+                                                            else{
+                                                                while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){                                                                   
+                                                                        echo'<td>'.$orderedProduct['name'].'</td>';                                                                    
+                                                                }
+                                                            }                                                            
+                                                        }             
+                                                        echo'<td>Nepal</td>
                                                         <td>
                                                             <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-success" style="width: 50%"></div>
-                                                                </div>
+                                                                <div class="progress" style="height: 6px">';
+                                                                if($row['status'] == "completed"){
+                                                                    echo'<div class="progress-bar bg-success" style="width: 100%"></div>';
+                                                                }
+                                                                else{
+                                                                    echo'<div class="progress-bar bg-warningd" style="width: 50%"></div>';
+                                                                }
+                                                                    
+                                                                echo'</div>
                                                             </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">10 sec ago</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/2.jpg" class=" rounded-circle mr-3" alt="">Walter R.</td>
-                                                        <td>Pixel 2</td>
-                                                        <td><span>Canada</span></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-success" style="width: 50%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">50 sec ago</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/3.jpg" class=" rounded-circle mr-3" alt="">Andrew D.</td>
-                                                        <td>OnePlus</td>
-                                                        <td><span>Germany</span></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-warning" style="width: 50%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-warning  mr-2"></i> Pending</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">10 sec ago</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/6.jpg" class=" rounded-circle mr-3" alt=""> Megan S.</td>
-                                                        <td>Galaxy</td>
-                                                        <td><span>Japan</span></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-success" style="width: 50%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">10 sec ago</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/4.jpg" class=" rounded-circle mr-3" alt=""> Doris R.</td>
-                                                        <td>Moto Z2</td>
-                                                        <td><span>England</span></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-success" style="width: 50%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-success  mr-2"></i> Paid</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">10 sec ago</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><img src="./images/avatar/5.jpg" class=" rounded-circle mr-3" alt="">Elizabeth W.</td>
-                                                        <td>Notebook Asus</td>
-                                                        <td><span>China</span></td>
-                                                        <td>
-                                                            <div>
-                                                                <div class="progress" style="height: 6px">
-                                                                    <div class="progress-bar bg-warning" style="width: 50%"></div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><i class="fa fa-circle-o text-warning  mr-2"></i> Pending</td>
-                                                        <td>
-                                                            <span>Last Login</span>
-                                                            <span class="m-0 pl-3">10 sec ago</span>
-                                                        </td>
-                                                    </tr>
+                                                        </td>';
+                                                        echo'</tr>';
+                                                        
+                                                    }
+                                                    ?>
                                                 </tbody>
                                             </table>
+                                            <?php
+                                            
+                                            ?>
                                         </div>
                                     </div>
                                 </div>

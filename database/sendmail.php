@@ -32,17 +32,14 @@ try {
     $mail->IsHTML(true);
     $mail->Subject = $subject;
     $mail->Body = $message;
-    $mail->AltBody = 'Plain text message body for non-HTML email client. Gmail SMTP email body.';
+    $mail->AltBody = 'Account notification from DNS Electronics.';
     if($mail->send()){
         $emailSent = true;
     }    
 } catch (Exception $e) {
-    if(isset($isUpdateProfile)){
-        echo json_encode(array("statusCode" => 202));
-    }
-    else{
-        $output['statusCode'] = 202;
-    }    
-    
+    $emailSent = false;
+    if(!isset($isUpdateProfile)){
+        $output['statusCode'] = 202;        
+    }     
 }
 ?>

@@ -4474,20 +4474,6 @@
     line-height: 22px;
 }
 
-.blog-single .single-comment .content .button {}
-
-.blog-single .single-comment .content .btn {
-    display: inline-block;
-    color: #666;
-    font-weight: 400;
-    color: #6a6a6a;
-    border-radius: 4px;
-    text-transform: capitalize;
-    font-size: 14px;
-    background: transparent;
-    padding: 0;
-}
-
 .blog-single .single-comment .content a i {
     display: inline-block;
     margin-right: 5px;
@@ -4495,6 +4481,36 @@
 
 .blog-single .single-comment .content a:hover {
     color: #ed1c24;
+}
+
+.card .card-header-dark .card-icon,
+.card .card-header-dark .card-text,
+.card .card-header-dark:not(.card-header-icon):not(.card-header-text),
+.card.bg-dark,
+.card.card-rotate.bg-dark .front,
+.card.card-rotate.bg-dark .back {
+    background: linear-gradient(60deg, #231f20, #272123);
+}
+
+.card .card-header-primary .card-icon,
+.card .card-header-primary:not(.card-header-icon):not(.card-header-text),
+.card .card-header-primary .card-text {
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(176, 60, 39, 0.4);
+}
+
+.card .card-header-dark .card-icon,
+.card .card-header-dark:not(.card-header-icon):not(.card-header-text),
+.card .card-header-dark .card-text {
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(176, 60, 39, 0.4);
+}
+
+.card-header-dark h3,
+.card-header-dark p {
+    color: #fff;
+}
+
+.isProduct {
+    transition: width 2s;
 }
 
 
@@ -5120,4 +5136,42 @@
 
 .deletebutton:hover {
     background-color: #231f20 !important;
+}
+
+.image-in-table {
+    height: 90px;
+    width: 90px;
+}
+
+.pagination ul {
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+
+.pagination li a {
+    color: #222;
+    text-align: center;
+    font-size: larger;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e6e6e6;
+}
+
+.pagination .active a {
+    background-color: #ed1c24;
+    color: #fff;
+}
+
+.pagination li a:hover {
+    background-color: #ed1c24;
+    color: #fff;
 }

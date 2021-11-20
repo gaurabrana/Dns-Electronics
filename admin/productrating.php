@@ -13,7 +13,7 @@ include("database/connect.php");
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <!-- Custom Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-
+    <link href="plugins/toastr/css/toastr.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -69,9 +69,9 @@ include("database/connect.php");
                                     $executegetRating = mysqli_query($conn, $getProductsRating);
                                     if(mysqli_num_rows($executegetRating) > 0){
                                         while($prod = mysqli_fetch_assoc($executegetRating)){
-                                            echo'<div class="col-lg-12 mb-2">
+                                            echo'<div class="col-lg-12 mb-2 col-md-12 col-12">
                                             <div class="row">
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-3 col-md-3 col-6">
                                                 <img class="autoimageSize" src="images/products/' . $prod['sold_by'] . '/' . $prod['image_folder_key'] . '/' . $prod['image_name'] . '" alt="product image">
                                                  <h5>'.$prod['name'].'</h5>
                                                  </div>';
@@ -105,7 +105,7 @@ include("database/connect.php");
                                             }
                                             
                                            } 
-                                        echo'<div class="col-lg-9">
+                                        echo'<div class="col-lg-9 col-md-9 col-6">
                                             <table class="table table-bordered table-hover">
                                             <thead>
                                             <th>User</th>
@@ -116,7 +116,7 @@ include("database/connect.php");
                                             <th>Action</th>                                         
                                             </thead>
                                             <tbody>
-                                            <tr>
+                                            <tr id="holdReview'.$row['review_id'].'">
                                                 <td><img class="image-in-table" src="'.$imagesrc.'" alt="userimage" /></td>
                                                 <td>'.$row['name'].'</td>
                                                 <td>'.$row['rating'].'</td>
@@ -177,6 +177,8 @@ include("database/connect.php");
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
+    <script src="plugins/toastr/js/toastr.min.js"></script>
+  <script src="plugins/toastr/js/toastr.init.js"></script>
 
 </body>
 

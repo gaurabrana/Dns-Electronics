@@ -16,8 +16,8 @@ extract($_POST);
     $cartid = $_SESSION['cartid'];    
     $user_id = $_SESSION['id'];
     $added_date = date("Y-m-d h:i:s A");
-if($info == "includeshipping"){
-    
+    $shipping_info_id = "-";
+if($info == "includeshipping"){    
     $shippingname = mysqli_escape_string($conn,$shippingname);
     $shippingphone = mysqli_escape_string($conn,$shippingphone);
     $shippingemail = mysqli_escape_string($conn,$shippingemail);
@@ -27,76 +27,23 @@ if($info == "includeshipping"){
     $shippingpostalcode = mysqli_escape_string($conn,$shippingpostalcode);    
     $shipping_info_id = RandomString();   
     //insert shipping address    
-    
-        //insert billing address
-        $shippingSql = "Insert into order_shipping_info values ('$shipping_info_id','$user_id','$shippingname','$shippingemail','$shippingphone','$shippingcountry','$shippingaddressone','$shippingaddresstwo','$shippingpostalcode')";
-        $resultShipping = mysqli_query($conn, $shippingSql);
-        $billingSql = "Insert into order_billing_info values ( '$infoid','$billingfname','$billinglname', '$billingemail','$billingphone','$country','$billingaddressone','$billingaddresstwo','$billingpostalcode')";
-        $resultbilling = mysqli_query($conn, $billingSql);
-    
-        if($resultbilling && $resultShipping){
-            // insert order
-            $orderid = RandomString();            
-            $orderSql = "Insert into orders values ('$orderid',
-            '$user_id',
-            '$added_date',
-            '$paymentType',
-            'pending',
-            '$infoid',
-            '$shipping_info_id')";
-            $resultOrder = mysqli_query($conn,$orderSql);
-            if($resultOrder){
-                // insert product ids of the order
-                $orderitemSql = "Select p.id, p.quantity_stock, p.price, p.discount, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
-                $resultOrderItem = mysqli_query($conn, $orderitemSql);                
-                if(mysqli_num_rows($resultOrderItem)>0){
-                    while($row = mysqli_fetch_assoc($resultOrderItem)){
-                        $orderItemid = RandomString();
-                        $discount = $row['discount'];
-                        if($discount!=0){
-                            $updatePrice = $row['price']-$row['discount'];                            
-                        }
-                        else{
-                            $updatePrice = $row['price'];
-                        }
-                        $quantity = $row['quantity'];
-                        $total = $updatePrice * $quantity;
-                        $productid = $row['id'];
-                        $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productid','$orderid','$updatePrice','$quantity','$total')";
-                        $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);                        
-                    }                    
-                }              
-                
-                //
-                $paymentId = RandomString();                
-                $paymentSql = "Insert into payment values ('$paymentId','$user_id','$orderid',null,'$paymentType','unpaid')";
-                $paymentresult = mysqli_query($conn, $paymentSql);
-                if($paymentresult){     
-                    echo json_encode(array("statusCode" => 200));
-                }
-            }
-            else{
-                echo json_encode(array("statusCode" => 201));
-            }            
-        } 
-        else{
-            echo json_encode(array("statusCode" => 202));
-        }       
+    $shippingSql = "Insert into order_shipping_info values ('$shipping_info_id','$user_id','$shippingname','$shippingemail','$shippingphone','$shippingcountry','$shippingaddressone','$shippingaddresstwo','$shippingpostalcode')";
+    $resultShipping = mysqli_query($conn, $shippingSql);          
 }
-else if($info == "onlybilling"){   
     $billingSql = "Insert into order_billing_info values ( '$infoid','$billingfname','$billinglname', '$billingemail','$billingphone','$country','$billingaddressone','$billingaddresstwo','$billingpostalcode')";    
-        $resultbilling = mysqli_query($conn, $billingSql);
+    $resultbilling = mysqli_query($conn, $billingSql);
 
         if($resultbilling){
             // insert order
             $orderid = RandomString();
-            $orderSql = "Insert into orders values ('$orderid','$user_id','$added_date','$paymentType','pending','$infoid','-')";
+            $orderSql = "Insert into orders values ('$orderid','$user_id','$added_date','$paymentType','pending','$infoid','$shipping_info_id')";
             $resultOrder = mysqli_query($conn, $orderSql);
             if($resultOrder){
                 // insert product ids of the order
                 $orderitemSql = "Select p.id, p.quantity_stock, p.price, p.discount, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
                 $resultOrderItem = mysqli_query($conn, $orderitemSql);                
                 if(mysqli_num_rows($resultOrderItem)>0){
+                    $error = 0;
                     while($row = mysqli_fetch_assoc($resultOrderItem)){
                         $orderItemid = RandomString();
                         $discount = $row['discount'];
@@ -110,17 +57,21 @@ else if($info == "onlybilling"){
                         $total = $updatePrice * $quantity;
                         $productid = $row['id'];
                         $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productid','$orderid','$updatePrice','$quantity','$total')";
-                        $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);                        
+                        $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);        
+                        if(!updateProductDetails($productcode, $quantity, $conn)){
+                            $error++;
+                        }                            
                     }                    
-                }              
-                
-                //
-                $paymentId = RandomString();                
-                $paymentSql = "Insert into payment values ('$paymentId','$user_id','$orderid',null,'$paymentType','unpaid')";
-                $paymentresult = mysqli_query($conn, $paymentSql);
-                if($paymentresult){   
-                    echo json_encode(array("statusCode" => 200));
-                }
+                    if($error == 0){
+                        clearCart($conn, $cartid);
+                        echo json_encode(array("statusCode" => 200,"orderid" => $orderid));  
+                    }
+                    else{
+                        //delete all
+                        reverseOrder($conn, $orderid, $infoid, $shipping_info_id);                           
+                        echo json_encode(array("statusCode" => 203));  
+                    }   
+                }                                                              
             }  
             else{
                 echo json_encode(array("statusCode" => 201));
@@ -130,7 +81,6 @@ else if($info == "onlybilling"){
             echo json_encode(array("statusCode" => 202));
         }
 }
-}
 
 if(isset($_POST['defaultaddress'])){
             $userid = $_SESSION['id'];
@@ -139,7 +89,6 @@ if(isset($_POST['defaultaddress'])){
             $cartid = $_SESSION['cartid'];    
             //copy billing
             $newOrderBillingId = RandomString();
-            echo $newOrderBillingId;
             $copyBillingDetail  = "Insert into order_billing_info (info_id, firstname, lastname, email_address, phone_number, country, address_one, address_two, postal_code) Select '$newOrderBillingId', firstname, lastname, email_address, phone_number, country, address_one, address_two, postal_code from billing_info where user_id = '$userid' and active='Yes'";
             $executecopyBillingDetail = mysqli_query($conn, $copyBillingDetail);  
             
@@ -163,6 +112,7 @@ if(isset($_POST['defaultaddress'])){
                     $orderitemSql = "Select p.code, p.quantity_stock, p.price, p.discount, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
                     $resultOrderItem = mysqli_query($conn, $orderitemSql);                
                     if(mysqli_num_rows($resultOrderItem)>0){
+                        $error = 0;
                         while($row = mysqli_fetch_assoc($resultOrderItem)){
                             $orderItemid = RandomString();
                             $discount = $row['discount'];
@@ -175,17 +125,25 @@ if(isset($_POST['defaultaddress'])){
                             $quantity = $row['quantity'];
                             $total = $updatePrice * $quantity;
                             $productcode = $row['code'];
-                            $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productcode','$orderid','$updatePrice','$quantity','$total')";
-                            $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);                        
-                        }                    
-                    }                                  
-                    //
-                    $paymentId = RandomString();                
-                    $paymentSql = "Insert into payment values ('$paymentId','$userid','$orderid',null,'$paymentType','unpaid')";
-                    $paymentresult = mysqli_query($conn, $paymentSql);
-                    if($paymentresult){   
-                        echo json_encode(array("statusCode" => 200));
-                    }
+                            $InsertProductInOrder = "Insert into order_item values ('$orderItemid','$productcode','$orderid','$updatePrice','$quantity','$total')";                            
+                            $resultAddProductItem = mysqli_query($conn ,$InsertProductInOrder);                                                  
+                            ///
+                            if(!updateProductDetails($productcode, $quantity, $conn)){
+                                $error++;
+                            }
+
+                        }      
+                        if($error == 0){
+                            clearCart($conn, $cartid);
+                            echo json_encode(array("statusCode" => 200,"orderid" => $orderid));  
+                        }
+                        else{
+                            //delete all
+                            reverseOrder($conn, $orderid, $newOrderBillingId, $newOrderShippingDetail);                           
+                            echo json_encode(array("statusCode" => 203));  
+                        }
+                       
+                    }                                                      
                 }
                 else{
                     echo json_encode(array("statusCode" => 201));
@@ -194,6 +152,48 @@ if(isset($_POST['defaultaddress'])){
             else{
                 echo json_encode(array("statusCode" => 202));
             } 
+}
+
+function reverseOrder($conn, $orderid, $billingid, $shippingid){
+    $deleteOrderItem = "Delete from order_item where order_id = '$orderid'";
+    $executedeleteOrderItem = mysqli_query($conn, $deleteOrderItem);
+    $deleteBillingDetail = "Delete from order_billing_info where info_id = '$billingid'";
+    $executedeleteBillingDetail = mysqli_query($conn, $deleteBillingDetail);
+    if($shippingid != "-"){
+        $deleteShippingDetail = "Delete from order_shipping_info where shipping_info_id = '$shippingid'";
+        $executedeleteShippingDetail = mysqli_query($conn, $deleteShippingDetail);
+    }    
+    $deleteOrder = "Delete from orders where id = '$orderid'";
+    $executedeleteOrder = mysqli_query($conn, $deleteOrder);
+}
+
+function updateProductDetails($code, $quantity, $conn){
+    //get quantity stock first
+    $getQuantity = "Select quantity_stock from product where code= '$code'";
+    $executegetQuantity = mysqli_query($conn, $getQuantity);
+    $row = mysqli_fetch_assoc($executegetQuantity);
+    $availablequantity = $row['quantity_stock'];
+    // decrease quantity available
+    $changedquantity = $availablequantity-$quantity;    
+    $updateQuantity = "Update product set quantity_stock = '$changedquantity' where code = '$code'";
+    $executeupdateQuantity = mysqli_query($conn, $updateQuantity);
+    if($executeupdateQuantity){
+        return true;
+    }
+    else{
+        return false;
+    }    
+}
+
+function clearCart($conn, $cartid){    
+    $sql = "Delete from product_in_cart where cart_id = '$cartid'";
+    $result = mysqli_query($conn, $sql); 
+    if($result){
+        return true;
+    }   
+    else{
+        return false;
+    }
 }
 
 function RandomString($length = 10) {

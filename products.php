@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\elementType;
+
 require ('database/connect.php');
 $active = "products";
 ?>
@@ -79,7 +82,7 @@ $active = "products";
 							<ul class="bread-list">
 								<li><a href="index.php">Home<i class="ti-arrow-right"></i></a></li>
 								<li class="active"><a href="products.php">Shop Products</a></li>
-								<input type="text" hidden value="all" id="currentQuery">								
+								<input type="text" hidden value='{"filter":"all"}' id="currentQuery">								
 							</ul>
 						</div>
 					</div>
@@ -197,7 +200,7 @@ $active = "products";
 								</div>
 								<!--/ End Single Widget -->
 								<!-- Single Widget -->
-								<div class="single-widget recent-post">
+								<div class="single-widget pb-30 recent-post">
 									<h3 class="title">Recently Added</h3>
 									<?php
 										$getRecentlyAddedProduct = "Select * from product order by STR_TO_DATE(added_date, '%Y-%m-%d') DESC LIMIT 3";
@@ -266,18 +269,20 @@ $active = "products";
 										<div class="single-shorter">
 											<label>Show :</label>
 											<select id="itemsPerPage">
-												<option selected="selected">09</option>
-												<option>15</option>
-												<option>25</option>
-												<option>30</option>
+												<option value="12" selected="selected">12</option>
+												<option value="24">24</option>
+												<option value="48">48</option>
+												<option value="72">72</option>
 											</select>
 										</div>
 										<div class="single-shorter">
 											<label>Sort By :</label>
 											<select id="sortType">
-												<option value="name" selected="selected">Name</option>
-												<option value="price">Price</option>
-												<option value="stock">In Stock</option>
+												<option value="none" disabled="disabled" selected="selected">Sort Here</option>
+												<option value="name:ASC">Name (A-Z)</option>												
+												<option value="name:DESC">Name (Z-A)</option>
+												<option value="price:ASC">Price (Low to High)</option>
+												<option value="price:DESC">Price (High to Low)</option>												
 											</select>
 										</div>
 									</div>
@@ -292,24 +297,34 @@ $active = "products";
 						<div id="loadProducts" class="row">
 							<?php
 							if(isset($_GET['type'])){
-								$keyword = $_GET['type'];
-								$sql = "Select * from product where type = '$keyword'";
-							}
-							else if(isset($_GET['qb'])){
-								$keyword = $_GET['qb'];
-								$sql = "Select * from product where brand = '$keyword'";
-							}
+								$keyword = $_GET['type'];								
+									$sql = "Select * from product where type = '$keyword'";
+																						
+							}							
 							else if(isset($_GET['qc'])){
 								$keyword = $_GET['qc'];
-								$sql = "Select * from product where category = '$keyword'";
+								if($keyword=="summer"){
+									$sql = "Select * from product where category = 'Fridge' or category='Air Conditioner' or category='Fan'";
+								}
+								else if($keyword == "winter"){
+									$sql = "Select * from product where category = 'Heater' or category='Geysers' or category='Fan'";
+								}
+								else{
+									$sql = "Select * from product where category = '$keyword'";
+								}		
 							}
 							else{
-								$sql = "Select * from product";
+								$sql = "Select * from product order by id asc LIMIT 12 ";
 							}
-							
+
+							//get total Products
+							$getTotal =  "Select count(id) as total from product";
+							$getTotalResult = mysqli_query($conn, $getTotal);
+							$r = mysqli_fetch_assoc($getTotalResult);
+							$totalproducts = $r['total'];
 							$result = mysqli_query($conn, $sql);
-							$result1 = mysqli_query($conn, $sql);
-							if(mysqli_num_rows($result) > 0){
+							$result1 = mysqli_query($conn, $sql);							
+							if(mysqli_num_rows($result) > 0){								
 								while($row=mysqli_fetch_assoc($result)){
 									if($row['discount']!=0){
 										$updatedPrice = $row['price'] - $row['discount'];								
@@ -472,7 +487,7 @@ $active = "products";
 									</div>
 									<!-- Modal end -->';
 									$discount = 0;
-									echo'<div class="col-lg-4 col-md-6 col-12">								
+									echo'<div class="col-lg-4 col-md-6 col-sm-4 col-6 isProduct">								
 									<div class="single-product">
 									<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 										<div class="product-img">
@@ -482,13 +497,18 @@ $active = "products";
 											</a>
 											<div class="button-head">
 												<div class="product-action">
-													<p data-bs-toggle="modal" id="modalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
+													<p data-bs-toggle="modal" id="modalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>																			
 													<p title="Favourite" id="favourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 													<p title="Compare" id="compare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 												</div>
-												<div class="product-action-2">
-													<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>																								
-												</div>
+												<div class="product-action-2">';
+												if(!$outOfStock){	
+												echo'<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>';
+												}
+												else{
+													echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+												}
+												echo'</div>
 											</div>
 										</div>
 										<div class="product-content">
@@ -511,13 +531,19 @@ $active = "products";
 							}							
 							?> 																				
 						</div>
-						<div class="row" id="list-style-product-display">								
+						<div class="row" id="list-style-product-display">														
 								<?php
 								while($row=mysqli_fetch_assoc($result1)){		
+									if($row['quantity_stock'] > 0){
+										$outOfStockGrid = false;
+									}
+									else{
+										$outOfStockGrid = true;
+									}
 									echo'<!-- Start Single List -->
 									<div class="col-12">
 									<div class="row">
-										<div class="col-lg-4 col-md-6 col-sm-6">
+										<div class="col-lg-4 col-md-6 col-sm-6 col-12 ">
 											<div class="single-product">
 												<div class="product-img">
 													<a href="singleproduct.php?i='.$row['code'].'">
@@ -530,9 +556,14 @@ $active = "products";
 														<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 														<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 														</div>
-														<div class="product-action-2">
-														<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>
-														</div>
+														<div class="product-action-2">';
+														if(!$outOfStockGrid){	
+															echo'<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>';
+															}
+															else{
+																echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+															}
+														echo'</div>
 													</div>
 												</div>												
 												<hr>
@@ -549,7 +580,7 @@ $active = "products";
 												</div>	
 											</div>
 										</div>
-										<div class="col-lg-8 col-md-6 col-12">
+										<div class="col-lg-8 col-md-6 col-sm-6 col-12">
 											<div class="list-content">
 												<div class="product-content">													
 													<h4 class="title"><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h4>
@@ -606,9 +637,33 @@ $active = "products";
 								}									
 									?>																							
 							</div>
+							<div class="row" id="holdPaginationButtons">
+								<div class="col-md-12 mt-6 pagination d-flex justify-content-center">								
+								<ul>
+								<li><a id="previousPage" href="#">&lt;</a></li>							
+								<?php
+								$rowsperpage  = 12;
+								$totalpages = ceil($totalproducts/$rowsperpage );								
+								$currentpage = 1;	
+								echo'<input hidden id="totalPages" value="'.$totalpages.'">';
+								echo'<input hidden id="currentPage" value="'.$currentpage.'">';			
+								for($i=1;$i<=$totalpages;$i++){
+									if($i == $currentpage){										
+										echo'<li class="active"><a id="paginationValue'.$i.'" href="#">'.$i.'</a></li>';
+									}							
+									else{
+										echo'<li><a id="paginationValue'.$i.'" href="#">'.$i.'</a></li>';
+									}	
+								}								
+								?>														
+								<li><a id="nextPage" href="#">&gt;</a></li>
+								</ul>
+								</div>							
+							</div>
 					</div>
 				</div>
 			</div>
+			
 		</section>
 		<!--/ End Product Style 1  -->		
 		<!-- Start Footer Area -->

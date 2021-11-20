@@ -1,78 +1,150 @@
 <?php
 include('connect.php');
-//for price range slider
-if(isset($_POST['minPrice']) && isset($_POST['maxPrice'])){    
-    $minPrice = mysqli_real_escape_string($conn,$_POST['minPrice']);
-    $maxPrice = mysqli_real_escape_string($conn,$_POST['maxPrice']);
+// first load 
+// number of products
+// clicked pagination
+//user clicks on samsung
+// show 12 samsung product
+// next pagination shows 12-24 products
 
-    $query = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";
+if(isset($_POST['filter'])){	
+	//get filter type
+	$filter = $_POST['filter'];
+	// get limit
+	$limit = $_POST['limit'];
+	// get sort type
+	$sortType = $_POST['sortType'];
+	$isSortActive = false;
+	if($sortType!="none"){
+		$isSortActive = true;
+		$sortField = explode(':', $sortType)[0];
+        $sortOrder = explode(':', $sortType)[1];
+	}
+	else{
+		$isSortActive = false;
+		$sortField = "-";
+        $sortOrder = "-";
+	}
+	
+	$pageno = isset($_POST['pageno']) ? $_POST['pageno'] : 1;	
+	$totalPages = 0;
+	$currentpage = $pageno;
+	//price slider
+	if($filter == "priceSlider"){		
+		if(isset($_POST['minPrice']) && isset($_POST['maxPrice'])){    
+			$minPrice = mysqli_real_escape_string($conn,$_POST['minPrice']);
+			$maxPrice = mysqli_real_escape_string($conn,$_POST['maxPrice']);
+			$OldQuery = "SELECT * from product where price BETWEEN {$minPrice} AND {$maxPrice}";			
+		}
+	}
+
+	//price ranges
+	else if($filter == "priceRanges"){
+		if(isset($_POST['range'])){
+			$rangeArea = mysqli_real_escape_string($conn,$_POST['range']);
+			if($rangeArea!="priceRange5"){        
+				if($rangeArea=="priceRange1"){
+					$minPrice = 0;
+					$maxPrice = 10000;        
+				}
+				else if($rangeArea=="priceRange2"){
+					$minPrice = 10000;
+					$maxPrice = 30000;        
+				}
+				else if($rangeArea=="priceRange3"){
+					$minPrice = 30000;
+					$maxPrice = 70000;        
+				}
+				else if($rangeArea=="priceRange4"){
+					$minPrice = 70000;
+					$maxPrice = 100000;        
+				}
+				$OldQuery = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";				
+			}
+			else{
+				$minPrice = 100000;
+				$OldQuery = "SELECT * FROM product where price > {$minPrice}";				
+			}            	
+		}
+	}
+	//brand type
+	else if($filter == "brand"){
+		if(isset($_POST['brandName'])){
+			$brandName = mysqli_real_escape_string($conn,$_POST['brandName']);
+			$OldQuery  = "SELECT * FROM product where brand = '$brandName'";
+		}
+	}
+	//category type
+	else if($filter == "category"){
+		if(isset($_POST['categoryName'])){
+			$categoryName = mysqli_real_escape_string($conn,$_POST['categoryName']);
+			$OldQuery  = "SELECT * FROM product where category = '$categoryName'";
+		}
+	}
+	else{
+			$OldQuery  = "SELECT * FROM product";
+	}
+	$getQueryDetail = getDetails($limit,$OldQuery,$conn,$pageno, $isSortActive, $sortField, $sortOrder);
+	$totalPages = $getQueryDetail[0];
+	$query = $getQueryDetail[1];
 }
-// for price radio buttons
-if(isset($_POST['range'])){
-    $rangeArea = mysqli_real_escape_string($conn,$_POST['range']);
-    if($rangeArea=="priceRange1"){
-        $minPrice = 0;
-        $maxPrice = 10000;
-        $query = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";
-    }
-    else if($rangeArea=="priceRange2"){
-        $minPrice = 10000;
-        $maxPrice = 30000;
-        $query = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";
-    }
-    else if($rangeArea=="priceRange3"){
-        $minPrice = 30000;
-        $maxPrice = 100000;
-        $query = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";
-    }
-    else if($rangeArea=="priceRange4"){
-        $minPrice = 70000;
-        $maxPrice = 100000;
-        $query = "SELECT * FROM product where price BETWEEN {$minPrice} AND {$maxPrice}";
-    }
-    else if($rangeArea=="priceRange5"){        
-        $minPrice = 100000;
-        $query = "SELECT * FROM product where price > {$minPrice}";
-    }
+else{	
+	exit();
 }
-//for brands
-if(isset($_POST['brandName'])){
-    $brandName = mysqli_real_escape_string($conn,$_POST['brandName']);
-    $query  = "SELECT * FROM product where brand = '$brandName'";
+
+function getDetails($limit,$query,$conn, $pageno, $sortActive, $sortField, $sortOrder){
+$totalrows = mysqli_num_rows(mysqli_query($conn, $query));
+$totalpages = ceil($totalrows/$limit);	
+// the offset of the list, based on current page 
+$offset = ($pageno - 1) * $limit;
+if($sortActive){
+	if($sortField == "price"){
+		$query .= " order by (price - discount) $sortOrder";
+	}
+	else{
+		$query .= " order by $sortField $sortOrder";
+	}	
 }
-//for category
-if(isset($_POST['categoryName'])){
-    $categoryName = mysqli_real_escape_string($conn,$_POST['categoryName']);
-    $query  = "SELECT * FROM product where category = '$categoryName'";
+$newQuery = $query." LIMIT $offset, $limit";
+$value = array($totalpages, $newQuery);
+return $value;
 }
-if(isset($_POST['sortType']) && isset($_POST['currentQuery'])){
-    $sortType = mysqli_real_escape_string($conn,$_POST['sortType']);
-    $currentQuery = mysqli_real_escape_string($conn,$_POST['currentQuery']);
-    if($currentQuery!="all"){
-        $sortField = explode(':', $currentQuery)[0];
-        $sortValue = explode(':', $currentQuery)[1];    
-        if($sortType!="stock"){
-            $query= "SELECT * FROM PRODUCT WHERE $sortField = '$sortValue' order by $sortType asc";
-        }
-        else{
-            $query= "SELECT * FROM PRODUCT WHERE $sortField = '$sortValue' AND quantity_stock > 0 order by name asc";
-        }    
-    }
-    else{
-        if($sortType!="stock"){
-            $query= "SELECT * FROM PRODUCT order by $sortType asc";
-        }
-        else{
-            $query= "SELECT * FROM PRODUCT WHERE quantity_stock > 0 order by name asc";
-        }    
-    }
-    
+
+if(isset($_POST['pageno']) && isset($_POST['totalpages'])){
+	$rowsperpage  = 12;	
+    $totalpages = $_POST['totalpages'];    
+    $pageno = $_POST['pageno'];	
+     // the offset of the list, based on current page 
+     $offset = ($pageno - 1) * $rowsperpage;
+     
+     // get the info from the db 
+     $query = "SELECT * FROM product LIMIT $offset, $rowsperpage";
 }
+
+
 $result = mysqli_query($conn, $query);
 $result1 = mysqli_query($conn, $query);
 if(mysqli_num_rows($result)>0){
-    $data = "";	
-    while($row = mysqli_fetch_assoc($result)){        		
+	$data = "";
+	if($totalPages > 1){
+		$data .= '<!--StartPagination--><li><a id="previousPage" href="#">&lt;</a></li>';	
+		for($i=1;$i<=$totalPages;$i++){
+			if($i == $currentpage){								
+				$data .= '<input hidden id="totalPages" value="'.$totalPages.'">
+				<input hidden id="currentPage" value="'.$currentpage.'">
+				<li class="active"><a id="paginationValue'.$i.'" href="#">'.$i.'</a></li>';
+			}							
+			else{
+				$data .= '<li><a id="paginationValue'.$i.'" href="#">'.$i.'</a></li>';
+			}	
+		}
+		$data .= '<li><a id="nextPage" href="#">&gt;</a></li>
+		<!--EndPagination-->';	
+	}	 
+	else{
+		$data .= "<!--EndPagination-->";
+	}   
+    while($row = mysqli_fetch_assoc($result)){    		
         $data .= '<!-- Modal for '.$row['code'].'-->
 		<div class="modal fade" id="modalbox'.$row['code'].'" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
@@ -108,7 +180,7 @@ if(mysqli_num_rows($result)>0){
 									<div class="quickview-ratting-review">
 										<div class="quickview-ratting-wrap">
 											<div class="quickview-ratting">';
-											$product_code = $row['code'];
+											$product_code = $row['code'];											
 											$getRating = "SELECT COUNT(rating) as totalratingsgiven, ROUND(AVG(rating), 1) as rating from reviews where product_code = '$product_code'";
 											$executegetRating = mysqli_query($conn, $getRating);									
 											$getRatingDetail =  mysqli_fetch_assoc($executegetRating);
@@ -228,7 +300,7 @@ if(mysqli_num_rows($result)>0){
 		</div>
 		<!-- Modal end -->';
 								$discount = 0;
-								$data.='<div class="col-lg-4 col-md-6 col-12">
+								$data.='<div class="col-lg-4 col-md-6 col-4">
 								<div class="single-product">
 								<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 									<div class="product-img">
@@ -242,9 +314,14 @@ if(mysqli_num_rows($result)>0){
 										<p title="Favourite" id="favourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 										<p title="Compare" id="compare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 									</div>
-									<div class="product-action-2">
-										<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>																								
-									</div>
+									<div class="product-action-2">';
+									if(!$outOfStock){	
+										$data.='<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>';
+										}
+										else{
+											$data.='<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+										}
+										$data.='</div>
 										</div>
 									</div>
 									<div class="product-content">
@@ -262,11 +339,17 @@ if(mysqli_num_rows($result)>0){
 							</div>';							
     }
 	$data .= "<!--EndGridSection-->";
-	while($row = mysqli_fetch_assoc($result1)){
+	while($row = mysqli_fetch_assoc($result1)){		
+		if($row['quantity_stock'] > 0){
+			$outOfStockGrid = false;
+		}
+		else{
+			$outOfStockGrid = true;
+		}
 		$data .= '<!-- Start Single List -->
 							<div class="col-12">
 							<div class="row">
-								<div class="col-lg-4 col-md-6 col-sm-6">
+								<div class="col-lg-4 col-md-6 col-sm-6 col-12">
 									<div class="single-product">
 										<div class="product-img">
 											<a href="singleproduct.php?i='.$row['code'].'">
@@ -279,9 +362,14 @@ if(mysqli_num_rows($result)>0){
 												<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
 												<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
 												</div>
-												<div class="product-action-2">
-												<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>
-												</div>
+												<div class="product-action-2">';
+												if(!$outOfStockGrid){	
+												$data .= '<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>';
+												}
+												else{
+													$data .= '<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+												}
+												$data .= '</div>
 											</div>
 										</div>												
 										<hr>
@@ -298,7 +386,7 @@ if(mysqli_num_rows($result)>0){
 										</div>	
 									</div>
 								</div>
-								<div class="col-lg-8 col-md-6 col-12">
+								<div class="col-lg-8 col-md-6 col-sm-6 col-12">
 									<div class="list-content">
 										<div class="product-content">													
 											<h4 class="title"><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h4>
@@ -356,5 +444,5 @@ if(mysqli_num_rows($result)>0){
 			echo $data;
 }
 else{
-echo "<h4 class='title'>No products found with this filters</h4>";
+echo "<div class='single-product'><h4 class='title'>No products found with this filters</h4></div><!--EndGridSection--><div class='single-product'><h4 class='title'>No products found with this filters</h4></div>";
 }

@@ -21,19 +21,14 @@
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
 	<!-- Font Awesome -->
-    
-	
-	
+	<link href="assets/plugin/toastr/css/toastr.min.css" rel="stylesheet">
 	<!-- Themify Icons -->
     <link rel="stylesheet" href="assets/css/themify-icons.css">
 	<!-- Nice Select CSS -->
     <link rel="stylesheet" href="assets/css/niceselect.css">
 	<!-- Animate CSS -->
     <link rel="stylesheet" href="assets/css/animate.css">
-	<!-- Flex Slider CSS -->
-    <link rel="stylesheet" href="assets/css/flex-slider.min.css">
-	<!-- Owl Carousel -->
-    <link rel="stylesheet" href="assets/css/owl-carousel.css">
+	<!-- Flex Slider CSS -->    
 	<!-- Slicknav -->
     <link rel="stylesheet" href="assets/css/slicknav.min.css">
 	
@@ -94,36 +89,24 @@
 									<h4>Get in touch</h4>
 									<h3>Write us a message</h3>
 								</div>
-								<form class="form" method="post" action="mail/mail.php">
+								<form class="form" id="getintouch">
 									<div class="row">
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
 												<label>Your Name<span>*</span></label>
-												<input name="name" type="text" placeholder="">
+												<input name="name" type="text" required placeholder="">
 											</div>
 										</div>
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
-												<label>Your Subjects<span>*</span></label>
-												<input name="subject" type="text" placeholder="">
+											<label>Your Email<span>*</span></label>
+												<input name="email" type="email" required placeholder="">
 											</div>
-										</div>
-										<div class="col-lg-6 col-12">
-											<div class="form-group">
-												<label>Your Email<span>*</span></label>
-												<input name="email" type="email" placeholder="">
-											</div>	
-										</div>
-										<div class="col-lg-6 col-12">
-											<div class="form-group">
-												<label>Your Phone<span>*</span></label>
-												<input name="company_name" type="text" placeholder="">
-											</div>	
-										</div>
+										</div>									
 										<div class="col-12">
 											<div class="form-group message">
-												<label>your message<span>*</span></label>
-												<textarea name="message" placeholder=""></textarea>
+												<label>Your message<span>*</span></label>
+												<textarea name="message" required placeholder=""></textarea>
 											</div>
 										</div>
 										<div class="col-12">
@@ -168,35 +151,6 @@
 	</section>
 	<!--/ End Contact -->
 	
-	<!-- Map Section -->
-	<!-- <div class="map-section">
-		<div id="myMap"></div>
-	</div> -->
-	<!--/ End Map Section -->
-	
-	<!-- Start Shop Newsletter  -->
-	<section class="shop-newsletter section">
-		<div class="container">
-			<div class="inner-top">
-				<div class="row">
-					<div class="col-lg-8 offset-lg-2 col-12">
-						<!-- Start Newsletter Inner -->
-						<div class="inner">
-							<h4>Newsletter</h4>
-							<p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-							<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-								<input name="EMAIL" placeholder="Your email address" required="" type="email">
-								<button class="btn">Subscribe</button>
-							</form>
-						</div>
-						<!-- End Newsletter Inner -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Shop Newsletter -->
-	
 	<!-- Start Footer Area -->
 	<?php
 	include"layouts/footer.php";
@@ -216,35 +170,28 @@
 	
 	<!-- Slicknav JS -->
 	<script src="assets/js/slicknav.min.js"></script>
-	<!-- Owl Carousel JS -->
-	<script src="assets/js/owl-carousel.js"></script>
+	<!-- Owl Carousel JS -->	
 	<!-- Magnific Popup JS -->
 	<script src="assets/js/magnific-popup.js"></script>
 	<!-- Fancybox JS -->
 	<script src="assets/js/facnybox.min.js"></script>
 	<!-- Waypoints JS -->
-	<script src="assets/js/waypoints.min.js"></script>
-	<!-- Jquery Counterup JS -->
-	<script src="assets/js/jquery-counterup.min.js"></script>
-	<!-- Countdown JS -->
-	<script src="assets/js/finalcountdown.min.js"></script>
+	<script src="assets/js/waypoints.min.js"></script>		
+	<!-- Countdown JS -->	
 	<!-- Nice Select JS -->
 	<script src="assets/js/nicesellect.js"></script>
-	<!-- Ytplayer JS -->
-	<script src="assets/js/ytplayer.min.js"></script>
-	<!-- Flex Slider JS -->
-	<script src="assets/js/flex-slider.js"></script>
+	<!-- Ytplayer JS -->	
+	<!-- Flex Slider JS -->	
 	<!-- ScrollUp JS -->
 	<script src="assets/js/scrollup.js"></script>
 	<!-- Onepage Nav JS -->
 	<script src="assets/js/onepage-nav.min.js"></script>
 	<!-- Easing JS -->
-	<script src="assets/js/easing.js"></script>
-	<!-- Google Map JS -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnhgNBg6jrSuqhTeKKEFDWI0_5fZLx0vM"></script>	
-	<script src="assets/js/gmap.min.js"></script>
-	<script src="assets/js/map-script.js"></script>
+	<script src="assets/js/easing.js"></script>		
 	<!-- Active JS -->
 	<script src="assets/js/active.js"></script>
+	<script src="assets/js/contact.js"></script>
+	<script src="assets/plugin/toastr/js/toastr.min.js"></script>
+  <script src="assets/plugin/toastr/js/toastr.init.js"></script>
 </body>
 </html>

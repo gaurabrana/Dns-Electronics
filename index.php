@@ -44,7 +44,8 @@ $active = "home";
 	<!-- custom StyleSheet -->
 	<link rel="stylesheet" href="assets/css/reset.css">
 	<link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">	
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body class="js">
 	
@@ -106,37 +107,37 @@ $active = "home";
 		<div class="container-fluid">
 			<div class="row">
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-6 col-12">
+				<div class="col-lg-4 col-md-6 col-12" data-aos="fade-right" data-aos-duration="500">
 					<div class="single-banner">
 						<img style="transform:scaleX(-1);" src="img/Fridge.jpg" alt="#">
 						<div class="content">
 							<p>Summer Season Appliances</p>
-							<h3>Refrigerators, <br> Air Conditioner</h3>
-							<a href="#">Discover Now</a>
+							<h3>Refrigerators, <br> Air Conditioner</h3>							
+							<a href="products.php?qc=summer">Discover Now</a>
 						</div>
 					</div>
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-6 col-12">
+				<div class="col-lg-4 col-md-6 col-12" data-aos="fade-up" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="https://cdn1.expertreviews.co.uk/sites/expertreviews/files/2020/09/best_electric_heater_-_delonghi_hsx2320.jpg?itok=aga5wPR3" alt="#">
 						<div class="content">
 							<p>Winter Season Appliances</p>
 							<h3>Electric Heater, <br> Water geysers</h3>
-							<a href="#">Shop Now</a>
+							<a href="products.php?qc=winter">Shop Now</a>
 						</div>
 					</div>
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-12">
+				<div class="col-lg-4 col-12" data-aos="flip-right" data-aos-duration="500">
 					<div class="single-banner tab-height">
 						<img src="https://hitek.fr/img/up_o/1751376525/hitek_35e9070c204335552ddadac47f540e87_1613239643.jpeg" alt="#">
 						<div class="content">
 							<p>Flash Sale</p>
-							<h3>Mid Season <br> Up to <span>40%</span> Off</h3>
-							<a href="#">Discover Now</a>
+							<h3>Discounted <br> Products</h3>
+							<a href="products.php?qc=discount">Discover Now</a>
 						</div>
 					</div>
 				</div>
@@ -201,6 +202,12 @@ $active = "home";
 										$sql1 = "Select * from product where brand = '$brand'";
 										$getBrand = mysqli_query($conn, $sql1);
 										while($row1 = mysqli_fetch_assoc($getBrand)){
+											if($row1['quantity_stock'] > 0){
+												$outOfStock = false;					
+											}
+											else{
+												$outOfStock = true;
+											}
 											if($row1['discount']!=0){
 												$updatedPrice = $row1['price'] - $row1['discount'];								
 											}
@@ -222,9 +229,14 @@ $active = "home";
 															<p title="Favourite" id="favourite'.$row1['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row1['code'].'">Add to Favourite</span></p>
 															<p title="Compare" id="compare'.$row1['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row1['code'].'">Add to Compare</span></p>
 														</div>
-														<div class="product-action-2">
-															<p title="Add to cart" id="cart'.$row1['code'].'">Add to cart</p>																								
-														</div>
+														<div class="product-action-2">';
+												if(!$outOfStock){	
+												echo'<p title="Add to cart" id="cart'.$row1['code'].'">Add to cart</p>';
+												}
+												else{
+													echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+												}
+												echo'</div>
 													</div>
 												</div>
 												<div class="product-content">
@@ -259,25 +271,25 @@ $active = "home";
 		<div class="container">
 			<div class="row">
 				<!-- Single Banner  -->
-				<div class="col-lg-6 col-md-6 col-12">
+				<div class="col-lg-6 col-md-6 col-12" data-aos="fade-right" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="https://i.ytimg.com/vi/tddValqLAfI/maxresdefault.jpg" alt="#">
 						<div class="content">
 							<p>Cleaning Appliances</p>
 							<h3>Vacuum Cleaner</h3>
-							<a href="products.php?type=cleaning">Shop Now</a>
+							<a href="products.php?qc=cleaning">Shop Now</a>
 						</div>
 					</div>
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-6 col-md-6 col-12">
+				<div class="col-lg-6 col-md-6 col-12" data-aos="fade-left" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="img/Speaker.png" alt="#">
 						<div class="content">
 							<p>Sound Appliances</p>
 							<h3>Multimedia Speaker</h3>
-							<a href="products.php?type=speaker" class="btn">Shop Now</a>
+							<a href="products.php?qc=speaker" class="btn">Shop Now</a>
 						</div>
 					</div>
 				</div>
@@ -297,7 +309,7 @@ $active = "home";
 					</div>
 				</div>
             </div>
-            <div class="row">
+            <div class="row" data-aos="flip-up" data-aos-duration="500">
                 <div class="col-12">
                     <div class="owl-carousel popular-slider">
 					<?php
@@ -649,5 +661,9 @@ echo'<!-- Modal -->
 	<script src="assets/js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="assets/js/active.js"></script>
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	<script>
+    AOS.init();
+  </script>
 </body>
 </html>

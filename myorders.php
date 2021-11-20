@@ -109,20 +109,20 @@ header("Location: index.php");
                             
                             echo'<div class="col-md-12">
                             <div class="card">
-                                <div class="card-header card-header-danger">
-                                    <h4 class="card-title "><i class="fas fa-paper-plane"></i> Order Id : '.$row['id'].'</h4>
+                                <div class="card-header card-header-dark">
+                                <a style="float:right" target="_blank" href="orderdetail.php?i='.$row['id'].'"><i class="fas fa-expand-arrows-alt"></i> Click to single page view</a>
+                                    <h4 class="card-title "><i class="fas fa-paper-plane"></i> ORDER ID : '.$row['id'].'</h4>
                                     <p class="card-category"><i class="fas fa-calendar-alt"></i> Date : '.$row['order_date'].'</p>
+                                    
+                                    
                                 </div>
                                 <div class="card-body">
                                 <div class="table-responsive">
                                 <table class="table">
-                                    <thead class="text-danger">
+                                    <thead class="text-rose">
                                         <th>
                                         <i class="fas fa-shopping-basket"></i> Products
-                                        </th>
-                                        <th>
-                                        <i class="fas fa-wallet"></i> Payment Type
-                                        </th>
+                                        </th>                                        
                                         <th>
                                         <i class="fas fa-tasks"></i> Status
                                         </th>
@@ -136,6 +136,9 @@ header("Location: index.php");
                                         <i class="fas fa-cash-register"></i> Total
                                         </th>
                                         <th>
+                                        <i class="fas fa-wallet"></i> Payment Type
+                                        </th>
+                                        <th>
                                         <i class="fas fa-file-invoice"></i> Invoice
                                         </th>
                                     </thead>
@@ -143,10 +146,7 @@ header("Location: index.php");
                                         <tr>
                                             <td><a data-bs-toggle="collapse" href="#getorderproducts'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderproducts'.$billingid.'">
                                             Expand more..
-                                          </a></td>
-                                            <td>
-                                                '.$row['payment_type'].'
-                                            </td>
+                                          </a></td>                                            
                                             <td>
                                             '.$row['status'].'
                                             </td>
@@ -172,6 +172,9 @@ header("Location: index.php");
                                             $total = $getTotalOrdered['total'];
                                             echo "Rs ".$total;
                                             echo'</td>
+                                            <td>
+                                                '.$row['payment_type'].'
+                                            </td>
                                             <td class="invoice" id="viewinvoice'.$orderid.'">View invoice</td>
                                         </tr>                                        
                                     </tbody>
@@ -179,16 +182,16 @@ header("Location: index.php");
                                 <!---collapsibles start--->
                               <div class="collapse" id="getorderproducts'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
-                                <h4 class="text-warning">Ordered Products</h4>                                                   
+                                <h4 class="text-dark">Ordered Products</h4>                                                   
                                 <table class="table table-hover">
-                                    <thead class="text-warning">
-                                    <th>Image</th>
+                                    <thead class="text-danger">
+                                    <th>Product</th>
                                     <th>Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     </thead>
                                     <tbody>';                      
-                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid' LIMIT 4";
+                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
                                     $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
                                     if(mysqli_num_rows($getOrderedProductsResult) > 0){
                                         while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
@@ -207,9 +210,9 @@ header("Location: index.php");
                               </div>
                               <div class="collapse" id="getorderbillingaddress'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
-                                <h4 class="text-success">Billing Details</h4>                                 
+                                <h4 class="text-dark">Billing Details</h4>                                 
                                 <table class="table table-hover">
-                                    <thead class="text-success">
+                                    <thead class="text-danger">
                                     <th>Name</th>
                                     <th>Email Address</th>
                                     <th>Phone Number</th>
@@ -237,9 +240,9 @@ header("Location: index.php");
                               if(!$sameshipping){
                                 echo'<div class="collapse" id="getordershippingaddress'.$billingid.'">
                                 <div class="card card-body table-responsive table-products">
-                                <h4 class="text-info">Shipping Details</h4>                                                   
+                                <h4 class="text-dark">Shipping Details</h4>                                                   
                                 <table class="table table-hover">
-                                    <thead class="text-info">
+                                    <thead class="text-danger">
                                     <th>Name</th>           
                                     <th>Email Address</th>                         
                                     <th>Phone Number</th>

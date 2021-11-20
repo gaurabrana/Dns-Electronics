@@ -2,7 +2,7 @@ $(document).on('ready', function() {
     $("#submitquery").on("click", function() {
         var query = $("#query").val();
         var productcode = $("#productidforquery").val();
-
+        var no_of_queries = $("#holdNumberOfQueries").text();
         if (query.length != 0) {
             $.ajax({
                 url: "database/addquery.php",
@@ -13,6 +13,9 @@ $(document).on('ready', function() {
                     if (data.statusCode == 200) {
                         $("#resultmsg").html("Question has been added. We will response shortly.");
                         $("#resultmsg").css("color", "green");
+                        $("#query").val("");
+                        $("#leaveaquestion").collapse('hide');
+                        $("#holdNumberOfQueries").text(parseInt(no_of_queries) + 1);
                         $(".comments").append(data.queries);
                     } else if (data.statusCode == 201) {
                         $("#resultmsg").html("Failed to add question. Please try again.");
@@ -26,6 +29,40 @@ $(document).on('ready', function() {
         } else {
             $("#resultmsg").html("Please type your question before posting.");
             $("#resultmsg").css("color", "#ed1c24");
+        }
+        $("#resultmsg").delay(2000).queue(function(next) {
+            $("#resultmsg").html("");
+            next();
+        });
+    });
+
+    $(document).on("click", ".querybutton button", function(e) {
+        let elementid = $(this).attr("id");
+        let splitter;
+        var no_of_queries = $("#holdNumberOfQueries").text();
+        if (elementid.indexOf("deleteQuestionButton") >= 0) {
+            splitter = "deleteQuestionButton";
+            let queryid = elementid.split(splitter)[1];
+            $.ajax({
+                url: "database/addquery.php",
+                data: { "action": "delete", "id": queryid },
+                method: "POST",
+                cache: false,
+                success: function(result) {
+                    var data = JSON.parse(result);
+                    if (data.statusCode == 200) {
+                        toastr.success('Question deleted.', 'Product Queries!');
+                        $("#holdQueryOfCustomers" + queryid).remove();
+                        $("#holdNumberOfQueries").text(no_of_queries - 1);
+                    } else if (data.statusCode == 201) {
+                        toastr.error('Failed to delete question. Please try again.', 'Product Queries!');
+                    }
+                }
+            });
+        } else if (elementid.indexOf("hideDeleteQuestionDiv") >= 0) {
+            splitter = "hideDeleteQuestionDiv";
+            let queryid = elementid.split(splitter)[1];
+            $("#deleteQuestionDiv" + queryid).collapse('hide');
         }
     });
 

@@ -1,6 +1,6 @@
 <?php
 require("connect.php");
-
+include("encryption.php");
 if(isset($_POST['type'])){
 $email = strtolower($_POST['email']);
 $password = $_POST['password'];
@@ -18,7 +18,7 @@ if(mysqli_num_rows($result) > 0){
         $login_id = $row['id'];
         $uniquekey  = $row['uniquekey'];
     }
-    if(md5($password) == $login_password){          
+    if(encrypt_text(md5($password)) == $login_password){          
         
         $_SESSION['name'] = strtoupper($login_name);
         $_SESSION['email'] = $login_email;        

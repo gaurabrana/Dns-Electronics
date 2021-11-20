@@ -1,5 +1,6 @@
 <?php
 include('connect.php');
+include('encryption.php');
 date_default_timezone_set("Asia/Kathmandu");
 
 function getData($datatype, $conn){
@@ -57,14 +58,14 @@ else{
 $verificationkey = md5(time());
 $age = $_POST['age'];
 $gender = $_POST['gender'];
-$phone = $_POST['phone'];
-$password = md5($_POST['password']);
+$phone = $_POST['phone'];    
     $email = strtolower(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
     $name = mysqli_real_escape_string($conn, $name);
     $email = mysqli_real_escape_string($conn, $email);    
     $email_query = "Select * from customer where email = '$email'";    
     $email_result = mysqli_query($conn, $email_query);
     $password = mysqli_real_escape_string($conn, $password);
+    $password = encrypt_text(md5($_POST['password']));
     if(mysqli_num_rows($email_result) == 0){
         $sql = "Insert into customer values('$newUserID',$userUniqueKey,'$username','$name','$password','$email','$phone','$age','$gender','$date','$imageLink','NO','NO', '$verificationkey')";
         $result = mysqli_query($conn, $sql);

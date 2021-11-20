@@ -1,6 +1,9 @@
 <?php
 include('database/connect.php');
 include('formatdate.php');
+if(isset($_SESSION['id'])){
+	$user_id = $_SESSION['id'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
@@ -23,32 +26,33 @@ include('formatdate.php');
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
+	<link href="assets/plugin/toastr/css/toastr.min.css" rel="stylesheet">
 	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="css/magnific-popup.min.css">
+	<link rel="stylesheet" href="assets/css/magnific-popup.min.css">
 	<!-- Font Awesome -->
 	
 	
 	
 	<!-- Themify Icons -->
-	<link rel="stylesheet" href="css/themify-icons.css">
+	<link rel="stylesheet" href="assets/css/themify-icons.css">
 	<!-- Nice Select CSS -->
-	<link rel="stylesheet" href="css/niceselect.css">
+	<link rel="stylesheet" href="assets/css/niceselect.css">
 	<!-- Animate CSS -->
-	<link rel="stylesheet" href="css/animate.css">
+	<link rel="stylesheet" href="assets/css/animate.css">
 	<!-- Flex Slider CSS -->
-	<link rel="stylesheet" href="css/flex-slider.min.css">
+	<link rel="stylesheet" href="assets/css/flex-slider.min.css">
 	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="css/owl-carousel.css">
+	<link rel="stylesheet" href="assets/css/owl-carousel.css">
 	<!-- Slicknav -->
-	<link rel="stylesheet" href="css/slicknav.min.css">
+	<link rel="stylesheet" href="assets/css/slicknav.min.css">
 
 	<!-- custom StyleSheet -->
 	<link rel="stylesheet" href="assets/css/reset.css">
 	<link rel="stylesheet" href="assets/css/style.css">
-	<link rel="stylesheet" href="css/singleproduct.css">
-	<link rel="stylesheet" href="css/responsive.css">
+	<link rel="stylesheet" href="assets/css/singleproduct.css">
+	<link rel="stylesheet" href="assets/css/responsive.css">
 
-	<link href="css/star-rating.css" rel="stylesheet" />
+	<link href="assets/css/star-rating.css" rel="stylesheet" />
 
 </head>
 
@@ -71,15 +75,18 @@ include('formatdate.php');
 	<!--/ End Header -->
 
 	<?php
-			if (isset($_GET['i'])) {
-				if(isset($_SESSION['id'])){
-					$user_id = $_SESSION['id'];
-				}
+			if (isset($_GET['i'])) {				
 				$product_code = $_GET['i'];
 				$sql = "Select * from product where code = '$product_code'";
 				$result = mysqli_query($conn, $sql);
 				$result1 = mysqli_query($conn, $sql);
+				if(mysqli_num_rows($result) == 0){
+					echo"<script>window.location.href='products.php'</script>";			
+				}				
 				$getProductDetail = mysqli_fetch_array($result1);			
+			}
+			else{
+				echo"<script>window.location.href='products.php'</script>";				
 			}
 				?>
 	<!-- Breadcrumbs -->
@@ -395,23 +402,84 @@ include('formatdate.php');
 					<div class="row">
 					<div class="col-lg-12 col-12">
 						<div class="blog-single-main">
-							<div class="row">								
+							<div class="row">	
+							<div class="col-12">			
+									<div class="reply">
+										<div class="reply-head">
+											<h2 style="cursor:pointer;" class="reply-title" data-bs-toggle="collapse" href="#leaveaquestion" role="button" aria-expanded="false" aria-controls="leaveaquestion">Click To Leave a Question</h2>											
+											<!-- Comment Form -->
+											<h7 id="resultmsg"></h7>
+											<div class="collapse" id="leaveaquestion">											
+											<div class="row">													
+													<div class="col-12">
+														<div class="form-group">
+															<h6>Your Question</h6>
+															<input hidden type="text" id="productidforquery" value="<?php echo $product_code ?>">
+															<textarea id="query" name="message" placeholder=""></textarea>
+														</div>
+													</div>
+													<div class="col-12">
+														<div class="form-group button">
+															<button type="submit" id="submitquery" class="btn">Post</button>
+														</div>
+														
+													</div>
+												</div>
+													</div>																							
+											<!-- End Comment Form -->
+										</div>
+									</div>			
+								</div>							
 								<div class="col-12">
 									<div class="comments">
 										<?php
-										$getQuestions = "Select c.name,c.profile_picture,c.uniquekey, p.added_date, p.replied_date, p.question, p.adminreply from product_queries p, customer c where p.product_code = '$product_code' and p.customer_id = c.id";
+										$getQuestions = "Select c.name, c.gender, c.profile_picture,c.uniquekey,p.id, p.customer_id, p.added_date, p.replied_date, p.question, p.adminreply from product_queries p, customer c where p.product_code = '$product_code' and p.customer_id = c.id";
 										$executegetQuestions = mysqli_query($conn, $getQuestions);
 										if(mysqli_num_rows($executegetQuestions) > 0){
 											$no_of_questions = mysqli_num_rows($executegetQuestions);
-											echo'<h3 class="comment-title">Questions ('.$no_of_questions.')</h3>';
+											echo'<h3 class="comment-title">Questions (<span id="holdNumberOfQueries">'.$no_of_questions.'</span>)</h3>';
 											while($row = mysqli_fetch_assoc($executegetQuestions)){																	
 												$formatteddate1 = formatDate($row['added_date']);
-												$formattedtime1 = formatTime($row['added_date']);												
-												echo'<div class="single-comment">
-												<img src="img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'" alt="userimage">
+												$formattedtime1 = formatTime($row['added_date']);
+												if($row['profile_picture']=="notset"){
+													if($row['gender']=="Male"){
+														$imagesrc =  'img/maleuser.png';
+													}
+													else{
+														$imagesrc =  'img/femaleuser.png';
+													}  
+												   }
+												   else{
+													if(file_exists('img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'')){
+														$imagesrc =  'img/UserProfile/'.$row['uniquekey'].'/'.$row['profile_picture'].'';   
+													}
+													else{
+														if($row['gender']=="Male"){
+															$imagesrc =  'img/maleuser.png';
+														}
+														else{
+															$imagesrc =  'img/femaleuser.png';
+														}                                                    
+													}
+													
+												   } 												
+												echo'<div class="single-comment" id="holdQueryOfCustomers'.$row['id'].'">
+												<img src="'.$imagesrc.'" alt="userimage">
 												<div class="content">
-													<h4>'.$row['name'].'<span>'.$formatteddate1.' at '.$formattedtime1.'</span></h4>
-													<p>'.$row['question'].'</p>   
+												<h4>'.$row['name'].'<span>'.$formatteddate1.' at '.$formattedtime1.'</span></h4>
+												<p>'.$row['question'];
+												if(isset($_SESSION['id'])){
+													if($row['customer_id']==$user_id){
+														echo'<span data-bs-toggle="collapse" href="#deleteQuestionDiv'.$row['id'].'" role="button" aria-expanded="false" aria-controls="deleteQuestionDiv'.$row['id'].'" id="deleteQuestion'.$row['id'].'" title="Delete Question" style="cursor:pointer;">&nbsp&nbsp<i class="fa fa-trash"></i></span>';
+													}
+												}																										
+												echo'</p>   	
+												<div class="collapse querybutton" id="deleteQuestionDiv'.$row['id'].'">												
+												Are you sure you want to delete this question??
+												<br>
+												<button id="deleteQuestionButton'.$row['id'].'" class="btn btn-danger">Delete</button>
+												<button id="hideDeleteQuestionDiv'.$row['id'].'" class="btn btn-dark">Cancel</button>
+												</div>										    
 												</div>
 											</div>';
 											if($row['adminreply']!="-"){
@@ -421,7 +489,7 @@ include('formatdate.php');
 												<img src="img/logored.png" alt="adminimage">
 												<div class="content">
 													<h4>Dns Electronics<span>'.$formatteddate2.' at '.$formattedtime2.'</span></h4>
-													<p>'.$row['adminreply'].'</p>                    
+													<p>'.$row['adminreply'].'</p>      													         
 												</div>
 											</div>';
 											}
@@ -438,33 +506,7 @@ include('formatdate.php');
 										?>																			
 									</div>									
 								</div>											
-								<div class="col-12">			
-									<div class="reply">
-										<div class="reply-head">
-											<h2 class="reply-title">Leave a Question</h2>
-											<h7 id="resultmsg"></h7>
-											<!-- Comment Form -->
 											
-												<div class="row">													
-													<div class="col-12">
-														<div class="form-group">
-															<h6>Your Question</h6>
-															<input hidden type="text" id="productidforquery" value="<?php echo $product_code ?>">
-															<textarea id="query" name="message" placeholder=""></textarea>
-														</div>
-													</div>
-													<div class="col-12">
-														<div class="form-group button">
-															<button type="submit" id="submitquery" class="btn">Post</button>
-														</div>
-														
-													</div>
-												</div>
-											
-											<!-- End Comment Form -->
-										</div>
-									</div>			
-								</div>			
 							</div>
 						</div>
 					</div>					
@@ -728,6 +770,8 @@ include('formatdate.php');
 	<!--custom page js -->
 	<script src="assets/js/singleproduct.js"></script>
 	<script src="assets/js/star-rating.js"></script>
+	<script src="assets/plugin/toastr/js/toastr.min.js"></script>
+  <script src="assets/plugin/toastr/js/toastr.init.js"></script>
 	<script>
 		var starRatingControl = new StarRating('.star-rating', {
         maxStars: 5,        

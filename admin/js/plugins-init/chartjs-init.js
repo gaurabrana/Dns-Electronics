@@ -1,4 +1,4 @@
-(function ($) {
+(function($) {
     "use strict";
 
     //Team chart
@@ -191,8 +191,7 @@
         type: 'line',
         data: {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
+            datasets: [{
                     label: "My First dataset",
                     borderColor: "rgba(144,	104,	190,.9)",
                     borderWidth: "1",
@@ -231,8 +230,7 @@
         type: 'bar',
         data: {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
+            datasets: [{
                     label: "My First dataset",
                     data: [65, 59, 80, 81, 56, 55, 40],
                     borderColor: "rgba(117, 113, 249, 0.9)",
@@ -269,9 +267,11 @@
     var myChart = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: [["Eating", "Dinner"], ["Drinking", "Water"], "Sleeping", ["Designing", "Graphics"], "Coding", "Cycling", "Running"],
-            datasets: [
-                {
+            labels: [
+                ["Eating", "Dinner"],
+                ["Drinking", "Water"], "Sleeping", ["Designing", "Graphics"], "Coding", "Cycling", "Running"
+            ],
+            datasets: [{
                     label: "My First dataset",
                     data: [65, 59, 66, 45, 56, 55, 40],
                     borderColor: "rgba(117, 113, 249, 0.6)",
@@ -403,15 +403,13 @@
         type: 'bar',
         data: {
             labels: ["Sun", "Mon", "Tu", "Wed", "Th", "Fri", "Sat"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    data: [40, 55, 75, 81, 56, 55, 40],
-                    borderColor: "rgba(117, 113, 249, 0.9)",
-                    borderWidth: "0",
-                    backgroundColor: "rgba(117, 113, 249, 0.5)"
-                }
-            ]
+            datasets: [{
+                label: "My First dataset",
+                data: [40, 55, 75, 81, 56, 55, 40],
+                borderColor: "rgba(117, 113, 249, 0.9)",
+                borderWidth: "0",
+                backgroundColor: "rgba(117, 113, 249, 0.5)"
+            }]
         },
         options: {
             scales: {
@@ -433,11 +431,11 @@
 
 let draw = Chart.controllers.line.prototype.draw;
 Chart.controllers.line = Chart.controllers.line.extend({
-    draw: function () {
+    draw: function() {
         draw.apply(this, arguments);
         let nk = this.chart.chart.ctx;
         let _stroke = nk.stroke;
-        nk.stroke = function () {
+        nk.stroke = function() {
             nk.save();
             nk.shadowColor = '#ddd';
             nk.shadowBlur = 10;
@@ -455,29 +453,29 @@ myChart = new Chart(nk, {
     data: {
         labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"],
         datasets: [{
-            data: [100, 70, 150, 120, 300, 250, 400, 300],
-            borderWidth: 4,
-            borderColor: "rgba(117, 113, 249, 0.9)",
-            pointBackgroundColor: "#FFF",
-            pointBorderColor: "rgba(117, 113, 249, 0.9)",
-            pointHoverBackgroundColor: "#FFF",
-            pointHoverBorderColor: "rgba(117, 113, 249, 0.9)",
-            pointRadius: 0,
-            pointHoverRadius: 6,
-            fill: !1
-        },
-        {
-            data: [20, 70, 300, 120, 180, 220, 450, 250],
-            borderWidth: 4,
-            borderColor: "#4d7cff",
-            pointBackgroundColor: "#FFF",
-            pointBorderColor: "#4d7cff",
-            pointHoverBackgroundColor: "#FFF",
-            pointHoverBorderColor: "#4d7cff",
-            pointRadius: 0,
-            pointHoverRadius: 6,
-            fill: !1
-        }
+                data: [100, 70, 150, 120, 300, 250, 400, 300],
+                borderWidth: 4,
+                borderColor: "rgba(117, 113, 249, 0.9)",
+                pointBackgroundColor: "#FFF",
+                pointBorderColor: "rgba(117, 113, 249, 0.9)",
+                pointHoverBackgroundColor: "#FFF",
+                pointHoverBorderColor: "rgba(117, 113, 249, 0.9)",
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                fill: !1
+            },
+            {
+                data: [20, 70, 300, 120, 180, 220, 450, 250],
+                borderWidth: 4,
+                borderColor: "#4d7cff",
+                pointBackgroundColor: "#FFF",
+                pointBorderColor: "#4d7cff",
+                pointHoverBackgroundColor: "#FFF",
+                pointHoverBorderColor: "#4d7cff",
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                fill: !1
+            }
         ]
     },
     options: {
@@ -510,5 +508,3 @@ myChart = new Chart(nk, {
         }
     },
 });
-
-

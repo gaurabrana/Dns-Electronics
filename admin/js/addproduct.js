@@ -31,7 +31,6 @@
                 cache: false,
                 success: function(response) {
                     var data = JSON.parse(response);
-                    console.log(data);
                     if (data.code == 200) {
                         $("#val-brand").text("");
                         $("#val-brand").append(data.result);
@@ -128,7 +127,7 @@
             // data.append("KEY", "VALUE");
             // (B3) AJAX REQUEST
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "database/imageupload.php");
+            xhr.open("POST", "imageupload.php");
             xhr.onload = function() {
                 var path = JSON.parse(this.response);
                 if (path.code == 200) {
@@ -200,7 +199,6 @@
             no_of_sub_images++;
             imageSrc.push(i.value);
         }
-
         //validate fields
         if (pName.length == 0) {
             no_of_errors++;
@@ -273,6 +271,9 @@
                         //add successful
                         showInfo("Product added successfully", "alert-success");
                         resetFields();
+                        if (isCategoryNew) {
+                            $("#val-brand").append("<option value='" + pCategoryName + "'>" + pCategoryName + "</option>");
+                        }
                         //remove all values
 
                     } else if (result.statusCode == 201) {
@@ -310,12 +311,18 @@
         $("#val-price").val("");
         $("#val-discountprice").val("");
         $("#val-description").val("");
+        $("#val-brand").text("");
+        $("#val-brand").append("<option value='new'>Choose New Brand</option>");
         $("#val-brand").val("new");
         $("#val-brandname").val("");
         $("#val-categoryname").val("");
         $("#val-category").val("new");
         $("#val-stockquantity").val("");
         $("#holdMainImageName").val("");
+        $("#new-category").removeClass("hide-element");
+        $("#new-category input").prop("disabled", false);
+        $("#new-brand").removeClass("hide-element");
+        $("#new-brand input").prop("disabled", false);
         $("#mainImage").css({ "height": "50px", "width": "50px" });
         $("#mainImage").attr("src", "images/addimages.png");
         $(".addSubImages").attr("src", "images/addimages.png");

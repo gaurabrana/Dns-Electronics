@@ -297,27 +297,50 @@ header("Location: index.php");
                       <div class="row">                                            
                       <?php
                       if($hasRequest && $isValid){                                          
-                        echo'<div class="col-md-12">
+                        echo'<div class="col-md-12" id="holdInfo">
                         <div class="form-group">
                           <label class="bmd-label-floating">Email Change in process: <br/>Expires after <span id="timeleft">'.$validity_date.'</span></label>                          
                           <br>
-                          Code has been sent to <i><b>'.$email.'</b></i>
+                          Code has been sent to <i><b id="holdNewEmailAddress">'.$email.'</b></i>
                         </div>
-                      </div>       
+                      </div>
+                        <div class="col-md-12 hide-element" id="holdEmail">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Email address</label>
+                          <input type="email" class="form-control" id="newEmailAddressChange" disabled name="newemail" placeholder="Enter your new email address" required autocomplete="off">
+                        </div>
+                      </div>                      
+                      <div class="col-md-12 hide-element" id="holdPassword">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Password</label>
+                          <input type="password" id="newEmailAddressChangeOldPassword" disabled class="form-control" name="currentpass" placeholder="Enter your current password" required autocomplete="off">
+                        </div>
+                      </div>
                         <div class="col-md-12" id="OtpCode">
                         <div class="form-group">
                           <label class="bmd-label-floating">One Time Code</label>
                           <input type="text" maxlength="6" class="form-control" name="otpcode" placeholder="Enter OTP code to verify new email address" required>
                         </div>
                       </div>
-                      <div class="progress-bar bg-info progress-bar-striped" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%;" role="progressbar"><span class="sr-only">85% Complete (success)</span>
+                      <div class="col-md-12">
+                      <div class="form-group">
+                      <div id="holdemailaddressprogressbar" class="progress mb-3 hide-element" style="height: 11px">
+                                    <div id="emailaddressprogressbar" class="progress-bar active progress-bar-striped bg-danger" style="width: 0%;" role="progressbar">
+                                    </div>
+                                </div>
                       </div>
-                      <div class="col-md-6">
+                      </div>
+                      <div class="col-md-12 hide-element" id="holdSubmitFormButton">
+                        <div class="form-group">                          
+                          <button type="submit" disabled id="submitFormButton" class="form-control btn btn-dark" name="Submit">Send OTP code</button>
+                        </div>
+                      </div>
+                      <div class="col-md-6" id="holdCodeSubmitButton">
                         <div class="form-group">                          
                           <button type="submit" class="form-control btn btn-dark" name="Submit">Verify Code</button>                         
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-6" id="ResetRequest">
                       <div class="form-group">                                                  
                         <button class="form-control btn btn-dark" name="Submit">Reset</button>
                       </div>
@@ -325,16 +348,23 @@ header("Location: index.php");
                       }
                       else{
                         echo'
-                        <div class="col-md-12">
+                        <div class="col-md-12 hide-element" id="holdInfo">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Email Change in process: <br/>Expires after <span id="requesttimeleft"></span></label>                          
+                          <br>
+                          Code has been sent to <i><b id="holdNewEmailAddress"></b></i>
+                        </div>
+                      </div>
+                        <div class="col-md-12" id="holdEmail">
                         <div class="form-group">
                           <label class="bmd-label-floating">Email address</label>
                           <input type="email" class="form-control" id="newEmailAddressChange" name="newemail" placeholder="Enter your new email address" required autocomplete="off">
                         </div>
                       </div>                      
-                      <div class="col-md-12">
+                      <div class="col-md-12" id="holdPassword">
                         <div class="form-group">
                           <label class="bmd-label-floating">Password</label>
-                          <input type="password" class="form-control" name="currentpass" placeholder="Enter your current password" required autocomplete="off">
+                          <input type="password" id="newEmailAddressChangeOldPassword" class="form-control" name="currentpass" placeholder="Enter your current password" required autocomplete="off">
                         </div>
                       </div>
                         <div class="col-md-12 hide-element" id="OtpCode">
@@ -345,17 +375,23 @@ header("Location: index.php");
                       </div>
                       <div class="col-md-12">
                       <div class="form-group">
-                      <div class="progress mb-3" style="height: 11px">
+                      <div id="holdemailaddressprogressbar" class="progress mb-3 hide-element" style="height: 11px">
                                     <div id="emailaddressprogressbar" class="progress-bar active progress-bar-striped bg-danger" style="width: 0%;" role="progressbar">
                                     </div>
                                 </div>
                       </div>
-                      
-                      <div class="col-md-12">
+                      </div>
+                      <div class="col-md-12" id="holdSubmitFormButton">
                         <div class="form-group">                          
-                          <button type="submit" class="form-control btn btn-dark" name="Submit">Send OTP code</button>
+                          <button type="submit" id="submitFormButton" class="form-control btn btn-dark" name="Submit">Send OTP code</button>
                         </div>
-                      </div>';
+                      </div>
+                      
+                      <div class="col-md-6 hide-element" id="ResetRequest">
+                      <div class="form-group">                                                  
+                        <button class="form-control btn btn-dark" name="Submit">Reset</button>
+                      </div>
+                    </div>';
                       }                      
                       ?>                                            
                       </form>                         
@@ -375,13 +411,13 @@ header("Location: index.php");
                       <div class="col-md-12">
                         <div class="form-group">
                           <label class="bmd-label-floating">Old Password</label>
-                          <input type="password" class="form-control" placeholder="Enter your current password" required autocomplete="off">
+                          <input type="password" class="form-control" name="oldPass" placeholder="Enter your current password" required autocomplete="off">
                         </div>
                       </div>
                       <div class="col-md-12">
                         <div class="form-group">
-                        <label class="bmd-label-floating">New Password</label>
-                          <input type="password" class="form-control" placeholder="Enter new password" required autocomplete="off">
+                        <label class="bmd-label-floating">New Password *(8-20 characters)</label>
+                          <input type="password" pattern=".{8,20}" class="form-control" name="newPass" placeholder="Enter new password" required autocomplete="off">
                         </div>
                       </div> 
                       <div class="col-md-12">

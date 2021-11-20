@@ -5,6 +5,9 @@ if(!isset($_SESSION['id'])){
 header("Location: index.php");
 }
 if(isset($_GET['i'])){
+    if($_GET['i']==""){
+        header("Location: index.php"); 
+    }
     $orderid = $_GET['i'];
     $exist = false;
     $userid = $_SESSION['id'];
@@ -74,8 +77,7 @@ else{
 	
 	<!-- custom StyleSheet -->
 	<link rel="stylesheet" href="assets/css/reset.css">
-	<link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="order.css">
+	<link rel="stylesheet" href="assets/css/style.css">    
     <link rel="stylesheet" href="assets/css/responsive.css">
 
 
@@ -107,7 +109,7 @@ else{
 					<div class="bread-inner">
 						<ul class="bread-list">
 							<li><a href="index.php">Home<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="order.php">Order</a></li>
+							<li class="active"><a href="orderdetail.php">Order Detail</a></li>
 						</ul>
 					</div>
 				</div>
@@ -127,23 +129,22 @@ else{
                     <div class="col">
                         <div class="row justify-content-start ">
                             <div class="col">                                                 
-                            <h3>ORDER ID: <?php if($exist){echo $orderid;} ?></h3>
+                            <h4>Order No: <?php if($exist){echo $orderid;} ?></h4>
                         </div>
                         </div>
                     </div>
                     <div class="col-auto"> <img class="irc_mi img-fluid bell" src="https://i.imgur.com/uSHMClk.jpg" width="30" height="30"> </div>
                 </div>                
                 <div class="row justify-content-around">
-                    <div class="col-md-5">
+                    <div class="col-md-5 col-12">
                         <div class="card border-0">
-                            <div class="card-header pb-0">
-                                <h3 class="card-title space ">Order placed</h3>
-                                <p class="card-text text-muted mt-2 space">ORDER DETAILS</p>
+                            <div class="card-header card-header-dark pb-0">                                
+                                <p class="card-text mt-2 space">ORDER DETAILS</p>
                                 <hr class="my-0">
                             </div>
                             <div class="card-body">
                                 <div class="row justify-content-between">
-                                    <div class="col-auto mt-0">
+                                    <div class="col-12 mt-0">
                                         <table class="table table-hover table-responsive">
                                             <tr><th><i class="fas fa-calendar-alt"></i> Order Date</th><td>
                                                 <?php 
@@ -172,7 +173,7 @@ else{
                                     </div>
                                 </div>
                                 <div class="row justify-content-between">
-                                    <div class="col-auto mt-0">                                                                                                                                   
+                                    <div class="col-12 mt-0">                                                                                                                                   
                                             <?php  
                                             $getBillingDetails = "Select * from order_billing_info where info_id = '$billingid'";
                                             $getBillingDetailsQuery = mysqli_query($conn, $getBillingDetails);
@@ -210,7 +211,7 @@ else{
                                     </div>
                                 </div>';  
                                 echo'<div class="row justify-content-between">
-                                    <div class="col-auto mt-0">
+                                    <div class="col-12 mt-0">
                                         <ul>';                                                                                    
                                             $getShippingInfo= "Select * from order_shipping_info where shipping_info_id = '$shippingid'";
                                             $getShippingInfoQuery = mysqli_query($conn, $getShippingInfo);
@@ -227,39 +228,20 @@ else{
                                     </div>                                   
                                 </div>';                        
                                 }
-                                ?>                                
-                                <div class="row mt-4">
-                                    <div class="col">
-                                        <p class="text-muted mb-2">PAYMENT DETAILS</p>
-                                        <hr class="mt-0">
-                                    </div>
-                                </div>
-                                <div class="row justify-content-between">
-                                    <div class="col-auto mt-0">
-                                        <ul>
-                                            <?php                                           
-                                            $getPayment = "Select * from payment where order_id = '$orderid' and user_id = '$userid'";
-                                            $getPaymentQuery = mysqli_query($conn, $getPayment);
-                                            while($row = mysqli_fetch_assoc($getPaymentQuery)){
-                                                echo'<li>Payment Status: '.$row['status'].'</li>';                                                
-                                            }                                                                                                                        
-                                            ?>
-                                        </ul>
-                                    </div>                                   
-                                </div>
+                                ?>                                                                
                             </div>
 
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-5 col-12">
                         <div class="card border-0 ">
-                            <div class="card-header card-2">
-                                <p class="card-text text-muted mt-md-4 mb-2 space">YOUR ORDER <span class=" small text-muted ml-2 cursor-pointer"></span> </p>
-                                <hr class="my-2">
-                            </div>                      
+                        <div class="card-header card-header-dark mb-2 pb-0">                                
+                                <p class="card-text mt-2 space">ORDERED PRODUCTS</p>
+                                <hr class="my-0">
+                            </div>                    
                             <div class="card-body pt-1">
                             <?php
-                    $getOrderProducts = "Select p.name,p.image_name,p.sold_by, p.code, p.category, o.price, o.quantity, o.total_price FROM order_item o, product p where o.order_id = '$orderid' and o.product_code = p.code";                            
+                    $getOrderProducts = "Select p.name,p.image_name,p.image_folder_key,p.sold_by, p.code, p.category, o.price, o.quantity, o.total_price FROM order_item o, product p where o.order_id = '$orderid' and o.product_code = p.code";                            
                     $getOrderProductsResult = mysqli_query($conn, $getOrderProducts);
                     $subtotal = 0;
                     while($row = mysqli_fetch_assoc($getOrderProductsResult)){
@@ -277,7 +259,7 @@ else{
                             </div>
                         </div>
                         <div class=" pl-0 flex-sm-col col-auto my-auto">
-                            <p class="boxed-1">'.$row['quantity'].'</p>
+                            <p class="boxed-1">x'.$row['quantity'].'</p>
                         </div>
                         <div class=" pl-0 flex-sm-col col-auto my-auto ">
                             <p><b>Rs '.$row['total_price'].'</b></p>
@@ -325,32 +307,6 @@ else{
         </div>
     </div>
 </div>
-	<!-- Start Shop Newsletter  -->
-	<section class="shop-newsletter section">
-		<div class="container">
-			<div class="inner-top">
-				<div class="row">
-					<div class="col-lg-8 offset-lg-2 col-12">
-						<!-- Start Newsletter Inner -->
-						<div class="inner">
-							<h4>Newsletter</h4>
-							<p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-							<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-								<input name="EMAIL" placeholder="Your email address" required="" type="email">
-								<button class="btn">Subscribe</button>
-							</form>
-						</div>
-						<!-- End Newsletter Inner -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Shop Newsletter -->
-	
-	
-	
-	
 	<!-- Start Footer Area -->
 	<?php
 	include"layouts/footer.php";
@@ -395,5 +351,6 @@ else{
 	<!-- Active JS -->
 	<script src="assets/js/active.js"></script>	
 	
+    <script src="assets/js/orderdetail.js"></script>	
 </body>
 </html>

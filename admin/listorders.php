@@ -84,10 +84,10 @@ include("database/connect.php");
                                         <tbody>
                                             <?php
                                             include("./formatdate.php");
-                                            $getAllCustomers = "Select * from orders";
-                                            $executegetAllCustomers = mysqli_query($conn, $getAllCustomers);
-                                            $forModal = mysqli_query($conn, $getAllCustomers);
-                                            while ($row = mysqli_fetch_assoc($executegetAllCustomers)) {
+                                            $getAllOrders = "Select * from orders";
+                                            $executegetAllOrders = mysqli_query($conn, $getAllOrders);
+                                            $forModal = mysqli_query($conn, $getAllOrders);
+                                            while ($row = mysqli_fetch_assoc($executegetAllOrders)) {
                                                 $date = formatDate($row['order_date']) . " " . formatTime($row['order_date']);
                                                 $orderid = $row['id'];
                                                 $getTotalPrice = "Select sum(total_price) as total from order_item where order_id = '$orderid'";

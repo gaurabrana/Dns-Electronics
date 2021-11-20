@@ -26,7 +26,7 @@ $(document).on('ready', function() {
                 });
             return;
         } else {
-            $("#triggerConfirmation").click();
+            confirmOrder();
             return false;
         }
     });
@@ -53,13 +53,13 @@ $(document).on('ready', function() {
                     });
                 return;
             } else {
-                $("#triggerConfirmation").click();
+                confirmOrder();
                 return false;
             }
         }
     });
 
-    $("#country").on("change", function() {
+    $("#billingcountry").on("change", function() {
         var a = $(this).val().toLowerCase();
         $("#billingcountryflag").attr("src", "img/flags/" + a + ".png");
     });
@@ -69,20 +69,17 @@ $(document).on('ready', function() {
         $("#shippingcountryflag").attr("src", "img/flags/" + a + ".png");
     });
 
-    $("#confirmOrder").on("click", function(e) {
-
-        $("#closeModalBox").click();
-        close();
+    function confirmOrder() {
         var addressCheck = $("#newaddressbook").val();
         var payment = $('input[type="radio"]:checked').val();
-        alert("sad");
+
         // has no address book
         if (addressCheck == "true") {
             var billingfname = $("#billingfname").val();
             var billinglname = $("#billinglname").val();
             var billingemail = $("#billingemail").val();
             var billingphone = $("#billingphone").val();
-            var country = $("#country").val();
+            var country = $("#billingcountry").val();
             var billingaddressone = $("#billingaddressone").val();
             var billingaddresstwo = $("#billingaddresstwo").val();
             var billingpostalcode = $("#billingpostalcode").val();
@@ -119,11 +116,15 @@ $(document).on('ready', function() {
                     },
                     cache: false,
                     success: function(result) {
+                        var data = JSON.parse(result);
                         if (data.statusCode == 200) {
-                            //if paypal or esewa send to respective part
+                            //order placed succesfully
+                            toastr.success('Order placed successfully.', 'Order Placement!');
                         } else if (data.statusCode == 201) {
+                            toastr.error('Order placing failed. Please try again.', 'Order Placement!');
                             //order placing failed
                         } else if (data.statusCode == 202) {
+                            toastr.error('Failed to add order details.', 'Order Placement!');
                             // billing or shipping detail add failed
                         }
                     }
@@ -146,11 +147,22 @@ $(document).on('ready', function() {
                     },
                     cache: false,
                     success: function(result) {
+                        var data = JSON.parse(result);
                         if (data.statusCode == 200) {
-                            //if paypal or esewa send to respective part
+                            //order placed succesfully
+                            toastr.success('Order placed successfully.', 'Order Placement!');
+                            $(this).delay(2000).queue(function(next) {
+                                window.location.href = "orderdetail.php?i=" + data.orderid;
+                                next();
+                            });
                         } else if (data.statusCode == 201) {
+                            toastr.error('Order placing failed. Please try again.', 'Order Placement!');
                             //order placing failed
                         } else if (data.statusCode == 202) {
+                            toastr.error('Failed to add billing and shipping details.', 'Order Placement!');
+                            // billing or shipping detail add failed
+                        } else if (data.statusCode == 203) {
+                            toastr.error('Failed to add order product details.', 'Order Placement!');
                             // billing or shipping detail add failed
                         }
                     }
@@ -159,7 +171,6 @@ $(document).on('ready', function() {
         }
         // has already address book        
         else {
-            alert("already address boook");
             $.ajax({
                 url: "database/confirmorder.php",
                 type: "POST",
@@ -167,29 +178,37 @@ $(document).on('ready', function() {
                 cache: false,
                 success: function(result) {
                     var data = JSON.parse(result);
+                    console.log(data);
                     if (data.statusCode == 200) {
+                        //order placed succesfully
+                        toastr.success('Order placed successfully.', 'Order Placement!');
+                        $(this).delay(2000).queue(function(next) {
+                            window.location.href = "orderdetail.php?i=" + data.orderid;
+                            next();
+                        });
                         //if paypal or esewa send to respective part
-                        if (payment == "Paypal") {
-                            const api = "https://api.exchangerate-api.com/v4/latest/USD";
-                            fetch(`${api}`)
-                                .then(currency => {
-                                    return currency.json();
-                                }).then(getOrderAmountInUSD);
-                        } else if (payment == "COD") {
-
-                        } else if (payment == "Esewa") {
-
-                        }
+                        // if (payment == "Paypal") {
+                        //     const api = "https://api.exchangerate-api.com/v4/latest/USD";
+                        //     fetch(`${api}`)
+                        //         .then(currency => {
+                        //             return currency.json();
+                        //         }).then(getOrderAmountInUSD);
+                        // }
                     } else if (data.statusCode == 201) {
+                        toastr.error('Order placing failed. Please try again.', 'Order Placement!');
                         //order placing failed
                     } else if (data.statusCode == 202) {
+                        toastr.error('Failed to add billing and shipping details.', 'Order Placement!');
+                        // billing or shipping detail add failed
+                    } else if (data.statusCode == 203) {
+                        toastr.error('Failed to add order product details.', 'Order Placement!');
                         // billing or shipping detail add failed
                     }
                 }
 
             });
         }
-    });
+    }
 
     function getOrderAmountInUSD(currency) {
         let resultFrom = "NPR";

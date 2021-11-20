@@ -12,11 +12,8 @@ if(isset($_POST['addProduct'])){
     if($executeAddProduct){        
         $error = 0;
         foreach($subImage as $imageName){  
-            if($imageName != "noimages"){
-                $getIDCount = "Select id from product_images";
-                $newID = mysqli_num_rows(mysqli_query($conn, $getIDCount));
-                $newID++;          
-                $sql1 = "Insert into product_images values('$newID','$code', '$imageName')";            
+            if($imageName != "noimages"){                     
+                $sql1 = "Insert into product_images values('','$imagekey', '$imageName')";            
                 $executeAddProductImages = mysqli_query($conn, $sql1);
                 if(!$executeAddProductImages){
                     $error++;                

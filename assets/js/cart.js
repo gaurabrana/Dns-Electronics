@@ -34,6 +34,7 @@ $(document).on('ready', function() {
             success: function(result) {
                 var data = JSON.parse(result);
                 var total = data.total;
+                getItemInCart();
                 $("#tablerow" + productID).remove();
                 $("#totalpayment").html("Rs " + total);
                 var totalWithoutDiscount = data.totalWithoutDiscount;
@@ -43,6 +44,18 @@ $(document).on('ready', function() {
             }
         });
     });
+
+    function getItemInCart() {
+        $.ajax({
+            type: "POST",
+            url: 'database/getcartdata.php',
+            data: { action: "getData" },
+            success: function(result) {
+                $("#holdshoppingcart").html(result);
+            }
+        });
+    }
+
 
     function updatecartquantity(j, k, l) {
         var m = $("#stock" + k).val();

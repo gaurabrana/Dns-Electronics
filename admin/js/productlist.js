@@ -183,7 +183,6 @@
     $(".deletebuttonforproduct").on("click", function() {
         let id = $(this).attr("id");
         let pcode = id.split("deleteproceed")[1];
-        alert(pcode);
         $.ajax({
             url: "database/deleteproduct.php",
             method: "POST",
@@ -200,14 +199,14 @@
                     let row = $("#rowforproduct" + pcode).get(0);
                     var table = $(".zero-configuration").dataTable();
                     table.fnDeleteRow(table.fnGetPosition(row));
-                    $("#rowforproduct" + pcode).remove();
                     $("#modalforproductdelete" + pcode).modal('hide');
+                    $("#rowforproduct" + pcode).remove();
                 } else if (result.statusCode == 201) {
                     color = "alert-danger";
                     resultholder.text("Failed to delete product.");
                 } else if (result.statusCode == 202) {
                     color = "alert-danger";
-                    resultholder.text("Error delete this product. Product data exist in " + result.existance + " tables.");
+                    resultholder.text("Error deleting this product. Product data exist in " + result.existance + " tables.");
                 }
                 resultholder.addClass(color);
                 resultholder

@@ -58,43 +58,7 @@
             $('.search-top').toggleClass('active');
         });
 
-        /*=======================
-          Slider Range JS
-        =========================*/
-        $(function() {
-            $("#slider-range").slider({
-                range: true,
-                min: 0,
-                max: 100000,
-                values: [0, 100000],
-                slide: function(event, ui) {
-                    $("#amount").val("Rs " + ui.values[0] + " - Rs " + ui.values[1]);
-                    loadProductsPriceSlider(ui.values[0], ui.values[1]);
-                }
-            });
-            $("#amount").val("Rs " + $("#slider-range").slider("values", 0) +
-                " - Rs " + $("#slider-range").slider("values", 1));
-        });
-
-        function loadProductsPriceSlider(range1, range2) {
-            $.ajax({
-                url: "database/sortProducts.php",
-                type: "POST",
-                data: { minPrice: range1, maxPrice: range2 },
-                cache: false,
-                success: function(result) {
-                    var gridData = result.split("<!--EndGridSection-->")[0];
-                    var listData = result.split("<!--EndGridSection-->")[1];
-                    $("#loadProducts").html(gridData);
-                    if ($("#toggle-list-style").hasClass("active")) {
-                        $("#loadProducts .single-product").css("display", "none");
-                    }
-                    $("#list-style-product-display").html(listData);
-                    $("#currentQuery").val("priceSlider");
-                    reInitializeCarousel();
-                }
-            });
-        }
+        /*=======================        
         /*=======================
           Home Slider JS
         =========================*/
@@ -313,6 +277,8 @@
     $("#genderFromRegister").niceSelect();
     $("#sortType").niceSelect();
     $("#itemsPerPage").niceSelect();
+    $("#billingcountry").niceSelect();
+    $("#shippingcountry").niceSelect();
 
     $(".star-rating").css("display", "none");
     /*=====================================
@@ -345,6 +311,20 @@
     /* Product Sorting Queries */
 
 
+
+    function getItemInCart() {
+        $.ajax({
+            type: "POST",
+            url: 'database/getcartdata.php',
+            data: { action: "getData" },
+            success: function(result) {
+                $("#holdshoppingcart").html(result);
+            }
+        });
+    }
+
+    getItemInCart();
+
     $(document).on("click", ".product-action-2 p", function(e) {
         var a = $(this).attr("id");
         var b = a.split("cart")[1];
@@ -366,6 +346,7 @@
             success: function(result) {
                 var data = JSON.parse(result);
                 if (data.statusCode == 200) {
+                    getItemInCart();
                     $(c).html("Added to cart");
                     if (d) {
                         addResultColor("list", c, "alert-success");
@@ -568,6 +549,7 @@
                 $(resultID).css("visibility", "visible");
                 if (data.statusCode == 200) {
                     color = "alert-success";
+                    getItemInCart();
                     $(resultID).html("Added to cart");
                 } else if (data.statusCode == 201) {
                     color = "alert-danger";

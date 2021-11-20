@@ -70,7 +70,7 @@ header("Location: index.php");
 		?>
 		<!--/ End Header -->
 	
-	<!-- Breadcrumbs -->
+	<!-- Breadcrumbs -->    
 	<div class="breadcrumbs">
 		<div class="container">
 			<div class="row">
@@ -78,7 +78,7 @@ header("Location: index.php");
 					<div class="bread-inner">
 						<ul class="bread-list">
 							<li><a href="index.php">Home<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="profile.php">My Profile</a></li>
+							<li class="active"><a href="profile.php">My Payment</a></li>
 						</ul>
 					</div>
 				</div>
@@ -87,179 +87,82 @@ header("Location: index.php");
 	</div>	
 	<!-- User Profile -->
 	<div class="section">
-	<div class="container">
-  <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Complete your profile</p>
-                </div>
-                <div class="card-body">
-                  <form>
-                    <?php
-                    $userid = $_SESSION['id'];
-                    $sql = "Select * from customer where id = '$userid'";
-                    $result = mysqli_query($conn, $sql);
-                    if(mysqli_num_rows($result) > 0){
-                      while($row = mysqli_fetch_assoc($result)){
-                        $username = $row['username'];
-                        $fname = explode(' ',$row['name'])[0];
-                        $lname = explode(' ',$row['name'])[1];
-                        $email = $row['email'];
-                        $phone = $row['phone_no'];
-                        $age = $row['age'];
-                        $gender = $row['gender'];
-                        $pp = $row['profile_picture'];
-                        $joined = $row['joined_date'];
-                        $uniquekey = $row['uniquekey'];
-                        if($row['approved'] == "YES"){
-                          $approved = "Verified";
-                        }
-                        else{
-                          $approved = "Not Verified";
-                        }
-                        if($row['active'] == "YES"){
-                          $active = "Active";
-                        }
-                        else{
-                          $active = "Inactive";
-                        }
-                        
-                      }
-                    }
-                    ?>
+  <div class="container">
                     <div class="row">
-                      <div class="col-md-5">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Country (disabled)</label>
-                          <input type="text" class="form-control" value="Nepal" disabled>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Username</label>
-                          <input type="text" class="form-control" disabled value="<?php echo $username; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Email address</label>
-                          <input type="email" class="form-control" disabled value="<?php echo $email; ?>">
-                        </div>
-                      </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-dark">
+                                    <h4 class="card-title ">Payments</h4>
+                                    <p class="card-category"> Your payment details</p>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class=" text-danger">
+                                                <th>
+                                                    ID
+                                                </th>
+                                                <th>
+                                                    OrderID
+                                                </th>
+                                                <th>
+                                                    Type
+                                                </th>
+                                                <th>
+                                                    TransactionID
+                                                </th>
+                                                <th>
+                                                    Due (Rs)
+                                                </th>
+                                                <th>
+                                                    Paid (Rs)
+                                                </th>
+                                                <th>
+                                                    Remaining (Rs)
+                                                </th>
+                                                <th>
+                                                    Paid Date
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </thead>
+                                            <tbody>
+                                                
+                                                    <?php
+                                                    $userid = $_SESSION['id'];
+                                                    $getPaymentDetails = "Select p.id, p.payment_type, p.transaction_id, p.order_id, p.due_amount, p.paid_amount, p.remaining_amount, p.paid_date, p.status from payment p,orders o where o.user_id = '$userid' and o.id = p.order_id order by p.paid_date ASC";
+                                                    $getPaymentDetailsResult = mysqli_query($conn, $getPaymentDetails);
+                                                    if(mysqli_num_rows($getPaymentDetailsResult) > 0){
+                                                        while($row = mysqli_fetch_assoc($getPaymentDetailsResult)){
+                                                            $transaction_id = ($row['transaction_id'] == 0 ? '-' : $row['transaction_id']);
+                                                            echo'<tr>
+                                                            <td>'.$row['id'].'</td>
+                                                            <td title="Click to see order details"><a class="text-success" target="_blank" href="orderdetail.php?i='.$row['order_id'].'">'.$row['order_id'].'</a></td>
+                                                            <td>'.$row['payment_type'].'</td>
+                                                            <td>'.$transaction_id.'</td>
+                                                            <td>'.$row['due_amount'].'</td>
+                                                            <td>'.$row['paid_amount'].'</td>
+                                                            <td>'.$row['remaining_amount'].'</td>
+                                                            <td>'.$row['paid_date'].'</td>
+                                                            <td>'.$row['status'].'</td>
+                                                            </tr>';
+                                                        }
+                                                    }
+                                                    else{
+                                                        echo'<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';
+                                                    }
+                                                    ?>                                                                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
                     </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">First Name</label>
-                          <input type="text" class="form-control" value="<?php echo $fname; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Last Name</label>
-                          <input type="text" class="form-control" value="<?php echo $lname; ?>">
-                        </div>
-                      </div>
-                    </div>                    
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Age</label>
-                          <input type="text" class="form-control" value="<?php echo $age; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Phone Number</label>
-                          <input type="text" class="form-control" value="<?php echo $phone; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                        <label class="bmd-label-floating">Password</label>
-                          <input type="password" class="form-control" value="-----------">           
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                        <label class="bmd-label-floating">Gender</label>
-                          <select style="padding: 5px;" class="form-control">
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Not Specified</option>
-                          </select>       
-                        </div>
-                      </div>                    
-                    </div>         
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label>Account Details</label>
-                          <div class="row">
-                          <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Joined Date</label>
-                          <input type="text" class="form-control" disabled value="<?php echo $joined; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Account Verification</label>
-                          <input type="text" class="form-control" disabled value="<?php echo $approved; ?>">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Status</label>
-                          <input type="text" class="form-control" disabled value="<?php echo $active; ?>">
-                        </div>
-                      </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 d-flex justify-content-center">
-                      <button type="submit" class="btn btn-dark">Update Profile</button>
-                      </div>
-                    </div>
-                    
-                    <div class="clearfix"></div>
-                  </form>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card card-profile">
-                <div class="card-avatar">
-                  <a href="javascript:;">
-                    <?php
-                    echo'<img class="img" src="img/UserProfile/'.$uniquekey.'/'.$pp.'" />';
-                    ?>
-                    
-                  </a>
-                </div>
-                <div class="card-body">
-                  <h6 class="card-category text-gray">Verified Customer</h6>
-                  <h4 class="card-title">
-                    <?php
-                    if(isset($_SESSION['name'])){
-                      echo $_SESSION['name'];
-                    }
-                    ?>
-                  </h4>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
   </div>
-	</div>
-	<!--/ End User Profile -->
+  <!--/ End User Profile -->
 	
 	<!-- Start Footer Area -->
 	<?php

@@ -103,11 +103,11 @@
                     </li> 
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">                        
-                            <i class="fas fa-users menu-icon"></i><span class="nav-text">Payments</span>
+                        <i class="fas fa-money-check menu-icon"></i><span class="nav-text">Payments</span>
                         </a>
                         <ul aria-expanded="false">                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Unpaid Orders</a></li>
+                            <li><a href="./payments.php"><i class="fas fa-money"></i>All Payments</a></li>
+                            <li><a href="./updatepayment.php"><i class="fas fa-money-check-edit-alt"></i>Update Payment</a></li>
                             <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Paid Orders</a></li>
                             <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>                            
                         </ul>
@@ -126,8 +126,7 @@
                             <i class="fas fa-envelope menu-icon"></i><span class="nav-text">Messages from users</span>
                         </a>
                         <ul aria-expanded="false">                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Unpaid Orders</a></li>
+                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>                            
                             <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Paid Orders</a></li>
                             <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>                            
                         </ul>

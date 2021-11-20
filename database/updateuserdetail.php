@@ -1,6 +1,7 @@
 <?php 
-include("connect.php");
 if(isset($_POST['action'])){
+    include("connect.php");
+    include("encryption.php");
     if($_POST['action']==="verifydetails"){
         $userid = $_SESSION['id'];
         $currentpass = $_POST['currentpass'];
@@ -9,9 +10,27 @@ if(isset($_POST['action'])){
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
         $pass = $row['password'];
-        if(md5($currentpass) == $pass){
-        //send code
-        $email = $_POST['newemail'];
+        if(encrypt_text(md5($currentpass)) == $pass){
+            $email = filter_var($_POST['newemail'], FILTER_SANITIZE_EMAIL);
+            $oldemail = $_SESSION['email'];        
+            //check if email associated with other users
+            $checkEmailAssociation = "Select count(id) as total from customer where id <> '$userid' and email = '$email'";
+            $checkEmailAssociationResult = mysqli_query($conn, $checkEmailAssociation);
+            $getMailCheckRow = mysqli_fetch_assoc($checkEmailAssociationResult);
+            $totalcount = $getMailCheckRow['total'];
+            if($totalcount != 0){
+                echo json_encode(array("statusCode" => 205));
+           exit();
+            }
+        //send code                
+        if (!filter_var($email,FILTER_VALIDATE_EMAIL)){        
+            echo json_encode(array("statusCode" => 204));
+           exit();
+        }
+        if($oldemail == $email){
+            echo json_encode(array("statusCode" => 203, "email" => $email));
+            exit();
+        }
         $name = $_SESSION['name'];
         $isUpdateProfile =true;
         $code = RandomString();
@@ -211,8 +230,8 @@ if(isset($_POST['action'])){
             </tr>
         </tbody>
         </table>';
-        $subject = "One time password code";
-        include('sendmail.php');
+        $subject = "One time password code";        
+        include('sendmail.php');        
         if($emailSent){
             $start = date('Y-m-d h:i:s A');
             $valid_date =  date('Y-m-d h:i:s A', strtotime('+5 minutes',strtotime($start)));
@@ -220,8 +239,11 @@ if(isset($_POST['action'])){
             $updateActionEmailUpdate = "Insert into email_update values('','$userid', '$old_email' ,'$email', '$code', '$valid_date' ,'ongoing')";
             $executeupdateActionEmailUpdate = mysqli_query($conn, $updateActionEmailUpdate);
             if($executeupdateActionEmailUpdate){
-                echo json_encode(array("statusCode" => 200, "email" => $email));
+                echo json_encode(array("statusCode" => 200, "email" => $email, "valid_date" => $valid_date));
             }            
+        }
+        else{
+            echo json_encode(array("statusCode" => 202));
         }
         }
         else{
@@ -272,6 +294,47 @@ if(isset($_POST['action'])){
             echo json_encode(array("statusCode" => 201));
         }
     }
+    if($_POST['action']=="changePassword"){
+        $userid = $_SESSION['id'];
+        $oldPass = $_POST['oldPass'];
+        $newPass = $_POST['newPass'];        
+        if(strlen($newPass) < 8 && strlen($newPass) > 20){
+            echo json_encode(array("statusCode" => 203));            
+        }
+        else{
+         $newPass = encrypt_text(md5($newPass));
+        $sql = "Select password from customer where id = '$userid'";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $pass = $row['password'];
+        if(encrypt_text(md5($oldPass)) == $pass){
+            //update password
+            $updatePass = "Update customer set password = '$newPass' where id = '$userid'";
+            $executeUpdatePass = mysqli_query($conn, $updatePass);
+            if($executeUpdatePass){
+                echo json_encode(array("statusCode" => 200));
+            }
+            else{
+                echo json_encode(array("statusCode" => 202));
+            }
+        }
+        else{
+            echo json_encode(array("statusCode" => 201));
+        }            
+        }
+    }
+    if($_POST['action']=="resetRequest"){
+        $userid = $_SESSION['id'];
+        $sql = "Update email_update set status = 'expired' where user_id = '$userid' and status<>'expired'";
+        $result = mysqli_query($conn, $sql);
+        if($result){
+            echo json_encode(array("statusCode" => 200));
+        }
+        else{
+            echo json_encode(array("statusCode" => 201));
+        }
+    }
+
 }
 
 function RandomString($length = 6) {
