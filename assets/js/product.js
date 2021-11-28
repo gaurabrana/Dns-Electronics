@@ -16,13 +16,15 @@ $(document).on('ready', function() {
                 if ('pageno' in data) {
                     $(".pagination li").removeClass("active");
                     $("#paginationValue" + data.pageno).closest('li').addClass("active");
-                    focusProducts();
                 }
+                focusProducts();
             }
         });
     }
 
     function ResetFilters() {
+        $(".brand-list li a").removeClass("active-filter");
+        $(".categor-list li a").removeClass("active-filter");
         let limit = $("select#itemsPerPage option").filter(":selected").val();
         let sortType = $("select#sortType option").filter(":selected").val();
         if (sortType != "none") {
@@ -63,28 +65,33 @@ $(document).on('ready', function() {
         e.preventDefault();
         ResetFilters();
         var brand = $(this).attr('id');
+        $("#" + brand).addClass("active-filter");
         let data = { "filter": "brand", brandName: brand };
         readyProductFilter(data);
-        $('html, body').animate({
-            scrollTop: $(".bread-inner").offset().top
-        }, 500);
     });
 
     $(".categor-list li a").on("click", function(e) {
         e.preventDefault();
         ResetFilters();
         var category = $(this).attr('id');
+        $("#" + category).addClass("active-filter");
         let data = { "filter": "category", categoryName: category };
         readyProductFilter(data);
     });
 
     $("#sortType").on('change', function(e) {
         let data = JSON.parse($("#currentQuery").val());
+        if ('pageno' in data) {
+            delete data.pageno;
+        }
         readyProductFilter(data);
     });
 
     $("#itemsPerPage").on('change', function(e) {
         let data = JSON.parse($("#currentQuery").val());
+        if ('pageno' in data) {
+            delete data.pageno;
+        }
         readyProductFilter(data);
     });
 
@@ -160,15 +167,27 @@ $(document).on('ready', function() {
         }
 
     });
-    if (window.matchMedia("(max-width: 767px)").matches) {
-        $(".shop-top").css("margin-top", "30px");
+    if (window.matchMedia("(max-width: 425px)").matches) {
+        $(".product-action-2 span").html('<i class="fas fa-cart-plus"></i>');
     }
+    if (window.matchMedia("(max-width: 767px)").matches) {
+        $(".single-widget.category").removeClass("mt-0");
+    }
+    $(window).on('resize', function() {
+        var win = $(this);
+        if (win.width() <= 767) {
+            $(".single-widget.category").removeClass("mt-0");
+        } else {
+            $(".single-widget.category").addClass("mt-0");
+        }
+    });
 
     function focusProducts() {
         let isMobileDevice = false;
+
         if (window.matchMedia("(max-width: 767px)").matches) {
             $('html, body').animate({
-                scrollTop: $(".shop-top").offset().top
+                scrollTop: $(".focusFilterProduct").offset().top
             }, 1000);
         } else {
             console.log("isdesktop");

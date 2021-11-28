@@ -20897,6 +20897,11 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
     width: 80px;
 }
 
+.date-cards span.active {
+    color: #ed1c24;
+    font-weight: bold;
+}
+
 .action-for-products a {
     cursor: pointer;
 }

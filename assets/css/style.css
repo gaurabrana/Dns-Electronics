@@ -2421,8 +2421,10 @@
     padding: 30px;
 }
 
-.shop-sidebar .single-widget:first-child {
-    margin-top: 0;
+.active-filter {
+    color: #ed1c24 !important;
+    border: 1px solid #ed1c24 !important;
+    padding: 0px 10px;
 }
 
 .shop-sidebar .single-widget .title {
@@ -2496,6 +2498,9 @@
 
 .shop .range .check-box-list {
     margin-top: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .shop .range .check-box-list li {
@@ -2531,6 +2536,9 @@
 
 .shop-sidebar .categor-list {
     margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .shop-sidebar .categor-list li {
@@ -2555,6 +2563,18 @@
 
 .shop-sidebar .categor-list {
     margin-top: 10px;
+}
+
+.shop-sidebar .recent-post {
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.shop-sidebar .brand-list {
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .shop-sidebar .brand-list li {

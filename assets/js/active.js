@@ -325,8 +325,11 @@
 
     getItemInCart();
 
-    $(document).on("click", ".product-action-2 p", function(e) {
+    $(document).on("click", ".product-action-2 span", function(e) {
         var a = $(this).attr("id");
+        if (a == undefined) {
+            return;
+        }
         var b = a.split("cart")[1];
         var c = null;
         var d = false;
@@ -721,5 +724,46 @@ CHECKOUT PAGE
         });
 
     });
+
+    // $(window).on('resize', function() {
+    //     var win = $(this); //this = window
+    //     //if (win.height() >= 820) { /* ... */ }
+    //     if (win.width() <= 375) {
+    //         $(".holdProductBrand").removeClass("col-6");
+    //         $(".holdProductBrand").addClass("col-12");
+    //     } else if (win.width() <= 555) {
+    //         $("#holdBanner1").removeClass("col-6");
+    //         $("#holdBanner1").addClass("col-12");
+    //         $("#holdBanner2").removeClass("col-6");
+    //         $("#holdBanner2").addClass("col-12");
+    //         $(".holdProductBrand").removeClass("col-12");
+    //         $(".holdProductBrand").removeClass("col-4");
+    //         $(".holdProductBrand").addClass("col-6");
+    //     } else if (win.width() <= 767) {
+    //         $("#holdBanner1").addClass("col-6");
+    //         $("#holdBanner1").removeClass("col-12");
+    //         $("#holdBanner2").addClass("col-6");
+    //         $("#holdBanner2").removeClass("col-12");
+    //         $(".holdProductBrand").addClass("col-4");
+    //         $(".holdProductBrand").removeClass("col-6");
+    //     }
+    // });
+
+    // focusProducts();
+
+    // function focusProducts() {
+    //     let width = $(window).width();
+    //     if (window.matchMedia("(max-width: 375px)").matches) {
+    //         $(".holdProductBrand").removeClass("col-4");
+    //         $(".holdProductBrand").addClass("col-12");
+    //     } else if (window.matchMedia("(max-width: 555px)").matches) {
+    //         $("#holdBanner1").removeClass("col-6");
+    //         $("#holdBanner1").addClass("col-12");
+    //         $("#holdBanner2").removeClass("col-6");
+    //         $("#holdBanner2").addClass("col-12");
+    //         $(".holdProductBrand").removeClass("col-4");
+    //         $(".holdProductBrand").addClass("col-6");
+    //     }
+    // }
 
 })(jQuery);

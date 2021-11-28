@@ -300,7 +300,7 @@ if(mysqli_num_rows($result)>0){
 		</div>
 		<!-- Modal end -->';
 								$discount = 0;
-								$data.='<div class="col-lg-4 col-md-6 col-4">
+								$data.='<div class="col-lg-4 col-md-6 col-sm-4 col-6">
 								<div class="single-product">
 								<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
 									<div class="product-img">
@@ -316,7 +316,7 @@ if(mysqli_num_rows($result)>0){
 									</div>
 									<div class="product-action-2">';
 									if(!$outOfStock){	
-										$data.='<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>';
+										$data.='<span title="Add to cart" id="cart'.$row['code'].'">Add to cart</span>';
 										}
 										else{
 											$data.='<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
@@ -364,7 +364,7 @@ if(mysqli_num_rows($result)>0){
 												</div>
 												<div class="product-action-2">';
 												if(!$outOfStockGrid){	
-												$data .= '<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>';
+												$data .= '<span title="Add to cart" id="listcart'.$row['code'].'">Add to cart</span>';
 												}
 												else{
 													$data .= '<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';

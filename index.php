@@ -107,7 +107,7 @@ $active = "home";
 		<div class="container-fluid">
 			<div class="row">
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-6 col-12" data-aos="fade-right" data-aos-duration="500">
+				<div class="col-lg-4 col-md-6 col-sm-6 col-12" id="holdBanner1" data-aos="fade-right" data-aos-duration="500">
 					<div class="single-banner">
 						<img style="transform:scaleX(-1);" src="img/Fridge.jpg" alt="#">
 						<div class="content">
@@ -119,7 +119,7 @@ $active = "home";
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-6 col-12" data-aos="fade-up" data-aos-duration="500">
+				<div class="col-lg-4 col-md-6 col-sm-6 col-12" id="holdBanner2" data-aos="fade-up" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="https://cdn1.expertreviews.co.uk/sites/expertreviews/files/2020/09/best_electric_heater_-_delonghi_hsx2320.jpg?itok=aga5wPR3" alt="#">
 						<div class="content">
@@ -131,7 +131,7 @@ $active = "home";
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-12" data-aos="flip-right" data-aos-duration="500">
+				<div class="col-lg-4 col-md-12 col-sm-12 col-12" id="holdBanner3" data-aos="flip-right" data-aos-duration="500">
 					<div class="single-banner tab-height">
 						<img src="https://hitek.fr/img/up_o/1751376525/hitek_35e9070c204335552ddadac47f540e87_1613239643.jpeg" alt="#">
 						<div class="content">
@@ -215,7 +215,7 @@ $active = "home";
 												$updatedPrice = $row1['price'];								
 											}											
 											$discount = 0;
-											echo'<div class="col-xl-3 col-lg-4 col-md-4 col-12">
+											echo'<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 holdProductBrand">
 											<div class="single-product">
 											<p class="hide-element" style="font-size:16px;" id="result'.$row1['code'].'">Result</p>
 												<div class="product-img">
@@ -231,7 +231,7 @@ $active = "home";
 														</div>
 														<div class="product-action-2">';
 												if(!$outOfStock){	
-												echo'<p title="Add to cart" id="cart'.$row1['code'].'">Add to cart</p>';
+												echo'<span title="Add to cart" id="cart'.$row1['code'].'">Add to cart</span>';
 												}
 												else{
 													echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
@@ -271,7 +271,7 @@ $active = "home";
 		<div class="container">
 			<div class="row">
 				<!-- Single Banner  -->
-				<div class="col-lg-6 col-md-6 col-12" data-aos="fade-right" data-aos-duration="500">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-12" data-aos="fade-right" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="https://i.ytimg.com/vi/tddValqLAfI/maxresdefault.jpg" alt="#">
 						<div class="content">
@@ -283,7 +283,7 @@ $active = "home";
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-6 col-md-6 col-12" data-aos="fade-left" data-aos-duration="500">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-12" data-aos="fade-left" data-aos-duration="500">
 					<div class="single-banner">
 						<img src="img/Speaker.png" alt="#">
 						<div class="content">

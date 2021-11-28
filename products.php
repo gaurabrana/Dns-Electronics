@@ -95,10 +95,11 @@ $active = "products";
 		<section class="product-area shop-sidebar shop section">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-3 col-md-4 col-12">
-						<div class="shop-sidebar">
-								<!-- Single Widget -->
-								<div class="single-widget category">
+					<div class="col-lg-3 col-md-4 col-12 mb-4">						
+							<div class="row">
+								<div class="col-md-12 col-sm-6">
+									<!-- Single Widget -->
+									<div class="mt-0 single-widget category">
 									<h3 class="title">Categories</h3>
 									<ul class="categor-list">
 									<?php									
@@ -111,6 +112,8 @@ $active = "products";
 									</ul>
 								</div>
 								<!--/ End Single Widget -->
+								</div>
+								<div class="col-md-12 col-sm-6">									
 								<!-- Shop By Price -->
 									<div class="single-widget range">
 										<h3 class="title">Shop by Price</h3>
@@ -185,8 +188,12 @@ $active = "products";
 											?>
 										</ul>
 									</div>
-									<!--/ End Shop By Price -->								
-								<!-- Single Widget -->
+									<!--/ End Shop By Price -->		
+								</div>
+							</div>
+									<div class="row">
+									<div class="col-md-12 col-sm-6">
+										<!-- Single Widget -->
 								<div class="single-widget brand">
 									<h3 class="title">Manufacturers</h3>													
 									<ul class="brand-list">
@@ -199,15 +206,21 @@ $active = "products";
 									</ul>									
 								</div>
 								<!--/ End Single Widget -->
-								<!-- Single Widget -->
-								<div class="single-widget pb-30 recent-post">
+									</div>
+									<div class="col-md-12 col-sm-6">
+										<!-- Single Widget -->
+								<div class="single-widget pb-30">
 									<h3 class="title">Recently Added</h3>
+									<ul class="recent-post">
+										
+
+										</li>									
 									<?php
 										$getRecentlyAddedProduct = "Select * from product order by STR_TO_DATE(added_date, '%Y-%m-%d') DESC LIMIT 3";
 										$getRecentlyAddedProductQuery = mysqli_query($conn, $getRecentlyAddedProduct);
 										while($row = mysqli_fetch_assoc($getRecentlyAddedProductQuery)){	
 													 
-											 echo'<div class="single-post first">
+											 echo'<li><div class="single-post first">
 										<div class="image">
 											<img src="admin/images/products/'.$row['sold_by'].'/'.$row['image_folder_key'].'/'.$row['image_name'].'" alt="#">
 										</div>
@@ -252,13 +265,16 @@ $active = "products";
 																								
 											echo'</ul>
 										</div>
-									</div>';
+									</div></li>';
 										}
 									?>
-							
+							</ul>
 								</div>
 								<!--/ End Single Widget -->
-						</div>
+									</div>
+									</div>						
+								
+														
 					</div>
 					<div class="col-lg-9 col-md-8 col-12">
 						<div class="row focusFilterProduct">
@@ -503,10 +519,10 @@ $active = "products";
 												</div>
 												<div class="product-action-2">';
 												if(!$outOfStock){	
-												echo'<p title="Add to cart" id="cart'.$row['code'].'">Add to cart</p>';
+												echo'<span title="Add to cart" id="cart'.$row['code'].'">Add to cart</span>';
 												}
 												else{
-													echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+													echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> NO STOCK</span>';
 												}
 												echo'</div>
 											</div>
@@ -553,15 +569,15 @@ $active = "products";
 													<div class="button-head">
 														<div class="product-action">
 														<p data-bs-toggle="modal" id="listmodalboxdata'.$row['code'].'" data-bs-target="#modalbox'.$row['code'].'" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></p>
-														<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="toFavourite'.$row['code'].'">Add to Favourite</span></p>
-														<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="toCompare'.$row['code'].'">Add to Compare</span></p>
+														<p title="Favourite" id="listfavourite'.$row['code'].'" href="#"><i class="ti-heart"></i><span id="listtoFavourite'.$row['code'].'">Add to Favourite</span></p>
+														<p title="Compare" id="listcompare'.$row['code'].'" href="#"><i class="ti-bar-chart-alt"></i><span id="listtoCompare'.$row['code'].'">Add to Compare</span></p>
 														</div>
 														<div class="product-action-2">';
 														if(!$outOfStockGrid){	
 															echo'<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>';
 															}
 															else{
-																echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i> OUT OF STOCK</span>';
+																echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i>NO STOCK</span>';
 															}
 														echo'</div>
 													</div>

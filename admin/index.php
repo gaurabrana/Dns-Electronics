@@ -10,14 +10,10 @@ include("database/connect.php");
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Dns Electronics Dashboard</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
-    <!-- Pignose Calender -->
-    <link href="./plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
-    <!-- Chartist -->
-    <link rel="stylesheet" href="./plugins/chartist/css/chartist.min.css">
-    <link rel="stylesheet" href="./plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">    
     <!-- Custom Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="./plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
 
 </head>
 
@@ -134,50 +130,47 @@ include("database/connect.php");
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-body pb-0 d-flex justify-content-between">
-                                            <div>
-                                                <h4 class="mb-1">Product Sales</h4>
-                                                <p>Total Earnings of the Month</p>
-                                                <h3 class="m-0">$ 12,555</h3>
-                                            </div>
-                                            <div>
-                                                <ul>
-                                                    <li class="d-inline-block mr-3"><a class="text-dark" href="#">Day</a></li>
-                                                    <li class="d-inline-block mr-3"><a class="text-dark" href="#">Week</a></li>
-                                                    <li class="d-inline-block"><a class="text-dark" href="#">Month</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="chart-wrapper">
-                                            <canvas id="chart_widget_2"></canvas>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="w-100 mr-2">
-                                                    <h6>Pixel 2</h6>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-danger" style="width: 40%"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="ml-2 w-100">
-                                                    <h6>iPhone X</h6>
-                                                    <div class="progress" style="height: 6px">
-                                                        <div class="progress-bar bg-primary" style="width: 80%"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <!-- Line Chart -->
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between" >
+                                <h4 class="card-title">Orders and Products</h4>
+                                <div class="date-cards">                                
+                                <span class="ml-2 btn active" id="orderProductWeek">Weeks</span>                                                                                                                  
+                                <span class="ml-2 btn" id="orderProductMonth">Months</span>                                
+                                <span class="ml-2 btn" id="orderProductYear">Year</span>
                                 </div>
+                                </div>                                
+                                <span>                                
+                                <!-- <?php
+                                    $week_number  = date("W", strtotime('now'));
+                                    echo $week_number;
+                                ?> <input id="week" type="week" name="week" value="2017-W<?php echo $week_number;?>">-->
+                                
+                                </span>
+                                <canvas id="lineChart" width="500" height="250"></canvas>
                             </div>
                         </div>
                     </div>
-
-
+                    <!-- Pie Chart -->
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Highest Ordered Products</h4>
+                                <canvas id="pieChart" width="500" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Highest Rated Products</h4>
+                                <canvas id="pieChart1" width="500" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                     <div class="row">
                         <div class="col-lg-6 col-md-12">
@@ -248,58 +241,6 @@ include("database/connect.php");
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img src="./images/users/8.jpg" class="rounded-circle" alt="">
-                                        <h5 class="mt-3 mb-1">Ana Liem</h5>
-                                        <p class="m-0">Senior Manager</p>
-                                        <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img src="./images/users/5.jpg" class="rounded-circle" alt="">
-                                        <h5 class="mt-3 mb-1">John Abraham</h5>
-                                        <p class="m-0">Store Manager</p>
-                                        <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img src="./images/users/7.jpg" class="rounded-circle" alt="">
-                                        <h5 class="mt-3 mb-1">John Doe</h5>
-                                        <p class="m-0">Sales Man</p>
-                                        <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img src="./images/users/1.jpg" class="rounded-circle" alt="">
-                                        <h5 class="mt-3 mb-1">Mehedi Titas</h5>
-                                        <p class="m-0">Online Marketer</p>
-                                        <!-- <a href="javascript:void()" class="btn btn-sm btn-warning">Send Message</a> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
@@ -308,9 +249,10 @@ include("database/connect.php");
                                             <table class="table table-xs mb-0 table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Customers</th>
+                                                        <th>Customer</th>
                                                         <th>Product</th>
                                                         <th>Country</th>
+                                                        <th>Date</th>
                                                         <th>Order Status</th>
                                                         <th>Payment Status</th>                                                        
                                                     </tr>
@@ -326,8 +268,8 @@ include("database/connect.php");
                                                         $userid = $row['user_id'];
                                                         $getUserDetail = "Select name, uniquekey, gender, profile_picture from customer where id= '$userid' ";
                                                         $executegetUserDetail = mysqli_query($conn, $getUserDetail);
-                                                        while($row1 = mysqli_fetch_assoc($executegetUserDetail)){
-                                                            if($row1['profile_picture']=="notset"){
+                                                        $row1 = mysqli_fetch_assoc($executegetUserDetail);                                                        
+                                                        if($row1['profile_picture']=="notset"){
                                                                 if($row1['gender']=="Male"){
                                                                     $imagesrc =  '../img/maleuser.png';
                                                                 }
@@ -349,8 +291,7 @@ include("database/connect.php");
                                                                 }
                                                                 
                                                                } 
-                                                            echo'<td><img src="'.$imagesrc.'" class=" rounded-circle mr-3" alt="">'.$row1['name'].'</td>';                                                            
-                                                        }
+                                                        echo'<td><img src="'.$imagesrc.'" class=" rounded-circle mr-3" alt="">'.$row1['name'].'</td>';                                                        
                                                         //get product detail
                                                         $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name,p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
                                                         $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
@@ -361,7 +302,7 @@ include("database/connect.php");
                                                                 <div class="modal-dialog modal-lg" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Ordered Products</h5>         
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Ordered Products by '.$row1['name'].' on '.$row['order_date'].'</h5>         
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                           <span aria-hidden="true">&times;</span>        
                                                                         </button>
@@ -371,7 +312,7 @@ include("database/connect.php");
                                                                     <thead>
                                                                     <th>Image</th>
                                                                     <th>Name</th>
-                                                                    <th>Price</th>
+                                                                    <th>Price</th>                                                                    
                                                                     <th>Quantity</th>
                                                                     </thead>
                                                                     <tbody>';                                          
@@ -393,11 +334,12 @@ include("database/connect.php");
                                                             }
                                                             else{
                                                                 while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){                                                                   
-                                                                        echo'<td>'.$orderedProduct['name'].'</td>';                                                                    
+                                                                        echo'<td><a target="_blank" href="../singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>';                                                                    
                                                                 }
                                                             }                                                            
                                                         }             
                                                         echo'<td>Nepal</td>
+                                                        <td>'.$row['order_date'].'</td>
                                                         <td>
                                                             <div>
                                                                 <div class="progress" style="height: 6px">';
@@ -405,7 +347,7 @@ include("database/connect.php");
                                                                     echo'<div class="progress-bar bg-success" style="width: 100%"></div>';
                                                                 }
                                                                 else{
-                                                                    echo'<div class="progress-bar bg-warningd" style="width: 50%"></div>';
+                                                                    echo'<div class="progress-bar bg-warning" style="width: 50%"></div>';
                                                                 }
                                                                     
                                                                 echo'</div>
@@ -425,202 +367,7 @@ include("database/connect.php");
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
-
-                            <div class="card">
-                                <div class="chart-wrapper mb-4">
-                                    <div class="px-4 pt-4 d-flex justify-content-between">
-                                        <div>
-                                            <h4>Sales Activities</h4>
-                                            <p>Last 6 Month</p>
-                                        </div>
-                                        <div>
-                                            <span><i class="fa fa-caret-up text-success"></i></span>
-                                            <h4 class="d-inline-block text-success">720</h4>
-                                            <p class=" text-danger">+120.5(5.0%)</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <canvas id="chart_widget_3"></canvas>
-                                    </div>
-                                </div>
-                                <div class="card-body border-top pt-4">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <ul>
-                                                <li>5% Negative Feedback</li>
-                                                <li>95% Positive Feedback</li>
-                                            </ul>
-                                            <div>
-                                                <h5>Customer Feedback</h5>
-                                                <h3>385749</h3>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div id="chart_widget_3_1"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Activity</h4>
-                                    <div id="activity">
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/1.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>Received New Order</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>iPhone develered</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>3 Order Pending</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>Join new Manager</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>Branch open 5 min Late</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media border-bottom-1 pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/2.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>New support ticket received</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                        <div class="media pt-3 pb-3">
-                                            <img width="35" src="./images/avatar/3.jpg" class="mr-3 rounded-circle">
-                                            <div class="media-body">
-                                                <h5>Facebook Post 30 Comments</h5>
-                                                <p class="mb-0">I shared this on my fb wall a few months back,</p>
-                                            </div><span class="text-muted ">April 24, 2018</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-12 col-sm-12 col-xxl-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title mb-0">Store Location</h4>
-                                    <div id="world-map" style="height: 470px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="social-graph-wrapper widget-facebook">
-                                    <span class="s-icon"><i class="fa fa-facebook"></i></span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 border-right">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">89k</h4>
-                                            <p class="m-0">Friends</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">119k</h4>
-                                            <p class="m-0">Followers</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="social-graph-wrapper widget-linkedin">
-                                    <span class="s-icon"><i class="fa fa-linkedin"></i></span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 border-right">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">89k</h4>
-                                            <p class="m-0">Friends</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">119k</h4>
-                                            <p class="m-0">Followers</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="social-graph-wrapper widget-googleplus">
-                                    <span class="s-icon"><i class="fa fa-google-plus"></i></span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 border-right">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">89k</h4>
-                                            <p class="m-0">Friends</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">119k</h4>
-                                            <p class="m-0">Followers</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="social-graph-wrapper widget-twitter">
-                                    <span class="s-icon"><i class="fa fa-twitter"></i></span>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 border-right">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">89k</h4>
-                                            <p class="m-0">Friends</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                            <h4 class="m-1">119k</h4>
-                                            <p class="m-0">Followers</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>                   
                     </div>
                 </div>
                 <!-- #/ container -->
@@ -654,28 +401,15 @@ include("database/connect.php");
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
-
+    <script src="./plugins/moment/moment.js"></script>    
     <!-- Chartjs -->
     <script src="./plugins/chart.js/Chart.bundle.min.js"></script>
     <!-- Circle progress -->
-    <script src="./plugins/circle-progress/circle-progress.min.js"></script>
-    <!-- Datamap -->
-    <script src="./plugins/d3v3/index.js"></script>
-    <script src="./plugins/topojson/topojson.min.js"></script>
-    <script src="./plugins/datamaps/datamaps.world.min.js"></script>
-    <!-- Morrisjs -->
-    <script src="./plugins/raphael/raphael.min.js"></script>
-    <script src="./plugins/morris/morris.min.js"></script>
-    <!-- Pignose Calender -->
-    <script src="./plugins/moment/moment.min.js"></script>
-    <script src="./plugins/pg-calendar/js/pignose.calendar.min.js"></script>
-    <!-- ChartistJS -->
-    <script src="./plugins/chartist/js/chartist.min.js"></script>
-    <script src="./plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="./plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>    
+    <script>
 
-
-
-    <script src="./js/dashboard/dashboard-1.js"></script>
+    </script>
 
 </body>
 
