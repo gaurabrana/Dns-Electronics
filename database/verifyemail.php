@@ -17,7 +17,7 @@ include('connect.php');
 if(!empty($_GET['vkey']))
 {
 $verifykey = $_GET['vkey'];
-$sql = "Update customer SET approved = 'YES' where verificationkey='$verifykey'";
+$sql = "Update customer SET approved = 'YES', access='ENABLED' where verificationkey='$verifykey'";
 $result = mysqli_query($conn, $sql);
 echo'<div class="container">
  

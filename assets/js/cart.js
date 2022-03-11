@@ -59,6 +59,7 @@ $(document).on('ready', function() {
 
     function updatecartquantity(j, k, l) {
         var m = $("#stock" + k).val();
+        var n = $("#minimumunit" + k).val();
         var l_a = parseInt(l, 10);
         var m_a = parseInt(m, 10);
         var isCheckout = $("#placeorder").val();
@@ -82,10 +83,11 @@ $(document).on('ready', function() {
                         $("#subTotalCheckout").html("Rs " + total);
                         $("#TotalCheckout").html("Rs " + total);
                     }
+                    getItemInCart();
                 }
             });
         } else {
-            $("#cartError" + k).html("Quantity available for this product is 1 - " + m + ".");
+            $("#cartError" + k).html("Quantity available for this product is " + n + " - " + m + ".");
             $("#cartError" + k).css('display', 'block');
             $("#cartError" + k)
                 .delay(3000)

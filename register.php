@@ -1,9 +1,9 @@
 <?php
-if(!isset($_SESSION)){
-session_start();
-if(isset($_SESSION['email'])){
-header("Location: index.php");
-}
+if (!isset($_SESSION)) {
+    session_start();
+    if (isset($_SESSION['email'])) {
+        header("Location: index.php");
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -32,7 +32,6 @@ header("Location: index.php");
     <!-- Font Awesome -->
     <link rel="stylesheet" href="assets/css/font-awesome.css">
 
-    
     <link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
     <!-- Themify Icons -->
     <link rel="stylesheet" href="assets/css/themify-icons.css">
@@ -93,11 +92,11 @@ header("Location: index.php");
         </div>
     </div>
     <!-- End Breadcrumbs -->
-    <section class="shop login section">
+    <section class="shop login" id="retailCustomer">
         <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 text-center p-0 mt-3 mb-2">
-                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+            <div id="holdForm" class="row justify-content-center animated">
+                <div class="col-11 col-sm-9 col-md-10 col-lg-8 col-xl-5 text-center p-0 mt-3 mb-2">
+                    <div class="card px-0 pt-4 pb-0 mt-3 mb-3 registration-card">
                         <h2 id="heading">Sign Up Your User Account</h2>
                         <p>Fill all form field to go to next step</p>
                         <form id="msform" method="POST" enctype="multipart/form-data" action="database/registerdata.php" autocomplete="off">
@@ -105,7 +104,8 @@ header("Location: index.php");
                             <ul id="progressbar">
                                 <li class="active" id="account"><strong>Account</strong></li>
                                 <li id="personal"><strong>Personal</strong></li>
-                                <li id="payment"><strong>Profile Image</strong></li>
+                                <span id="payment" class="hide"><strong>Business</strong></span>
+                                <li id="documents"><strong>Documents</strong></li>
                                 <li id="confirm"><strong>Finish</strong></li>
                             </ul>
                             <div class="progress">
@@ -118,7 +118,7 @@ header("Location: index.php");
                                             <h2 class="fs-title">Account Information:</h2>
                                         </div>
                                         <div class="col-5">
-                                            <h2 class="steps">Step 1 - 4</h2>
+                                            <h2 class="steps">Step 1 - <span class="totalsteps">4</span></h2>
                                         </div>
                                     </div>
                                     <label class="fieldlabels">Email: *</label>
@@ -127,9 +127,8 @@ header("Location: index.php");
                                     <label class="fieldlabels">Password: *</label>
                                     <p id="errorpass"></p>
                                     <input type="password" oninput="checkPassword()" id="password_register" required name="password" placeholder="Password" autocomplete="off" />
-                                    <!-- <label class="fieldlabels">Confirm Password: *</label> 
-                                    <p id="errorconfirmpass"></p>
-                                    <input type="password" oninput="checkConfirmPassword()" id="confirm_password_register" name="cpwd" placeholder="Confirm Password" /> -->
+                                    <label class="fieldlabels">Wholesale User? &nbsp;<input type="checkbox" id="isWholesaleUser" name="isWholesaleUser" /></label>
+
                                 </div>
                                 <input type="button" id="step1" name="next" class="next action-button" value="Next" />
                             </fieldset>
@@ -140,29 +139,79 @@ header("Location: index.php");
                                             <h2 class="fs-title">Personal Information:</h2>
                                         </div>
                                         <div class="col-5">
-                                            <h2 class="steps">Step 2 - 4</h2>
+                                            <h2 class="steps">Step 2 - <span class="totalsteps">4</span></h2>
                                         </div>
-                                    </div> <label class="fieldlabels">Full Name: *</label>
-                                    <p id="errorname"></p>
-                                    <input type="text" id="fullname" oninput="checkName()" name="name" placeholder="Full Name" required autocomplete="off" />
-                                    <label class="fieldlabels">Age: *</label>
-                                    <p id="errorage"></p>
-                                    <input type="number" oninput="validateAge()" id="age" name="age" placeholder="Age" required autocomplete="off" />
-                                    <label class="fieldlabels">Contact No: *</label> <br />
-                                    <span id="valid-msg" class="hide">✓ Valid</span>
-                                    <span id="error-msg" class="hide"></span>
-                                    <input type="tel" name="phone_number[main]" id="phone" required autocomplete="off" />
-                                    <label style="margin-top: 25px;" class="fieldlabels">Gender: *</label> <br>
-                                    <select name="gender" id="genderFromRegister" aria-placeholder="Choose gender" required>
-                                        <option value="notselected" disabled="" selected="">Choose Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="private">Rather not say.</option>
-                                    </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 holdFrontRow">
+                                            <label class="fieldlabels">Full Name: *</label>
+                                            <span id="errorname"></span>
+                                            <input type="text" id="customerfullName" oninput="checkName()" name="name" placeholder="Full Name" required autocomplete="off" />
+                                        </div>
+                                        <div class="col-12 holdBackRow">
+                                            <label class="fieldlabels">Age: *</label>
+                                            <span id="errorage"></span>
+                                            <input type="number" oninput="validateAge()" id="age" name="age" placeholder="Age" required autocomplete="off" />
+                                        </div>
+                                        <div class="col-12 holdFrontRow">
+                                            <label class="fieldlabels">Contact No: *</label>
+                                            <span id="valid-msg" class="hide">✓ Valid</span>
+                                            <span id="error-msg" class="hide"></span>
+                                            <input type="tel" name="phone_number[main]" id="phone" required autocomplete="off" />
+                                        </div>
+                                        <div style="margin-top:20px;" class="col-12 holdBackRow">
+                                            <label class="fieldlabels">Gender: *</label> <br>
+                                            <select name="gender" id="genderFromRegister" placeholder="Choose gender" required>
+                                                <option value="notselected" disabled="" selected="">Choose Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="private">Other</option>
+                                            </select>
+                                        </div>
+                                        <div id="holdCustomerCitizenship" class="col-12 hide">
+                                            <label style="margin-top:25px;" class="fieldlabels">Citizenship Number: *</label>
+                                            <span id="errorname"></span>
+                                            <input type="text" disabled id="citizenshipNumber" name="citizenship_no" placeholder="Citizenship Number" required autocomplete="off" />
+                                        </div>
+                                        <div id="holdCustomerCurr" class="col-12 hide">
+                                            <label for="currentAddress" class="fieldlabels">Current Address* </label>
+                                            <input type="text" disabled id="currentAddress" placeholder="Current Address" required>
+                                        </div>
+                                        <div id="holdCustomerPerm" class="col-12 hide">
+                                            <label for="permanentAddress" class="fieldlabels">Permanent Address* </label>
+                                            <input type="text" disabled id="permanentAddress" placeholder="Permanent Address" required>
+                                        </div>                                       
+                                    </div>
+
                                     <br><br>
                                     <!-- <input type="text" maxlength="10" id="phone" name="phno" placeholder="Contact No." />                                      -->
-                                </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                </div> <input type="button" name="next" id="forBusinessButton" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
                             </fieldset>
+                            <div id="businessInfo" class="hide">
+                            <div class="form-card">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h2 class="fs-title">Business Information:</h2>
+                                        </div>
+                                        <div class="col-5">
+                                            <h2 class="steps">Step 3 - 5</span></h2>
+                                        </div>
+                                    </div>
+                                    <div class="row">                                        
+                                        <div id="holdBusinessName" class="col-12">
+                                            <label class="fieldlabels">Business Name: *</label>
+                                            <span id="errorBusinessName"></span>
+                                            <input type="text" id="businessname" name="businessfullname" placeholder="Business Name" required autocomplete="off" />
+                                        </div>
+                                        <div id="holdBusinessPan" class="col-12">
+                                            <label class="fieldlabels">Vat / Pan Number: *</label>                                            
+                                            <input type="number" id="businessPan" name="businessPanNumber" placeholder="Business Pan Number" required autocomplete="off" />
+                                        </div>                                                                                
+                                    </div>
+
+                                    <br><br>                                    
+                                </div> <input type="button" name="next" class="next action-button" value="Next" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" /> 
+                            </div>
                             <fieldset>
                                 <div class="form-card">
                                     <div class="row">
@@ -170,38 +219,46 @@ header("Location: index.php");
                                             <h2 class="fs-title">Image Upload:</h2>
                                         </div>
                                         <div class="col-5">
-                                            <h2 class="steps">Step 3 - 4</h2>
+                                            <h2 class="steps">Step <span class="ImageUploadSpan">3</span> - <span class="totalsteps">4</span></h2>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                    <div class="col-12">
                                     <p style="color:black; margin-bottom:8px; font-size:medium;" id="msg">Add profile picture for your account. This step can be skipped.</p>
-                                    <div id="imgContainer">                                    
-                                        <div id="imgArea"><img id="usericon" src="./img/register_usericon.png">
-                                            <div class="progressBarImageUpload">
-                                                <div class="bar"></div>
-                                                <div class="percent">0%</div>
-                                            </div>
-                                            <div id="imgChange"><span>Change Photo</span>
-                                                <input type="file" accept="image/*" name="image_upload_file" id="image_upload_file">      
-                                                <input id="profileimage" type="text" hidden name="imagename">
-                                                <input id="finalsubmit" hidden type="submit" name="sumbit" value="submit" />
+                                    <div id="imgContainer">
+                                        <div id="imgArea">
+                                            <img id="usericon" src="./img/register_usericon.png">                                            
+                                            <div id="imgChange">
+                                            <label>Change Photo</label>
+                                            <input type="file" accept="image/*" name="profilePicture" id="profilePicture">                                                                                                
                                             </div>
                                         </div>
+                                        <p style="color:black;margin:8px 0px; font-size:medium;cursor:pointer;" id="reset" onclick="resetUpload()">Reset</p>
+                                    </div>
+                                    </div>
+                                    <div id="citizenship_image_hold_front" class="col-6 hide">
+                                    <p style="color:black; margin-bottom:8px; font-size:medium;" id="msg">Citizenship Front</p>
+                                    <img class="mt-2" id="citizenship_front" src="">
+                                    <input type="file" disabled accept="image/*" name="customer_citizenship_front" id="customer_citizenship_front">
+                                    </div>
+                                    <div id="citizenship_image_hold_back" class="col-6 hide">
+                                    <p style="color:black; margin-bottom:8px; font-size:medium;" id="msg">Citizenship Back</p>
+                                    <img class="mt-2" id="citizenship_back" src="">
+                                    <input type="file" disabled accept="image/*" name="customer_citizenship_back" id="customer_citizenship_back">     
+                                    </div>
+                                    
+                                    </div>                                    
+                                </div>
+                                <button type="button" style="display:none;" id="proceedtofinal" name="skipped" class="next action-button">Next Step</button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />
+                                <br /> <br />
 
-                                        <p style="color:black;margin:8px 0px; font-size:medium;cursor:pointer;" id="reset" onclick="resetUpload()">Reset</p>                                                                                
-                                    </div>                                                                        
+                                <div class="alert alert-danger alert-dismissible" id="errormessage" style="display: none; margin-top:20px;">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                    <span id="errormsg"></span>
+                                    <hr>
+                                    <span id="errordetail" class="mb-0"></span>
+                                    <a href="#" id="closemsg" class="close" aria-label="danger">×</a>
                                 </div>
-                                <button type="button" style="display:none;" id="proceedtofinal"  name="skipped" class="next action-button">Next Step</button> <input id="submitForm" type="button" name="change" class="action-button" value="Submit" /> <input type="button" name="previous" class="previous action-button-previous" value="Previous" />                                                    
-                                <br/> <br/>
-                                <div class="imageLoading">
-                               
-                                </div>
-                                                    <div class="alert alert-danger alert-dismissible" id="errormessage" style="display: none; margin-top:20px;">
-                                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                                                    <span id="errormsg"></span>                                                                                                
-                                                    <hr>
-                                                    <span id="errordetail" class="mb-0"></span>        
-													<a href="#" id="closemsg" class="close" aria-label="danger">×</a>
-												</div>                                                
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
@@ -210,7 +267,7 @@ header("Location: index.php");
                                             <h2 class="fs-title">Finish:</h2>
                                         </div>
                                         <div class="col-5">
-                                            <h2 class="steps">Step 4 - 4</h2>
+                                            <h2 class="steps">Step <span class="finalStepSpan">4</span> - <span class="totalsteps">4</span></h2>
                                         </div>
                                     </div> <br><br>
                                     <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
@@ -218,7 +275,7 @@ header("Location: index.php");
                                         <div class="col-3"> <img src="img/success.png"></div>
                                     </div> <br><br>
                                     <div class="row justify-content-center">
-                                        <div class="col-7 text-center">
+                                        <div class="col-7 finalStageText text-center">
                                             <h5 class="purple-text text-center">An email verification link has been sent to your email. Please verify before logging in.</h5>
                                             <h5 class="purple-text text-center">Redirecting to homepage...</h5>
                                         </div>
@@ -226,10 +283,10 @@ header("Location: index.php");
                                 </div>
                             </fieldset>
                         </form>
+
                     </div>
                 </div>
             </div>
-        </div>
     </section>
     <?php
     include("layouts/footer.php");
@@ -276,87 +333,140 @@ header("Location: index.php");
     <script>
         function resetUpload() {
             $("#imgArea>img").prop('src', "./img/register_usericon.png");
-            $("#image_upload_file").val("");
+            $("#profilePicture").val("");
         }
     </script>
 
     <script>
         $(document).ready(function() {
-            $("#submitForm").click(function() {                
+            $("#submitForm").click(function() {
                 var email = $('#email_register').val();
                 var password = $('#password_register').val();
-                var fullname = $('#fullname').val();
+                var fullname = $('#customerfullName').val();
                 var age = $('#age').val();
                 var gender = $('#genderFromRegister').val();
+                if(gender == null){
+                    gender = "notselected";
+                }                
                 var full_number = intl.getNumber(intlTelInputUtils.numberFormat.E164);
                 var phone_number = $('#phone').val();
-                var imageName = $('#imageName').val();
-                        
-                if (email != "" && password != "" && age != "" && phone_number != "" && fullname != "" && gender!="notselected") {
+                var imageName = $('#profilePicture').prop('files')[0];                
+                var isWholesale = $("#isWholesaleUser").prop("checked") == true ? true : false;
+                
+                            var data = new FormData;
+                            data.append("email", email);
+                            data.append("password", password);
+                            data.append("name", fullname);
+                            data.append("register", "submit");
+                            data.append("age", age);
+                            data.append("phone", full_number);
+                            data.append("gender", gender);
+                            data.append("profilePicture", imageName);  
+                            if(isWholesale){
+                                //is wholesale
+                    data.append("iswholesale", "true");
+                    // currentAddress
+                    data.append("currentAddress", $("#currentAddress").val());
+                    // PermanentAddress
+                    data.append("permanentAddress", $("#permanentAddress").val());
+                    // Citizenship Number
+                    data.append("citizenshipNumber", $("#citizenshipNumber").val());
+                    // Business Name
+                    data.append("businessname", $("#businessname").val());
+                    // Business Pan no
+                    data.append("businessPan", $("#businessPan").val());
+                    // Citizenship Image Front
+                    data.append("citizenship_front_image", $("#customer_citizenship_front").prop('files')[0]);
+                    // Citizenship Image Back                    
+                    data.append("citizenship_back_image", $("#customer_citizenship_back").prop('files')[0]);
+                }          
+                else{
+                    data.append("iswholesale", "false");
+                }                                
+
+                //if (email != "" && password != "" && age != "" && phone_number != "" && fullname != "" && gender != "notselected") {
                     $.ajax({
-                        url: "database/registerdata.php",
-                        type: "POST",
-                        data: {
-                            email: email,
-                            password: password,
-                            name: fullname,
-                            submit: "submit",
-                            age: age,
-                            phone: full_number,
-                            gender: gender,
-                            imageName: imageName
-                        },
+                        url: "database/registercustomer.php",                        
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        data:data,
                         cache: false,
                         success: function(dataResult) {
-                            var dataResult = JSON.parse(dataResult);    
-                            console.log(dataResult);
-                           if (dataResult.statusCode == 201) {           
-                               $("#proceedtofinal").click();                                                                         
-                                var delay = 3000; 
-                            setTimeout(function(){ window.location = "index.php"; }, delay);
+                            var dataResult = JSON.parse(dataResult);
+                            console.log(dataResult);                            
+                            if (dataResult.statusCode == 200) {
+                                $("#proceedtofinal").click();
+                                var delay = 7000;
+                                setTimeout(function() {
+                                    window.location = "index.php";
+                                }, delay);
                             }
-                            else if (dataResult.statusCode == 200) {
+                            else if(dataResult.statusCode == 203){
+                                $("#errormessage").css("display", "block");                                
+                                $("#errordetail").html("");
+                                var errors = dataResult.errors.split(".");
+                                let totalErrorsNumber = 0;                                
+                                for (const element of errors) {
+                                    // ...use `element`...
+                                    if (element != "") {
+                                        totalErrorsNumber++;
+                                        $("#errordetail").append(element + "<br>"); 
+                                    }
+                                }
+                                $("#errormsg").html(totalErrorsNumber + " Invalid fields found.");
+                            }
+                            else if (dataResult.statusCode == 201) {
                                 $("#errormsg").html("Email already exist!");
                                 $("#errordetail").html("An account already exist with the email address " + email);
                                 //$("#errormessage").fadeOut(4300);
                                 //$("#error").slideUp(300).delay(8000).fadeOut(400);	
                                 $("#errormessage").css("display", "block");
-                                $("#submitForm").removeAttr("disabled");                                
-                            }
-                            else if(dataResult.statusCode == 203){
+                                $("#submitForm").removeAttr("disabled");
+                                }
+                                else if (dataResult.statusCode == 202) {
+                                    $("#errormsg").html("Failed to add customer details!");
+                                    $("#errordetail").html("We ran into an unknown problem. We request you to refresh the page and try again. Sorry for the inconvenience.");
+                                //$("#errormessage").fadeOut(4300);
+                                //$("#error").slideUp(300).delay(8000).fadeOut(400);	
+                                $("#errormessage").css("display", "block");
+                                $("#submitForm").removeAttr("disabled");
+                                } 
+                                if(!isWholesale){                                                                                                   
+                                    if (dataResult.statusCode == 205) {
                                 $("#errormsg").html("Email verification link");
                                 $("#errordetail").html("We failed to send an email verification link to the " + email + ". Are you sure you entered the correct email??");
                                 $("#errormessage").css("display", "block");
-                                $("#submitForm").removeAttr("disabled");        
-                            }
-                            else if(dataResult.statusCode == 204){
+                                $("#submitForm").removeAttr("disabled");
+                            } else if (dataResult.statusCode == 204) {
                                 $("#errormsg").html("Error Occured.");
                                 $("#errordetail").html("We ran into an unknown problem. We request you to refresh the page and try again. Sorry for the inconvenience.");
                                 $("#errormessage").css("display", "block");
-                                $("#submitForm").removeAttr("disabled");  
+                                $("#submitForm").removeAttr("disabled");
                             }
+                            }                                                                                         
                         }
-                    });
-                } else {                    
-                    $("#errormsg").html('Empty fields found.');
-                    $("#errormessage").css("display", "block");
-                    $("#errordetail").html("Please make sure the details are entered correctly.");
-                    $("#submitForm").removeAttr("disabled");
-                }
+                    });                
+                // else {
+                //     $("#errormsg").html('Empty fields found.');
+                //     $("#errormessage").css("display", "block");
+                //     $("#errordetail").html("Please make sure the details are entered correctly.");
+                //     $("#submitForm").removeAttr("disabled");
+                // }
             });
-            
-            $("#closemsg").click(function(e){
-         e.preventDefault();
-         $("#errormessage").css("display", "none");         
-         // your statements;
-     });        
+
+            $("#closemsg").click(function(e) {
+                e.preventDefault();
+                $("#errormessage").css("display", "none");
+                // your statements;
+            });
         });
     </script>
 
 
-    <script>
-        $(document).on('change', '#image_upload_file', function() {            
-                var progressBar = $('.progressBarImageUpload'),
+    <!-- <script>
+        $(document).on('change', '#image_upload_file', function() {
+            var progressBar = $('.progressBarImageUpload'),
                 bar = $('.progressBarImageUpload .bar'),
                 percent = $('.progressBarImageUpload .percent');
 
@@ -367,16 +477,16 @@ header("Location: index.php");
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
-                uploadProgress: function(event, position, total, percentComplete) {                    
+                uploadProgress: function(event, position, total, percentComplete) {
                     var percentVal = percentComplete + '%';
                     bar.width(percentVal)
                     percent.html(percentVal);
                 },
                 success: function(html, statusText, xhr, $form) {
-                    obj = $.parseJSON(html);                    
+                    obj = $.parseJSON(html);
                     if (obj.status) {
                         var percentVal = '100%';
-                        bar.width(percentVal)                        
+                        bar.width(percentVal)
                         percent.html(percentVal);
                         $("#imgArea>img").prop('src', obj.image_medium);
                         $("#profileimage").val(obj.imageName);
@@ -387,9 +497,9 @@ header("Location: index.php");
                 complete: function(xhr) {
                     progressBar.css("display", "none");
                 }
-            }).submit();            
+            }).submit();
         });
-    </script>
+    </script> -->
 
     <script>
         var input = document.querySelector("#phone"),
@@ -433,7 +543,7 @@ header("Location: index.php");
 
     <script>
         function checkName() {
-            var elements = document.getElementById("fullname").value;
+            var elements = document.getElementById("customerfullName").value;
             var values = [];
             values.push(elements);
             var val = values.toString();
@@ -442,8 +552,7 @@ header("Location: index.php");
                 if (!val.match(regEx)) {
                     document.getElementById("errorname").innerHTML = "Please enter letters and space only";
                     document.getElementById("errorname").style.color = "#ed1c24";
-                }
-                else{
+                } else {
                     document.getElementById("errorname").innerHTML = "";
                 }
             } else {
@@ -462,8 +571,7 @@ header("Location: index.php");
                 if (!(val.length > 7 && val.length < 20)) {
                     document.getElementById("errorpass").innerHTML = "Invalid Password (8-20 characters.)";
                     document.getElementById("errorpass").style.color = "#ed1c24";
-                } 
-                else{
+                } else {
                     document.getElementById("errorpass").innerHTML = "";
                 }
             }
@@ -479,8 +587,7 @@ header("Location: index.php");
                 if (!validateEmail(val)) {
                     $("#errormail").text("Invalid email address");
                     $("#errormail").css("color", "#ed1c24");
-                } 
-                else{
+                } else {
                     $("#errormail").text("");
                 }
             } else {
@@ -504,8 +611,7 @@ header("Location: index.php");
                     //show error
                     document.getElementById("errorage").innerHTML = "Between 16 and 99.";
                     document.getElementById("errorage").style.color = "#ed1c24";
-                } 
-                else{
+                } else {
                     document.getElementById("errorage").innerHTML = "";
                 }
             } else {
@@ -513,7 +619,6 @@ header("Location: index.php");
                 document.getElementById("errorage").style.color = "#ed1c24";
             }
         };
-  
     </script>
 
 </body>

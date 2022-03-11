@@ -54,7 +54,7 @@ include("connect.php");
                  
     function breakdownDate($dataFromDatabase, $sortdata){  
       if($sortdata == "Week"){
-        // get current week and +- 6
+        
         return getWeekDataForChart($dataFromDatabase);
     }
     else if($sortdata == "Month"){

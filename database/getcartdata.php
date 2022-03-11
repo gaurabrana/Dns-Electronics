@@ -1,8 +1,8 @@
 <?php
     include('connect.php');
     if(isset($_POST['action'])){
-        $cartid = $_SESSION['cartid'];
-        $getcartitem = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
+        $cartid = $_SESSION['cartid'];        
+        $getcartitem = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount,p.wholesale_discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cartid' and p.code = c.product_code";
         $cartquery = mysqli_query($conn, $getcartitem);
         $totalItems = mysqli_num_rows($cartquery);
         echo'<div class="sinlge-bar shopping" id="holdshoppingcart">
@@ -17,11 +17,20 @@
     $total = 0;
     while ($row = mysqli_fetch_assoc($cartquery)) {
         $subtotal = 0;
-        if ($row['discount'] != 0) {
-            $updatedPrice = $row['price'] - $row['discount'];
-        } else {
-            $updatedPrice = $row['price'];
+        if($_SESSION['isRetail']){
+            $discount = $row['discount'];
         }
+    else{
+        $discount = $row['wholesale_discount'];
+        }
+        if($discount > 0){										
+		$updatedPrice = $row['price'] - $discount;
+		$percentage = round(($discount * 100)/$row['price']);
+		}
+		else{
+		$updatedPrice = $row['price'];	
+		$percentage = 0;							
+		}	
         $subtotal = $row['quantity'] * $updatedPrice;
         $total = $total + $subtotal;
         echo '<li>

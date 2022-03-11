@@ -170,80 +170,13 @@ include("database/connect.php");
                             </div>
                         </div>
                     </div>
-                </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Order Summary</h4>
-                                    <div id="morris-bar-chart"></div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="card card-widget">
-                                <div class="card-body">
-                                    <h5 class="text-muted">Order Overview </h5>
-                                    <h2 class="mt-4">5680</h2>
-                                    <span>Total Revenue</span>
-                                    <div class="mt-4">
-                                        <h4>30</h4>
-                                        <h6>Online Order <span class="pull-right">30%</span></h6>
-                                        <div class="progress mb-3" style="height: 7px">
-                                            <div class="progress-bar bg-primary" style="width: 30%;" role="progressbar"><span class="sr-only">30% Order</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <h4>50</h4>
-                                        <h6 class="m-t-10 text-muted">Offline Order <span class="pull-right">50%</span></h6>
-                                        <div class="progress mb-3" style="height: 7px">
-                                            <div class="progress-bar bg-success" style="width: 50%;" role="progressbar"><span class="sr-only">50% Order</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <h4>20</h4>
-                                        <h6 class="m-t-10 text-muted">Cash On Develery <span class="pull-right">20%</span></h6>
-                                        <div class="progress mb-3" style="height: 7px">
-                                            <div class="progress-bar bg-warning" style="width: 20%;" role="progressbar"><span class="sr-only">20% Order</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="card">
-                                <div class="card-body px-0">
-                                    <h4 class="card-title px-4 mb-3">Todo</h4>
-                                    <div class="todo-list">
-                                        <div class="tdl-holder">
-                                            <div class="tdl-content">
-                                                <ul id="todo_list">
-                                                    <li><label><input type="checkbox"><i></i><span>Get up</span><a href='#' class="ti-trash"></a></label></li>
-                                                    <li><label><input type="checkbox" checked><i></i><span>Stand up</span><a href='#' class="ti-trash"></a></label></li>
-                                                    <li><label><input type="checkbox"><i></i><span>Don't give up the fight.</span><a href='#' class="ti-trash"></a></label></li>
-                                                    <li><label><input type="checkbox" checked><i></i><span>Do something else</span><a href='#' class="ti-trash"></a></label></li>
-                                                </ul>
-                                            </div>
-                                            <div class="px-4">
-                                                <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>                
 
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body">
+                                <h4 class="card-title">Today's Orders</h4>
                                     <div class="active-member">
                                         <div class="table-responsive">
                                             <table class="table table-xs mb-0 table-hover">
@@ -254,17 +187,35 @@ include("database/connect.php");
                                                         <th>Country</th>
                                                         <th>Date</th>
                                                         <th>Order Status</th>
-                                                        <th>Payment Status</th>                                                        
+                                                        <th>Order Details</th>                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $getRecentCustomerOrder  = "Select * from orders order by order_date ASC";
+                                                    function check_Todays_DateMatch($a, $b) {
+                                                        // Convert to timestamp
+
+                                                        // from database a
+                                                        $FromDatabase = strtotime($a);
+                                                        // Current date b
+                                                        $Current = strtotime($b);      
+                                                        
+                                                        // Check that user date is between start & end
+                                                        return (($Current == $FromDatabase ));
+                                                    }
+                                                    $getRecentCustomerOrder  = "Select * from orders order by order_date DESC";
                                                     $executegetRecentCustomerOrder = mysqli_query($conn, $getRecentCustomerOrder);
+                                                    $forModal = mysqli_query($conn, $getRecentCustomerOrder);
                                                     while($row = mysqli_fetch_assoc($executegetRecentCustomerOrder)){
                                                         $orderid = $row['id'];
-                                                        echo' <tr>';
-                                                        //get user detail
+                                                        $orderDate = $row['order_date'];
+                                                        $newDate =  DateTime::createFromFormat("Y-m-d h:i:s A", $orderDate);       
+                                                        $nextDate =  $newDate -> format("Y-m-d"); 
+                                                        $date = new DateTime('now');  
+                                                        $dateTodays = $date->format('Y-m-d');
+                                                        $isToday = check_Todays_DateMatch($nextDate, $dateTodays) == true ? "Today" : "False";
+                                                        if($isToday=="Today"){
+                                                             //get user detail
                                                         $userid = $row['user_id'];
                                                         $getUserDetail = "Select name, uniquekey, gender, profile_picture from customer where id= '$userid' ";
                                                         $executegetUserDetail = mysqli_query($conn, $getUserDetail);
@@ -302,7 +253,7 @@ include("database/connect.php");
                                                                 <div class="modal-dialog modal-lg" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Ordered Products by '.$row1['name'].' on '.$row['order_date'].'</h5>         
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Ordered Products by '.$row1['name'].' on '.$orderDate.'</h5>         
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                           <span aria-hidden="true">&times;</span>        
                                                                         </button>
@@ -339,7 +290,7 @@ include("database/connect.php");
                                                             }                                                            
                                                         }             
                                                         echo'<td>Nepal</td>
-                                                        <td>'.$row['order_date'].'</td>
+                                                        <td>'.$orderDate.'</td>
                                                         <td>
                                                             <div>
                                                                 <div class="progress" style="height: 6px">';
@@ -352,15 +303,181 @@ include("database/connect.php");
                                                                     
                                                                 echo'</div>
                                                             </div>
-                                                        </td>';
+                                                        </td>
+                                                        <td><button class="btn btn-light" data-target="#moredetails' . $orderid . '" data-toggle="modal">See more</button></td>
+                                                        ';
                                                         echo'</tr>';
+                                                        }                                                                                                                                                                   
                                                         
                                                     }
                                                     ?>
                                                 </tbody>
                                             </table>
                                             <?php
-                                            
+                                             while ($row1 = mysqli_fetch_assoc($forModal)) {                                                
+                                                $orderDate = $row1['order_date'];
+                                                $newDate =  DateTime::createFromFormat("Y-m-d h:i:s A", $orderDate);       
+                                                $nextDate =  $newDate -> format("Y-m-d"); 
+                                                $date = new DateTime('now');  
+                                                $dateTodays = $date->format('Y-m-d');
+                                                $isToday = check_Todays_DateMatch($nextDate, $dateTodays) == true ? "Today" : "False";
+                                                if($isToday=="Today"){
+                                                    $getORders = "Select * from orders where id = '$orderid'";
+                                                    $getORdersResult = mysqli_query($conn, $getORders);
+                                                    $row = mysqli_fetch_assoc($getORdersResult);
+                                                    $orderid = $row['id'];
+                                                    $billingid =$row['billing_address_id'];
+                                                    if($row['shipping_address_id'] == "-"){
+                                                        $sameshipping = true;
+                                                    }
+                                                    else{
+                                                        $shippingid = $row['shipping_address_id'];
+                                                        $sameshipping = false;
+                                                    }
+                                                    echo '<div class="modal fade" id="moredetails' . $orderid . '" tabindex="-1" role="dialog" aria-labelledby="moredetails' . $orderid . 'label" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Order Details</h5>                              
+                                                    </div>
+                                                    <div class="modal-body">                                        
+                                                       <div class="row">
+                                                       <div class="col-lg-12">
+                                                       <h4 style="text-align:center;" class="text-info">USER DETAILS</h4>';
+                                                       $userid = $row['user_id'];
+                                                       $getAllCustomers = "Select * from customer where id='$userid'";
+                                                        $executegetAllCustomers = mysqli_query($conn, $getAllCustomers);
+                                                        $userinfo = mysqli_fetch_assoc($executegetAllCustomers);
+                                                       if($userinfo['profile_picture']=="notset"){
+                                                        if($userinfo['gender']=="Male"){
+                                                            $imagesrc =  '../img/maleuser.png';
+                                                        }
+                                                        else{
+                                                            $imagesrc =  '../img/femaleuser.png';
+                                                        }     
+                                                       }
+                                                       else{
+                                                        if(file_exists('../img/UserProfile/'.$userinfo['uniquekey'].'/'.$userinfo['profile_picture'].'')){
+                                                            $imagesrc =  '../img/UserProfile/'.$userinfo['uniquekey'].'/'.$userinfo['profile_picture'].'';   
+                                                        }
+                                                        else{
+                                                            if($userinfo['gender']=="Male"){
+                                                                $imagesrc =  '../img/maleuser.png';
+                                                            }
+                                                            else{
+                                                                $imagesrc =  '../img/femaleuser.png';
+                                                            }     
+                                                        }
+                                                        
+                                                       }   
+                                                       echo'<div class="row"><div class="col-lg-4 col-md-3 col-6">
+                                                       <img class="modalUserImage" src="'.$imagesrc.'" alt="User profile picture">
+                                                       </div>    
+                                                       <div class="col-lg-8 col-md-8 col-6">
+                                                       <table class="table table-responsive table-hover">
+                                                                <tr><th><i class="fas fa-user"></i> Name </th><td>'.$userinfo['name'].'</td></tr>
+                                                                <tr><th><i class="fas fa-envelope"></i> Email Address </th><td>'.$userinfo['email'].'</td></tr>
+                                                                <tr><th><i class="fas fa-phone-alt"></i> Contact </th><td>'.$userinfo['phone_no'].'</td></tr>
+                                                                <tr><th><i class="fas fa-street-view"></i> Age </th><td>'.$userinfo['age'].'</td></tr>
+                                                                <tr><th><i class="fas fa-flag"></i> Gender </th><td>'.$userinfo['gender'].'</td></tr>								                              								                            
+                                                                </table>
+                                                       </div>                     
+                                                       </div>
+                                                       <div class="col-lg-12">
+                                                       <hr>
+                                                       <h4 style="text-align:center;" class="text-warning">ORDERED PRODUCTS</h4>                                                   
+                                                    <table class="table table-hover">
+                                                    <thead>
+                                                    <th>Image</th>
+                                                    <th>Name</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    </thead>
+                                                    <tbody>';                      
+                                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name,p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
+                                                    $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
+                                                    if(mysqli_num_rows($getOrderedProductsResult) > 0){
+                                                        while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
+                                                        echo'<tr>
+                                                        <td width="120px" class="small-size"><img src="../admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_folder_key'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
+                                                        <td><a href="../singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>
+                                                        <td>Rs '.$orderedProduct['price'].'</td>
+                                                        <td>'.$orderedProduct['quantity'].'</td>
+                                                        </tr>';
+                                                        }
+                                                    }                      
+                                                                                        
+                                                    echo'</tbody>
+                                                </table>
+                                                       </div> 
+                                                       </div>                      
+                                                       <div class="col-lg-12">
+                                                       <hr>
+                                                       <h4 style="text-align:center;" class="text-success">BILLING DETAILS</h4>
+                                                       <table class="table table-hover">
+                                                    <thead>
+                                                    <th>Name</th>
+                                                    <th>Email Address</th>
+                                                    <th>Phone Number</th>
+                                                    <th>Address</th>                                                                        
+                                                    <th>Country</th>
+                                                    </thead>
+                                                    <tbody>';                      
+                                                    $getOrderBillingAddress = "Select * from order_billing_info where info_id = '$billingid'";
+                                                    $getOrderBillingAddressResult = mysqli_query($conn, $getOrderBillingAddress);
+                                                    if(mysqli_num_rows($getOrderBillingAddressResult) > 0){
+                                                        while($orderBillingAddress = mysqli_fetch_assoc($getOrderBillingAddressResult)){
+                                                        echo'<tr>
+                                                        <td>'.$orderBillingAddress['firstname'].' '.$orderBillingAddress['lastname'].'</td>
+                                                        <td>'.$orderBillingAddress['email_address'].'</td>
+                                                        <td>'.$orderBillingAddress['phone_number'].'</td>
+                                                        <td>'.$orderBillingAddress['address_one'].', '.$orderBillingAddress['address_two'].', '.$orderBillingAddress['postal_code'].'</td>                                                                                
+                                                        <td>'.$orderBillingAddress['country'].'</td>
+                                                        </tr>';
+                                                        }
+                                                    }                                                                                              
+                                                    echo'</tbody>
+                                                </table>
+                                                       </div>';
+                                                       if(!$sameshipping){
+                                                        echo'<div class="col-lg-12">
+                                                        <hr>
+                                                        <h4 style="text-align:center;" class="text-danger">SHIPPING DETAILS</h4>                                                   
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <th>Name</th>           
+                                                            <th>Email Address</th>                         
+                                                            <th>Phone Number</th>
+                                                            <th>Address</th>
+                                                            <th>Country</th>
+                                                            </thead>
+                                                            <tbody>';                      
+                                                            $getOrderShippingAddress = "Select * from order_shipping_info where shipping_info_id = '$shippingid'";
+                                                            $getOrderShippingAddressResult = mysqli_query($conn, $getOrderShippingAddress);
+                                                            if(mysqli_num_rows($getOrderShippingAddressResult) > 0){
+                                                                while($orderShippingAddress = mysqli_fetch_assoc($getOrderShippingAddressResult)){
+                                                                echo'<tr>
+                                                                <td>'.$orderShippingAddress['fullname'].'</td>     
+                                                                <td>'.$orderShippingAddress['email_address'].'</td>                                   
+                                                                <td>'.$orderShippingAddress['phone_number'].'</td>
+                                                                <td>'.$orderShippingAddress['address_one'].', '.$orderShippingAddress['address_two'].', '.$orderShippingAddress['postal_code'].'</td>                                        
+                                                                <td>'.$orderShippingAddress['country'].'</td>
+                                                                </tr>';
+                                                                }
+                                                            }                                                                                          
+                                                            echo'</tbody>
+                                                        </table>
+                                                        </div>';                        
+                                                      }                       
+                                                       echo'</div>
+                                                    </div>
+                                                    <div class="modal-footer">                                    
+                                                    </div>
+                                                    </div>
+                                                    </div>
+                                                    </div>';
+                                                }                                               
+                                            }
                                             ?>
                                         </div>
                                     </div>

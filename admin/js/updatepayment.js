@@ -39,10 +39,19 @@
                     var dataresult = JSON.parse(result);
                     if (dataresult.statusCode == 200) {
                         showResult(resultdisplay, "alert-success", "Payment updated successfully.");
+                        let row = $("#paymentfororder" + orderid).get(0);
+                        var table = $(".paymenttable").DataTable();                        
+                        let date = dataresult.date;
+                        let status = dataresult.status;
+                        let index = table.row(row).index();
+                        table.cell({ row: index, column: 2 }).data(payamount);                        
+                        table.cell({ row: index, column: 3 }).data(date);
+                        table.cell({ row: index, column: 4 }).data(status);
+                        table.cell({ row: index, column: 5 }).data("Job Done");
                     } else if (dataresult.statusCode == 201) {
                         showResult(resultdisplay, "alert-danger", "Failed to update payment. Please try again.");
                     } else if (dataresult.statusCode == 202) {
-                        showResult(resultdisplay, "alert-danger", "Over payment found. Please check.");
+                        showResult(resultdisplay, "alert-danger", "Payment price not met. Please check.");
                     }
                 }
             });
@@ -64,15 +73,18 @@
         });
     }
 
+    $('.amountPaid').on('input', function() {
+        let elementid = $(this).attr("id");
+        let payamount = parseFloat($(this).val());
+        let orderid = elementid.split("val-payamount")[1];
+        let totalamount = parseFloat($(this).attr("max"));
+        if (payamount > totalamount) {
+            $("#val-remainingamount" + orderid).prop('value', "Over Payment");
+
+        } else {
+            let remainingamount = totalamount - payamount;
+            $("#val-remainingamount" + orderid).prop('value', remainingamount);
+        }
+    });
 
 })(jQuery);
-
-function checkAmount(orderid, totalamount) {
-    let payamount = $("#val-payamount" + orderid).val();
-    if (payamount > totalamount) {
-        $("#val-remainingamount" + orderid).val("Over payment.");
-    } else {
-        let remainingamount = parseFloat(totalamount) - parseFloat(payamount);
-        $("#val-remainingamount" + orderid).val(remainingamount);
-    }
-}

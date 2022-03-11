@@ -71,7 +71,7 @@ include("database/connect.php");
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>User ID</th>
+                                                <th>User ID</th>                                                
                                                 <th>Date</th>
                                                 <th>Billing ID</th>
                                                 <th>Shipping ID</th>
@@ -84,7 +84,7 @@ include("database/connect.php");
                                         <tbody>
                                             <?php
                                             include("./formatdate.php");
-                                            $getAllCustomers = "Select * from orders where status = 'pending'";
+                                            $getAllCustomers = "Select * from orders where status = 'Ongoing'";
                                             $executegetAllCustomers = mysqli_query($conn, $getAllCustomers);
                                             $forModal = mysqli_query($conn, $getAllCustomers);
                                             while ($row = mysqli_fetch_assoc($executegetAllCustomers)) {
@@ -96,7 +96,7 @@ include("database/connect.php");
                                                 $total = $getTotalOrdered['total'];
                                                     echo '<tr>
                                                     <td>' . $orderid . '</td>
-                                                    <td>' . $row['user_id'] . '</td>
+                                                    <td>' . $row['user_id'] . '</td>                                                    
                                                     <td>' . $date . '</td>                                                    
                                                     <td>' . $row['billing_address_id'] . '</td>                                                
                                                     <td>' . $row['shipping_address_id'] . '</td>                                                    
@@ -112,7 +112,7 @@ include("database/connect.php");
                                         <tfoot>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>User ID</th>
+                                                <th>User ID</th>                                                
                                                 <th>Date</th>
                                                 <th>Billing ID</th>
                                                 <th>Shipping ID</th>
@@ -149,7 +149,7 @@ include("database/connect.php");
                        <div class="row">
                        <div class="col-lg-12">
                        <h4 style="text-align:center;" class="text-info">USER DETAILS</h4>';
-                       $userid = $row['user_id'];
+                       $userid = $row['user_id'];                       
                        $getAllCustomers = "Select * from customer where id='$userid'";
                         $executegetAllCustomers = mysqli_query($conn, $getAllCustomers);
                         $userinfo = mysqli_fetch_assoc($executegetAllCustomers);
@@ -312,7 +312,7 @@ include("database/connect.php");
     ***********************************-->
     <script src="plugins/common/common.min.js"></script>
     <script src="js/custom.min.js"></script>
-    <script src="js/order.js"></script>
+    
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>

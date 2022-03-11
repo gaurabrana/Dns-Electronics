@@ -24,7 +24,7 @@ header("Location: index.php");
 	
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link href="assets/css/material-dashboard.css?v=2.1.2" rel="stylesheet" />
+    
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
 	<!-- Font Awesome -->
@@ -90,7 +90,15 @@ header("Location: index.php");
 		<div class="container">
         <div class="row">
                         <?php
-                        $userid = $_SESSION['id'];
+
+                        function getOrderTotalAmountById($conn, $order_id){
+                            $getTotalPrice = "Select sum(total_price) as total from order_item where order_id = '$order_id'";
+                            $getTotalPriceExecute = mysqli_query($conn, $getTotalPrice);
+                            $getTotalOrdered = mysqli_fetch_assoc($getTotalPriceExecute);
+                            return $getTotalOrdered['total'];
+                        }                        
+
+                        $userid = $_SESSION['id'];                        
                         $getUserOrders = "Select * from orders where user_id = '$userid'";
                         $getUserOrdersExecute = mysqli_query($conn, $getUserOrders);
                         while($row = mysqli_fetch_assoc($getUserOrdersExecute)){
@@ -107,18 +115,20 @@ header("Location: index.php");
                             //billing address                            
                             //products
                             
-                            echo'<div class="col-md-12">
+                            echo'<div class="col-md-12 orderLog">
                             <div class="card">
-                                <div class="card-header card-header-dark">
-                                <a style="float:right" target="_blank" href="orderdetail.php?i='.$row['id'].'"><i class="fas fa-expand-arrows-alt"></i> Click to single page view</a>
-                                    <h4 class="card-title "><i class="fas fa-paper-plane"></i> ORDER ID : '.$row['id'].'</h4>
-                                    <p class="card-category"><i class="fas fa-calendar-alt"></i> Date : '.$row['order_date'].'</p>
-                                    
-                                    
+                                <div class="card-header">
+                                <div class="row">                                
+                                <div class="col-md-4 col-sm-4 col-6"><p class="card-category"><i class="fas fa-calendar-alt"></i> Date : '.$row['order_date'].'</p></div>
+                                <div class="col-md-4 col-sm-4 col-6"><p style="font-weight:bold;"><i class="fas fa-paper-plane"></i> ORDER ID : '.$row['id'].'</p> </div>
+                                <div class="col-md-4 col-sm-4 col-6"><a class="fullscreenmode" target="_blank" href="orderdetail.php?i='.$row['id'].'"><i class="fas fa-expand-arrows-alt"></i> Click to single page view</a></div>                                                            
                                 </div>
-                                <div class="card-body">
+                                </div>
+                                <div class="card-body">        
+                                <div class="row">
+                                <div class="col-md-12">
                                 <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-hover ">
                                     <thead class="text-rose">
                                         <th>
                                         <i class="fas fa-shopping-basket"></i> Products
@@ -144,14 +154,14 @@ header("Location: index.php");
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><a data-bs-toggle="collapse" href="#getorderproducts'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderproducts'.$billingid.'">
+                                            <td><a class="toggleData buttonData" data-bs-toggle="collapse" href="#getorderproducts'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderproducts'.$billingid.'">
                                             Expand more..
                                           </a></td>                                            
                                             <td>
                                             '.$row['status'].'
                                             </td>
                                             <td>
-                                            <a data-bs-toggle="collapse" href="#getorderbillingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderbillingaddress'.$billingid.'">
+                                            <a class="toggleData buttonData" data-bs-toggle="collapse" href="#getorderbillingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getorderbillingaddress'.$billingid.'">
                                             Expand more..
                                           </a>                                         
                                             </td>
@@ -160,17 +170,13 @@ header("Location: index.php");
                                                 echo'Same as billing address';
                                             }
                                             else{
-                                                echo'<a data-bs-toggle="collapse" href="#getordershippingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getordershippingaddress'.$billingid.'">
+                                                echo'<a class="toggleData buttonData" data-bs-toggle="collapse" href="#getordershippingaddress'.$billingid.'" role="button" aria-expanded="false" aria-controls="getordershippingaddress'.$billingid.'">
                                                 Expand more..
                                               </a>';
                                             }                                            
                                             echo'</td>
-                                            <td class="text">';
-                                            $getTotalPrice = "Select sum(total_price) as total from order_item where order_id = '$orderid'";
-                                            $getTotalPriceExecute = mysqli_query($conn, $getTotalPrice);
-                                            $getTotalOrdered = mysqli_fetch_assoc($getTotalPriceExecute);
-                                            $total = $getTotalOrdered['total'];
-                                            echo "Rs ".$total;
+                                            <td class="text">';                                                                                        
+                                            echo "Rs ".getOrderTotalAmountById($conn, $order_id);
                                             echo'</td>
                                             <td>
                                                 '.$row['payment_type'].'
@@ -178,98 +184,105 @@ header("Location: index.php");
                                             <td class="invoice" id="viewinvoice'.$orderid.'">View invoice</td>
                                         </tr>                                        
                                     </tbody>
-                                </table>                                
-                                <!---collapsibles start--->
-                              <div class="collapse" id="getorderproducts'.$billingid.'">
-                                <div class="card card-body table-responsive table-products">
-                                <h4 class="text-dark">Ordered Products</h4>                                                   
-                                <table class="table table-hover">
-                                    <thead class="text-danger">
-                                    <th>Product</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    </thead>
-                                    <tbody>';                      
-                                    $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
-                                    $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
-                                    if(mysqli_num_rows($getOrderedProductsResult) > 0){
-                                        while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
-                                        echo'<tr>
-                                        <td width="120px" class="small-size"><img src="admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_folder_key'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
-                                        <td><a href="singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>
-                                        <td>Rs '.$orderedProduct['price'].'</td>
-                                        <td>'.$orderedProduct['quantity'].'</td>
-                                        </tr>';
-                                        }
-                                    }                      
-                                                                        
-                                    echo'</tbody>
-                                </table>
-                                </div>                                
-                              </div>
-                              <div class="collapse" id="getorderbillingaddress'.$billingid.'">
-                                <div class="card card-body table-responsive table-products">
-                                <h4 class="text-dark">Billing Details</h4>                                 
-                                <table class="table table-hover">
-                                    <thead class="text-danger">
-                                    <th>Name</th>
-                                    <th>Email Address</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>                                                                        
-                                    <th>Country</th>
-                                    </thead>
-                                    <tbody>';                      
-                                    $getOrderBillingAddress = "Select * from order_billing_info where info_id = '$billingid'";
-                                    $getOrderBillingAddressResult = mysqli_query($conn, $getOrderBillingAddress);
-                                    if(mysqli_num_rows($getOrderBillingAddressResult) > 0){
-                                        while($orderBillingAddress = mysqli_fetch_assoc($getOrderBillingAddressResult)){
-                                        echo'<tr>
-                                        <td>'.$orderBillingAddress['firstname'].' '.$orderBillingAddress['lastname'].'</td>
-                                        <td>'.$orderBillingAddress['email_address'].'</td>
-                                        <td>'.$orderBillingAddress['phone_number'].'</td>
-                                        <td>'.$orderBillingAddress['address_one'].', '.$orderBillingAddress['address_two'].', '.$orderBillingAddress['postal_code'].'</td>                                                                                
-                                        <td>'.$orderBillingAddress['country'].'</td>
-                                        </tr>';
-                                        }
-                                    }                                                                                              
-                                    echo'</tbody>
-                                </table>
+                                </table> 
+                                </div>                                 
                                 </div>
-                              </div>';
-                              if(!$sameshipping){
-                                echo'<div class="collapse" id="getordershippingaddress'.$billingid.'">
-                                <div class="card card-body table-responsive table-products">
-                                <h4 class="text-dark">Shipping Details</h4>                                                   
-                                <table class="table table-hover">
-                                    <thead class="text-danger">
-                                    <th>Name</th>           
-                                    <th>Email Address</th>                         
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
-                                    <th>Country</th>
-                                    </thead>
-                                    <tbody>';                      
-                                    $getOrderShippingAddress = "Select * from order_shipping_info where shipping_info_id = '$shippingid'";
-                                    $getOrderShippingAddressResult = mysqli_query($conn, $getOrderShippingAddress);
-                                    if(mysqli_num_rows($getOrderShippingAddressResult) > 0){
-                                        while($orderShippingAddress = mysqli_fetch_assoc($getOrderShippingAddressResult)){
-                                        echo'<tr>
-                                        <td>'.$orderShippingAddress['fullname'].'</td>     
-                                        <td>'.$orderShippingAddress['email_address'].'</td>                                   
-                                        <td>'.$orderShippingAddress['phone_number'].'</td>
-                                        <td>'.$orderShippingAddress['address_one'].', '.$orderShippingAddress['address_two'].', '.$orderShippingAddress['postal_code'].'</td>                                        
-                                        <td>'.$orderShippingAddress['country'].'</td>
-                                        </tr>';
-                                        }
-                                    }                                                                                          
-                                    echo'</tbody>
-                                </table>
+                                <div class="col-md-12">
+                                        <div class="collapse" id="getorderproducts'.$billingid.'">
+                                        <div class="card card-body table-responsive table-products">
+                                        <p style = "font-size: 15px; font-weight:bold; text-align:center;">Ordered Products</p>                                                   
+                                        <table class="table table-hover ">
+                                            <thead class="text-danger">
+                                            <th>Product</th>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            </thead>
+                                            <tbody>';                      
+                                            $getOrderedProducts = "Select oi.price, p.code, p.sold_by, oi.quantity, p.name, p.image_folder_key, p.image_name from orders o, order_item oi, product p where o.id = oi.order_id and oi.product_code = p.code and o.id = '$orderid'";
+                                            $getOrderedProductsResult = mysqli_query($conn, $getOrderedProducts);
+                                            if(mysqli_num_rows($getOrderedProductsResult) > 0){
+                                                while($orderedProduct = mysqli_fetch_assoc($getOrderedProductsResult)){
+                                                echo'<tr>
+                                                <td width="120px" class="small-size"><img src="admin/images/products/'.$orderedProduct['sold_by'].'/'.$orderedProduct['image_folder_key'].'/'.$orderedProduct['image_name'].'" alt="#"></td>
+                                                <td><a href="singleproduct.php?i='.$orderedProduct['code'].'">'.$orderedProduct['name'].'</a></td>
+                                                <td>Rs '.$orderedProduct['price'].'</td>
+                                                <td>'.$orderedProduct['quantity'].'</td>
+                                                </tr>';
+                                                }
+                                            }                      
+                                                                                
+                                            echo'</tbody>
+                                        </table>
+                                        </div>                                
+                                    </div>
                                 </div>
-                              </div>';
-                              }                              
-                        echo'<!------collapsible end ----->
-                            </div>
+                                <div class="col-md-12">
+                                    <!---collapsibles start--->                              
+                                    <div class="collapse" id="getorderbillingaddress'.$billingid.'">
+                                    <div class="card card-body table-responsive table-products">
+                                    <p style = "font-size: 15px; font-weight:bold; text-align:center;">Billing Details</p>                                 
+                                    <table class="table  table-hover">
+                                        <thead class="text-danger">
+                                        <th>Name</th>
+                                        <th>Email Address</th>
+                                        <th>Phone Number</th>
+                                        <th>Address</th>                                                                        
+                                        <th>Country</th>
+                                        </thead>
+                                        <tbody>';                      
+                                        $getOrderBillingAddress = "Select * from order_billing_info where info_id = '$billingid'";
+                                        $getOrderBillingAddressResult = mysqli_query($conn, $getOrderBillingAddress);
+                                        if(mysqli_num_rows($getOrderBillingAddressResult) > 0){
+                                            while($orderBillingAddress = mysqli_fetch_assoc($getOrderBillingAddressResult)){
+                                            echo'<tr>
+                                            <td>'.$orderBillingAddress['firstname'].' '.$orderBillingAddress['lastname'].'</td>
+                                            <td>'.$orderBillingAddress['email_address'].'</td>
+                                            <td>'.$orderBillingAddress['phone_number'].'</td>
+                                            <td>'.$orderBillingAddress['address_one'].', '.$orderBillingAddress['address_two'].', '.$orderBillingAddress['postal_code'].'</td>                                                                                
+                                            <td>'.$orderBillingAddress['country'].'</td>
+                                            </tr>';
+                                            }
+                                        }                                                                                              
+                                        echo'</tbody>
+                                    </table>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">';
+                                if(!$sameshipping){
+                                    echo'<div class="collapse" id="getordershippingaddress'.$billingid.'">
+                                    <div class="card card-body table-responsive table-products">
+                                    <p style = "font-size: 15px; font-weight:bold; text-align:center;">Shipping Details</pclass=>                                                   
+                                    <table class="table  table-hover">
+                                        <thead class="text-danger">
+                                        <th>Name</th>           
+                                        <th>Email Address</th>                         
+                                        <th>Phone Number</th>
+                                        <th>Address</th>
+                                        <th>Country</th>
+                                        </thead>
+                                        <tbody>';                      
+                                        $getOrderShippingAddress = "Select * from order_shipping_info where shipping_info_id = '$shippingid'";
+                                        $getOrderShippingAddressResult = mysqli_query($conn, $getOrderShippingAddress);
+                                        if(mysqli_num_rows($getOrderShippingAddressResult) > 0){
+                                            while($orderShippingAddress = mysqli_fetch_assoc($getOrderShippingAddressResult)){
+                                            echo'<tr>
+                                            <td>'.$orderShippingAddress['fullname'].'</td>     
+                                            <td>'.$orderShippingAddress['email_address'].'</td>                                   
+                                            <td>'.$orderShippingAddress['phone_number'].'</td>
+                                            <td>'.$orderShippingAddress['address_one'].', '.$orderShippingAddress['address_two'].', '.$orderShippingAddress['postal_code'].'</td>                                        
+                                            <td>'.$orderShippingAddress['country'].'</td>
+                                            </tr>';
+                                            }
+                                        }                                                                                          
+                                        echo'</tbody>
+                                    </table>
+                                    </div>
+                                  </div>';
+                                  }                                                               
+                        echo' </div>
+                                </div>                                                  
                                 </div>
                             </div>
                         </div>  ';
@@ -323,6 +336,7 @@ header("Location: index.php");
 	<script src="assets/js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="assets/js/active.js"></script>	
+    <script src="assets/js/myorders.js"></script>	
 	<!--custom page js -->	
 </body>
 </html>

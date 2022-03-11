@@ -5,6 +5,8 @@ $userid = $_SESSION['id'];
 extract($_POST);
 $_SESSION['name'] = strtoupper($userfname);
 $updatesql = "Update customer set name='$userfname', age = '$userage', phone_no = '$userphone', gender='$usergender' where id = '$userid'";
+
+//wholesale user ko address update vako xaina
 $executeupdateusersql = mysqli_query($conn, $updatesql);
 if($executeupdateusersql){
     echo json_encode(array("statusCode" => 200));

@@ -85,8 +85,9 @@
                             <i class="fas fa-users menu-icon"></i><span class="nav-text">Customers</span>
                         </a>
                         <ul aria-expanded="false">
-                            
-                            <li><a href="./listcustomers.php"><i class="fas fa-users-cog"></i>Manage Customers</a></li>
+                        <li><a href="./retailcustomers.php"><i class="fas fa-users-cog"></i>Retail Customers</a></li>
+                            <li><a href="./wholesalecustomers.php"><i class="fas fa-store"></i>Wholesale Customers</a></li>
+                            <li><a href="./membership.php"><i class="fas fa-store"></i>Membership Packages</a></li>
                         </ul>
                     </li>  
                     <li class="mega-menu mega-menu-sm">
@@ -99,6 +100,7 @@
                             <li><a href="./completedorders.php"><i class="fal fa-clipboard-check"></i>Completed Orders</a></li>
                             <li><a href="#"><i class="fas fa-times-circle"></i>Failed Orders</a></li>
                             <li><a href="#"><i class="fas fa-undo-alt"></i>Returns</a></li>
+                            <li><a href="./trackorder.php"><i class="fas fa-times-circle"></i>Track Orders</a></li>
                         </ul>
                     </li> 
                     <li class="mega-menu mega-menu-sm">
@@ -107,9 +109,7 @@
                         </a>
                         <ul aria-expanded="false">                            
                             <li><a href="./payments.php"><i class="fas fa-money"></i>All Payments</a></li>
-                            <li><a href="./updatepayment.php"><i class="fas fa-money-check-edit-alt"></i>Update Payment</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Paid Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>                            
+                            <li><a href="./updatepayment.php"><i class="fas fa-money-check-edit-alt"></i>Update Payment</a></li>                            
                         </ul>
                     </li>   
                     <li class="mega-menu mega-menu-sm">
@@ -126,9 +126,7 @@
                             <i class="fas fa-envelope menu-icon"></i><span class="nav-text">Messages from users</span>
                         </a>
                         <ul aria-expanded="false">                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>All Payments</a></li>                            
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Paid Orders</a></li>
-                            <li><a href="./sad.php"><i class="fas fa-users-cog"></i>Failed Orders</a></li>                            
+                            <li><a href="./messagefromuser.php"><i class="fas fa-users-cog"></i>Contact Us Page</a></li>                                                        
                         </ul>
                     </li>                              
                 </ul>

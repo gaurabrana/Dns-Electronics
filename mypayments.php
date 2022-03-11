@@ -98,10 +98,7 @@ header("Location: index.php");
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-hover">
-                                            <thead class=" text-danger">
-                                                <th>
-                                                    ID
-                                                </th>
+                                            <thead class=" text-danger">                                                
                                                 <th>
                                                     OrderID
                                                 </th>
@@ -112,14 +109,11 @@ header("Location: index.php");
                                                     TransactionID
                                                 </th>
                                                 <th>
-                                                    Due (Rs)
+                                                    Due Total (Rs)
                                                 </th>
                                                 <th>
                                                     Paid (Rs)
-                                                </th>
-                                                <th>
-                                                    Remaining (Rs)
-                                                </th>
+                                                </th>                                               
                                                 <th>
                                                     Paid Date
                                                 </th>
@@ -131,19 +125,17 @@ header("Location: index.php");
                                                 
                                                     <?php
                                                     $userid = $_SESSION['id'];
-                                                    $getPaymentDetails = "Select p.id, p.payment_type, p.transaction_id, p.order_id, p.due_amount, p.paid_amount, p.remaining_amount, p.paid_date, p.status from payment p,orders o where o.user_id = '$userid' and o.id = p.order_id order by p.paid_date ASC";
+                                                    $getPaymentDetails = "Select p.id, p.payment_type, p.transaction_id, p.order_id, p.due_amount, p.paid_amount, p.paid_date, p.status from payment p,orders o where o.user_id = '$userid' and o.id = p.order_id order by p.paid_date ASC";
                                                     $getPaymentDetailsResult = mysqli_query($conn, $getPaymentDetails);
                                                     if(mysqli_num_rows($getPaymentDetailsResult) > 0){
                                                         while($row = mysqli_fetch_assoc($getPaymentDetailsResult)){
                                                             $transaction_id = ($row['transaction_id'] == 0 ? '-' : $row['transaction_id']);
-                                                            echo'<tr>
-                                                            <td>'.$row['id'].'</td>
+                                                            echo'<tr>                                                            
                                                             <td title="Click to see order details"><a class="text-success" target="_blank" href="orderdetail.php?i='.$row['order_id'].'">'.$row['order_id'].'</a></td>
                                                             <td>'.$row['payment_type'].'</td>
                                                             <td>'.$transaction_id.'</td>
                                                             <td>'.$row['due_amount'].'</td>
-                                                            <td>'.$row['paid_amount'].'</td>
-                                                            <td>'.$row['remaining_amount'].'</td>
+                                                            <td>'.$row['paid_amount'].'</td>                                                            
                                                             <td>'.$row['paid_date'].'</td>
                                                             <td>'.$row['status'].'</td>
                                                             </tr>';

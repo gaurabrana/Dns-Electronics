@@ -86,14 +86,16 @@ include("database/connect.php");
 	<div class="middle-inner">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-2 col-md-2 col-12">
+				<div class="col-lg-2 col-md-2 col-sm-12 col-12">
 					<!-- Logo -->
-					<div class="logo">
-					<a href="./"><img src="img/logored.png" alt="logo"></a>						
-					</div>
-					<!--/ End Logo -->
-					<!-- Search Form -->
-					<div class="search-top">
+					<div class="row justify-content-between">
+								<div class="col-md-12 col-sm-2 col-3">
+								<div class="logo">
+								<a href="./"><img src="img/logored_30.png" alt="logo"></a>						
+								</div>
+								</div>
+								<div class="col-sm-3 col-3 justify-content-center">
+								<div class="search-top">
 						<div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
 						<!-- Search Form -->
 						<div class="search-top">
@@ -104,8 +106,15 @@ include("database/connect.php");
 						</div>
 						<!--/ End Search Form -->
 					</div>
-					<!--/ End Search Form -->
-					<div class="mobile-nav"></div>
+					<div id="menuButton">
+					<i class="fas fa-bars slicknav_btn fa-lg"></i>
+					</div>					
+					</div>									
+					</div>
+					<div id="showelement" class="mobile-nav"></div>						
+					<!--/ End Logo -->
+					<!-- Search Form -->					
+					<!--/ End Search Form -->					
 				</div>
 				<div class="col-lg-8 col-md-7 col-12">					
 					<div class="search-bar-top">
@@ -218,12 +227,12 @@ include("database/connect.php");
 					<div class="col-lg-9 col-12">
 						<div class="menu-area">
 							<!-- Main Menu -->
-							<nav class="navbar navbar-expand-lg">
+							<nav class="navbar navbar-expand-md">
 								<div class="navbar-collapse">
 									<div class="nav-inner">
 										<ul class="nav main-menu menu navbar-nav">
 											<li class="active"><a href="./">Home</a></li>		
-											<li><a href="#">Services</a></li>																															
+											<li><a href="membership.php">Membership</a></li>																															
 											<li>
 												<a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
 												<ul class="dropdown">
@@ -271,10 +280,10 @@ include("database/connect.php");
 		$(".navbarregister").click(function() {			
 			window.location.href = "./register.php";
 		});
-		$(".navbarlogin").click(function() {
-			$(".navbarlogin").prop('disabled', true);
+		$(".navbarlogin").click(function() {			
 
 			var email = $('#email_log').val();
+			console.log(email);
 			var password = $('#password_log').val();
 			var rememberme = false;
 			var currentLocation = window.location.href;			
@@ -299,22 +308,29 @@ include("database/connect.php");
 					success: function(dataResult) {
 						var dataResult = JSON.parse(dataResult);
 						if (dataResult.statusCode != null) {							
-							if (dataResult.statusCode != 202) {
+							if (dataResult.statusCode != 200) {
 								$("#error").show();
+								$("#error").fadeOut(10000);
 							}
 						}
 						if (dataResult.statusCode == 200) {
-							$('#error').html('User not found.');
-							$("#error").fadeOut(4300);
-							//$("#error").slideUp(300).delay(8000).fadeOut(400);
-							$(".navbarlogin").removeAttr('disabled');
-						} else if (dataResult.statusCode == 201) {
-							$('#error').html('Invalid Password !');
-							$("#error").fadeOut(4300);
-							//$("#error").slideUp(300).delay(8000).fadeOut(400);	
-							$(".navbarlogin").removeAttr('disabled');
-						} else if (dataResult.statusCode == 202) {
 							location.href = currentLocation;
+						}
+						 else if (dataResult.statusCode == 201) {
+							$('#error').html('Invalid Password !');															
+							
+						} else if (dataResult.statusCode == 202) {
+							$('#error').html('User not found.');														
+							
+						} else if (dataResult.statusCode == 203) {
+							$('#error').html('System Eror Occured.');							
+							
+						} else if (dataResult.statusCode == 204) {
+							$('#error').html('User access disabled. Please Contact us.');							
+							
+						} else if (dataResult.statusCode == 205) {
+							$('#error').html('User is not approved.');							
+							
 						}
 					}
 				});

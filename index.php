@@ -24,10 +24,7 @@ $active = "home";
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
 	<!-- Magnific Popup -->
     <link rel="stylesheet" href="assets/css/magnific-popup.min.css">
-	<!-- Font Awesome -->
-    
-	
-	
+	<!-- Font Awesome -->    		
 	<!-- Themify Icons -->
     <link rel="stylesheet" href="assets/css/themify-icons.css">
 	<!-- Nice Select CSS -->
@@ -68,8 +65,6 @@ $active = "home";
 	<!-- Slider Area -->
 	<section class="hero-slider">
 		<!-- Single Slider -->
-<!-- 
-
 		<?php		
 		$sql = "Select * from homepage_image where placing='heading'";
 		$result = mysqli_query($conn, $sql);
@@ -131,7 +126,7 @@ $active = "home";
 				</div>
 				<!-- /End Single Banner  -->
 				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-12 col-sm-12 col-12" id="holdBanner3" data-aos="flip-right" data-aos-duration="500">
+				<div class="col-lg-4 col-md-12 col-sm-12 col-12" id="holdBanner3">
 					<div class="single-banner tab-height">
 						<img src="https://hitek.fr/img/up_o/1751376525/hitek_35e9070c204335552ddadac47f540e87_1613239643.jpeg" alt="#">
 						<div class="content">
@@ -184,7 +179,7 @@ $active = "home";
 							<div class="tab-content" id="myTabContent">
 								<!-- Start Single Tab -->
 								<?php
-								$sql = "Select distinct brand from product LIMIT 7";
+								$sql = "Select distinct brand from product";
 								$brandQuery = mysqli_query($conn, $sql);
 								$i = 0;
 								while($row = mysqli_fetch_assoc($brandQuery)){
@@ -540,7 +535,7 @@ echo'<!-- Modal -->
 								<p class="text">Suspendisse massa leo, vestibulum cursus nulla sit amet, frungilla placerat lorem. Cars fermentum, sapien. </p>
 								<h1 class="price">Rs 70000 <s>Rs 100000</s></h1>
 								<div class="coming-time">
-									<div class="clearfix" data-countdown="2021/09/30"></div>
+									<div class="clearfix" data-countdown="2021/12/30"></div>
 								</div>
 							</div>
 						</div>	

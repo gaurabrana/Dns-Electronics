@@ -72,8 +72,7 @@ include("database/connect.php");
                                                 <th>Order ID</th>     
                                                 <th>Payment Type</th>                                                
                                                 <th>Due Total (Rs)</th>
-                                                <th>Paid Amount (Rs)</th>
-                                                <th>Remaining Amount (Rs)</th> 
+                                                <th>Paid Amount (Rs)</th>                                                 
                                                 <th>Payment Date</th>     
                                                 <th>Status</th>                                                
                                             </tr>
@@ -102,16 +101,14 @@ include("database/connect.php");
                                                     $row1 = mysqli_fetch_assoc($getPaymentDetailResult);
                                                     $paymentid = $row1['id'];
                                                     $due_amount = $row1['due_amount'];
-                                                    $paid_amount = $row1['paid_amount'];
-                                                    $remaining_amount = $row1['remaining_amount'];
+                                                    $paid_amount = $row1['paid_amount'];                                                    
                                                     $paid_date = $row1['paid_date'];
                                                     $status = $row1['status'];     
                                                     echo '<tr>
                                                     <td>' . $orderid . '</td>       
                                                     <td>' . $row['payment_type'] . '</td>                                                                                                                                                                                                                                             
                                                     <td>' . $total . '</td>
-                                                    <td>' . $paid_amount . '</td>         
-                                                    <td>' . $remaining_amount . '</td>                                                          
+                                                    <td>' . $paid_amount . '</td>                                                                                                                     
                                                     <td>' . $paid_date . '</td>            
                                                     <td>'.$status.'</td>                                                                                                                                                                                                                                
                                                     </tr>';                                               
@@ -124,8 +121,7 @@ include("database/connect.php");
                                                 <th>Order ID</th>   
                                                 <th>Payment Type</th>                                                                                                                                     
                                                 <th>Due Total (Rs)</th>
-                                                <th>Paid Amount (Rs)</th>
-                                                <th>Remaining Amount (Rs)</th>
+                                                <th>Paid Amount (Rs)</th>                                                
                                                 <th>Payment Date</th>
                                                 <th>Status</th>                                                
                                             </tr>

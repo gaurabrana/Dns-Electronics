@@ -94,12 +94,12 @@ header("Location: index.php");
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title">User Profile</h4>
-                  <p class="card-category">Edit your profile</p>
+                  <p class="card-category">Manage your profile</p>
                 </div>
                 <div class="card-body">
                   <form id="userprofile">
                     <?php
-                    $userid = $_SESSION['id'];
+                    $userid = $_SESSION['id'];                    
                     $sql = "Select * from customer where id = '$userid'";
                     $result = mysqli_query($conn, $sql);
                     if(mysqli_num_rows($result) > 0){
@@ -110,6 +110,18 @@ header("Location: index.php");
                         $phone = $row['phone_no'];
                         $age = $row['age'];
                         $gender = $row['gender'];
+                        if($row['type'] == "wholesale"){  
+                          $getDetails = "Select * from wholesale_detail where user_id = '$userid'";
+                          $getDetailsResult = mysqli_query($conn, $getDetails);
+                          $businessDetails = mysqli_fetch_assoc($getDetailsResult);
+                          $currentAddress = $businessDetails['current_address'];
+                          $permanentAddress = $businessDetails['permanent_address'];
+                          $citizenshipNumber = $businessDetails['citizenship_number'];
+                          $citizenshipFront = $businessDetails['citizenship_front'];
+                          $citizenshipBack = $businessDetails['citizenship_back'];
+                          $businessname = $businessDetails['business_name'];
+                          $panNumber = $businessDetails['pan_number'];
+                        }                                                                          
                         $pp = $row['profile_picture'];
                         $joined = $row['joined_date'];
                         $uniquekey = $row['uniquekey'];
@@ -119,24 +131,24 @@ header("Location: index.php");
                         else{
                           $approved = "Not Verified";
                         }
-                        if($row['active'] == "YES"){
-                          $active = "Active";
+                        if($row['active'] == "NO"){
+                          $active = "Inactive";
                         }
                         else{
-                          $active = "Inactive";
+                          $active = "Active";
                         }
                         
                       }
                     }
                     ?>
                     <div class="row">
-                      <div class="col-md-5">
+                      <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">Country (disabled)</label>
                           <input type="text" class="form-control" value="Nepal" disabled required>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <div class="form-group">
                           <label class="bmd-label-floating">Username (disabled)</label>
                           <input type="text" class="form-control" disabled value="<?php echo $username; ?>" required>
@@ -170,7 +182,14 @@ header("Location: index.php");
                       </div>               
                     </div>                                        
                     <div class="row">
-                      <div class="col-md-12">
+                      <?php
+                    if(!$_SESSION['isRetail']){  
+                    echo'<div class="col-md-6">';
+                    }
+                    else{
+                      echo'<div class="col-md-12">';
+                    }
+                    ?>
                         <div class="form-group">
                         <label class="bmd-label-floating">Gender</label>
                           <select style="padding: 5px;" name="usergender" class="form-control" required>
@@ -178,12 +197,69 @@ header("Location: index.php");
                             echo'<option value="Male"'; if($gender=="Male"){echo " selected "; }echo'>Male</option>
                             <option value="Female"'; if($gender=="Female"){echo " selected "; }echo'>Female</option>
                             <option value="private"'; if($gender=="private"){echo " selected "; }echo'>Rather not say</option>';
-                          ?>
-                            
+                          ?>                            
                           </select>       
                         </div>
-                      </div>                    
-                    </div>         
+                      </div> 
+                      <?php
+                      if(!$_SESSION['isRetail']){
+                      echo'<div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Citizenship Number</label>
+                            <input type="text" class="form-control" disabled value="'.$citizenshipNumber.'" required >
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Current Address</label>
+                            <input type="text" class="form-control" name="current_address" value="'.$currentAddress.'" required >
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Permanent Address</label>
+                            <input type="text" class="form-control" name="permanent_address" value="'.$permanentAddress.'" required >
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Business Name</label>
+                            <input type="text" class="form-control" value="'.$businessname.'" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Business Pan No</label>
+                            <input type="text" class="form-control" disabled value="'.$panNumber.'">
+                          </div>
+                        </div>
+                        ';
+                      }
+                      ?>                      
+                    </div>
+                    <?php
+                    if(!$_SESSION['isRetail']){
+                    echo'<div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <span style="cursor:pointer" title="Click to view" class="btn-light" data-bs-toggle="collapse" data-bs-target="#citizenshipimages">Citizenship images are here.</span>
+                      </div>                        
+                    </div>
+                    <div class="collapse col-md-12" id="citizenshipimages">
+                      <div class="row">
+                      <div class="col-md-6">
+                      <label class="bmd-label-floating">Front Image</label>
+                        <img src="img/UserProfile/'.$uniquekey.'/'.$citizenshipFront.'">                        
+                        </div>
+                        <div class="col-md-6">
+                        <label class="bmd-label-floating">Back Image</label>                        
+                        <img src="img/UserProfile/'.$uniquekey.'/'.$citizenshipBack.'">                        
+                        </div>                          
+                      </div>                          
+                      </div>
+                  </div>';
+                    } 
+                    ?>                    
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">

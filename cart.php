@@ -97,6 +97,11 @@ header("Location: index.php");
 								<th>PRODUCT</th>
 								<th>NAME</th>
 								<th class="text-center">UNIT PRICE</th>
+								<?php
+								if(!$_SESSION['isRetail']){
+									echo'<th class="text-center">MINIMUM UNIT</th>';
+								}	
+								?>							
 								<th class="text-center">QUANTITY</th>
 								<th class="text-center">TOTAL</th> 
 								<th class="text-center">REMOVE</th>
@@ -105,9 +110,9 @@ header("Location: index.php");
 						<tbody>
 						<?php
 						if(isset($_SESSION['cartid'])){
-							$cart_id = 	$_SESSION['cartid'];							
-						}						
-						$sql = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
+							$cart_id = 	$_SESSION['cartid'];																																									
+						}												
+						$sql = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price,p.minimum_unit, p.discount,p.wholesale_discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
 						$result = mysqli_query($conn, $sql);
 						$total = 0;
 						$totalDiscount = 0;
@@ -116,15 +121,24 @@ header("Location: index.php");
 							$hasItems = true;
 							while($row=mysqli_fetch_assoc($result)){							
 								$subtotal = 0;
+								
 								$description = substr($row['description'],0,100)."....";							
 								$totalDiscount = $totalDiscount + ($row['discount']*$row['quantity']);
 								$totalWithoutDiscount = $totalWithoutDiscount + ($row['quantity'] * $row['price']);
-								if($row['discount']!=0){
-									$updatedPrice = $row['price'] - $row['discount'];								
+									if($_SESSION['isRetail']){
+										$discount = $row['discount'];
 								}
 								else{
-									$updatedPrice = $row['price'];								
-								}							
+									$discount = $row['wholesale_discount'];
+								}
+								if($discount > 0){										
+									$updatedPrice = $row['price'] - $discount;
+									$percentage = round(($discount * 100)/$row['price']);
+								}
+								else{
+									$updatedPrice = $row['price'];	
+									$percentage = 0;							
+								}						
 								$subtotal = $row['quantity'] * $updatedPrice;							
 								$total = $total + $subtotal;							
 								echo'<tr id="tablerow'.$row['productcartid'].'">
@@ -134,11 +148,18 @@ header("Location: index.php");
 									<p class="product-des">'.$description.'</p>
 								</td>
 								<td class="price" data-title="Price"><span>Rs </span>';
-								if($row['discount']!=0){								
+								if($discount!=0){								
 									echo'<span style="color:red;text-decoration: line-through;">'.$row['price'].'</span>';
 								}							
-								echo'<br><span>'.$updatedPrice.'</span></td>
-								<td class="price" hidden data-title="Price"><span>'.$updatedPrice.'</span></td>
+								echo'<br><span>'.$updatedPrice.'</span></td>';
+								if(!$_SESSION['isRetail']){
+									$min = $row['minimum_unit'];
+									echo'<td>'.$row['minimum_unit'].'</td>';
+								}
+								else{
+									$min = 1;
+								}
+								echo'<td class="price" hidden data-title="Price"><span>'.$updatedPrice.'</span></td>
 								<td class="qty" data-title="Qty"><!-- Input Order -->
 									<div class="input-group">
 										<div class="button minus" id="minus'.$row['productcartid'].'">
@@ -146,8 +167,9 @@ header("Location: index.php");
 												<i class="ti-minus"></i>
 											</button>
 										</div>
-										<input type="text" value="'.$row['quantity_stock'].'" hidden id="stock'.$row['productcartid'].'">
-										<input type="text" id="quantity'.$row['productcartid'].'" name="quant['.$row['productcartid'].']" class="input-number"  data-min="1" data-max="'.$row['quantity_stock'].'" value="'.$row['quantity'].'">
+										<input type="text" value="'.$min.'" hidden id="minimumunit'.$row['productcartid'].'">
+										<input type="text" value="'.$row['quantity_stock'].'" hidden id="stock'.$row['productcartid'].'">										
+										<input type="text" id="quantity'.$row['productcartid'].'" name="quant['.$row['productcartid'].']" class="input-number"  data-min="'.$min.'" data-max="'.$row['quantity_stock'].'" value="'.$row['quantity'].'">
 										<div class="button plus" id="plus'.$row['productcartid'].'">
 											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant['.$row['productcartid'].']">
 												<i class="ti-plus"></i>

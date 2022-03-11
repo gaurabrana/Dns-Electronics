@@ -62,14 +62,18 @@ if (createThumb($path[1], $path[2],"$desiredExt", IMAGE_SMALL_SIZE, IMAGE_SMALL_
     }    
  }
  else{
-    $output['status']=TRUE;
-    $output['image_medium']= $pathmedium;
-    $output['imageName'] = $fileNameMediumFile;
+      
+         $output['status']=TRUE;
+         $output['image_medium']= $pathmedium;
+         $output['imageName'] = $fileNameMediumFile;
+        
  }
 
 }
 }
 }
+if(!isset($registerWholesale)){
 echo json_encode($output);
+}
 }
 ?>

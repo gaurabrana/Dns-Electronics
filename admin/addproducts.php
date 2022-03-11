@@ -59,6 +59,7 @@ include('database/connect.php');
             <!-- row -->
 
             <div class="container-fluid">
+                <div class="card pl-3 pt-3">
                 <div class="form-validation">
                     <form class="form-valide" action="#" method="post" enctype="multipart/form-data">
                     <?php                    
@@ -87,6 +88,20 @@ include('database/connect.php');
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="val-wholesale_discount">Wholesale Discount (Rs)<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="number" class="form-control" id="val-wholesale_discount" name="val-wholesale_discount" placeholder="Enter wholesale discount amount..">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="val-minimumlimit">Wholesale Minimum Order Needed (Rs)<span class="text-danger">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input type="number" class="form-control"  min="1" id="val-minimumlimit" name="val-minimumlimit" placeholder="Enter minimum limit for product to be ordered on wholesale..">
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-lg-2 col-form-label" for="val-stockquantity">Stock<span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
@@ -97,7 +112,7 @@ include('database/connect.php');
                             <label class="col-lg-2 col-form-label" for="val-description">Description <span class="text-danger">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <textarea class="form-control" id="val-description" name="val-description" rows="5" placeholder="About the product"></textarea>
+                                <textarea class="form-control" id="val-description" name="val-description" rows="5" placeholder="Use . after each specification Example: Easy. Compact."></textarea>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -174,7 +189,7 @@ include('database/connect.php');
                     </div>                
                     </div>
                 </div>
-                           
+                </div>                                          
             </div>
         </div>
         <!-- #/ container -->

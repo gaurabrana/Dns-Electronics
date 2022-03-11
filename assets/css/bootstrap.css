@@ -38,10 +38,10 @@
 
 @media print {
     *,
-    ::after,
-    ::before {
+     ::after,
+     ::before {
         text-shadow: none!important;
-        box-shadow: none!important        
+        box-shadow: none!important
     }
     a,
     a:visited {
@@ -3961,14 +3961,6 @@ tbody.collapse.show {
     .navbar-expand-md .dropup .dropdown-menu {
         top: auto;
         bottom: 100%
-    }
-}
-
-@media (max-width:991px) {
-    .navbar-expand-lg>.container,
-    .navbar-expand-lg>.container-fluid {
-        padding-right: 0;
-        padding-left: 0
     }
 }
 

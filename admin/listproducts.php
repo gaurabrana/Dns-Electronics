@@ -73,6 +73,8 @@ include("database/connect.php");
                                                 <th>Name</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
+                                                <th>Wholesale</th>
+                                                <th>Min Unit</th>
                                                 <th>Description</th>
                                                 <th>Code</th>
                                                 <th>Brand</th>
@@ -94,6 +96,8 @@ include("database/connect.php");
                                                 <td>' . $row['name'] . '</td>
                                                 <td>' . $row['price'] . '</td>
                                                 <td>' . $row['discount'] . '</td>
+                                                <td>' . $row['wholesale_discount'] . '</td>
+                                                <td>' . $row['minimum_unit'] . '</td>
                                                 <td>' . $description . '</td>
                                                 <td>' . $row['code'] . '</td>                                                
                                                 <td>' . $row['brand'] . '</td>
@@ -114,6 +118,8 @@ include("database/connect.php");
                                                 <th>Name</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
+                                                <th>Wholesale</th>
+                                                <th>Min Unit</th>
                                                 <th>Description</th>
                                                 <th>Code</th>
                                                 <th>Brand</th>
@@ -162,6 +168,20 @@ include("database/connect.php");
                                                             </label>
                                                             <div class="col-lg-6">
                                                                 <input type="text" class="form-control" id="val-discountprice' . $row['code'] . '" name="val-discountprice" value="' . $row['discount'] . '" placeholder="Enter discount amount..">
+                                                            </div>
+                                                        </div>  
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-4 col-form-label" for="val-wholesalediscountprice">Wholesale Discount (Rs)<span class="text-danger">*</span>
+                                                            </label>
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" id="val-wholesalediscountprice' . $row['code'] . '" name="val-wholesalediscountprice" value="' . $row['wholesale_discount'] . '" placeholder="Enter wholesale discount amount..">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-4 col-form-label" for="val-minimumunit">Order Minimum unit (Rs)<span class="text-danger">*</span>
+                                                            </label>
+                                                            <div class="col-lg-6">
+                                                                <input type="text" class="form-control" id="val-minimumunit' . $row['code'] . '" name="val-minimumunit" value="' . $row['minimum_unit'] . '" placeholder="Enter minimum order unit..">
                                                             </div>
                                                         </div>    
                                                         <div class="form-group row">

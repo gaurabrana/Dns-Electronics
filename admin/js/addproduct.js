@@ -171,6 +171,8 @@
         let pName = $("#val-productname").val();
         let pPrice = $("#val-price").val();
         let pDiscountprice = $("#val-discountprice").val();
+        let pWholesaleDiscountprice = $("#val-wholesale_discount").val();
+        let pOrderLimit = $("#val-minimumlimit").val();
         let pDescription = $("#val-description").val();
         let pBrand = $("#val-brand").val();
         let pBrandName;
@@ -221,6 +223,23 @@
         } else {
             pDiscountprice = 0;
         }
+
+        if (pWholesaleDiscountprice.length > 0) {
+            if (pWholesaleDiscountprice <= 0) {
+                no_of_errors++;
+                showInfo("Invalid product wholesale discount price.<br>", "alert-danger");
+            }
+        } else {
+            pWholesaleDiscountprice = 0;
+        }
+
+        if (pOrderLimit.length == 0) {
+            no_of_errors++;
+            showInfo("Invalid product wholesale order limit.<br>", "alert-danger");
+
+        }
+
+
         if (pDescription.length == 0) {
             no_of_errors++;
             showInfo("Empty product description.<br>", "alert-danger");
@@ -259,7 +278,7 @@
         if (no_of_errors == 0) {
             let imageKey = $("#productImageFolderKey").val();
             //prepare to send product details
-            let pdata = { "addProduct": "ready", name: pName, price: pPrice, description: pDescription, discount: pDiscountprice, stock: pStock, mainImage: pMainImage, subImage: imageSrc, brand: pBrandName, category: pCategoryName, imagekey: imageKey };
+            let pdata = { "addProduct": "ready", name: pName, price: pPrice, description: pDescription, discount: pDiscountprice, wholesalediscount: pWholesaleDiscountprice, orderlimit: pOrderLimit, stock: pStock, mainImage: pMainImage, subImage: imageSrc, brand: pBrandName, category: pCategoryName, imagekey: imageKey };
             $.ajax({
                 url: "database/addproduct.php",
                 method: "POST",
@@ -273,14 +292,15 @@
                         resetFields();
                         if (isCategoryNew) {
                             $("#val-brand").append("<option value='" + pCategoryName + "'>" + pCategoryName + "</option>");
+                            $("#productImageFolderKey").val(result.imagekey);
                         }
                         //remove all values
-
                     } else if (result.statusCode == 201) {
                         //sub image add failed
                         showInfo("Failed to add product sub images", "alert-danger");
                     } else if (result.statusCode == 202) {
                         //add failed
+                        console.log(result.error);
                         showInfo("Failed to add product details.", "alert-danger");
                     }
                 }
@@ -317,6 +337,8 @@
         $("#val-brandname").val("");
         $("#val-categoryname").val("");
         $("#val-category").val("new");
+        $("#val-wholesale_discount").val("");
+        $("#val-minimumlimit").val("");
         $("#val-stockquantity").val("");
         $("#holdMainImageName").val("");
         $("#new-category").removeClass("hide-element");

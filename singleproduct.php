@@ -2,7 +2,7 @@
 include('database/connect.php');
 include('formatdate.php');
 if(isset($_SESSION['id'])){
-	$user_id = $_SESSION['id'];
+	$user_id = $_SESSION['id'];	
 }
 ?>
 <!DOCTYPE html>
@@ -186,14 +186,34 @@ if(isset($_SESSION['id'])){
 							echo'</span>
 						</div>
 				</div>';
-						if ($row['discount'] != 0) {
-							$updatedPrice = $row['price'] - $row['discount'];
-							echo '<h3>Rs <span style="color:#ed1c24; text-decoration: line-through;">' . $row['price'] . '</span> ' . $updatedPrice . '</h3>';
-						} else {
-							$updatedPrice = $row['price'];
-							echo '<h3>Rs' . $updatedPrice . '</h3>';
-						}
-						echo '<div class="quickview-peragraph">';
+				if($_SESSION['isRetail']){
+					$discount = $row['discount'];
+			}
+			else{
+				$discount = $row['wholesale_discount'];
+			}
+				if($discount > 0){										
+					$updatedPrice = $row['price'] - $discount;
+					$percentage = round(($discount * 100)/$row['price']);												
+				}
+				else{
+					$updatedPrice = $row['price'];			
+					$percentage = 0;																	
+				}
+				echo'<div class="row">
+				<div class="col-md-12 d-flex justify-content-between">';																 
+				if($discount!=0){																	
+				   echo'<span>Rs <span style="color:#ed1c24; text-decoration: line-through;">'.$row['price'].'</span><span style="font-size:large; font-weight:bold;"> '.$updatedPrice.'</span> </span>
+				   <span style="color:#ef271b;">'.$percentage.'% off</span>';
+			   }
+			   else{																	
+				   echo'<span>Rs'.$updatedPrice.'</span>';							
+			   }
+			   echo '
+			   <span class="tags"></span>
+			   </div>
+			   </div>	
+						<div class="quickview-peragraph">';
 						$description = explode('.', $row['description']);
 						foreach ($description as $var) {
 							echo '<li>' . $var . '</li>';

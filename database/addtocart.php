@@ -2,7 +2,7 @@
 include('connect.php');
 if(isset($_SESSION['email'])){
     $exist = true;
-    $id = null;
+    $id = null;           
     $cart_id = $_SESSION['cartid'];        
     while($exist){        
         $id = generateRandomString();
@@ -24,7 +24,16 @@ if(isset($_SESSION['email'])){
                 $productquantity = $_POST['quantityofproduct'];
             }
             else{
-                $productquantity = 1;
+                if($_SESSION['isRetail']){
+                    $productquantity = 1;
+                }
+                else{
+                    // get minimum order unit
+                    $getMinLimit = "Select minimum_unit from product where code = '$code'";
+                    $getMinLimitResult = mysqli_query($conn, $getMinLimit);
+                    $minUnit = mysqli_fetch_assoc($getMinLimitResult);
+                    $productquantity = $minUnit['minimum_unit'] != 0 ? $minUnit['minimum_unit'] : 1;
+                }                
             }
             $sql = "Insert into product_in_cart values ('$id', $cart_id, '$code', '$productquantity')";
             $cartResult = mysqli_query($conn, $sql);

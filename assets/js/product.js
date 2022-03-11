@@ -17,7 +17,11 @@ $(document).on('ready', function() {
                     $(".pagination li").removeClass("active");
                     $("#paginationValue" + data.pageno).closest('li').addClass("active");
                 }
-                focusProducts();
+                if ('filter' in data) {
+                    if (data.filter != "priceSlider") {
+                        focusProducts();
+                    }
+                }
             }
         });
     }
@@ -170,27 +174,28 @@ $(document).on('ready', function() {
     if (window.matchMedia("(max-width: 425px)").matches) {
         $(".product-action-2 span").html('<i class="fas fa-cart-plus"></i>');
     }
-    if (window.matchMedia("(max-width: 767px)").matches) {
+    if (window.matchMedia("(max-width: 767.5px)").matches) {
         $(".single-widget.category").removeClass("mt-0");
     }
     $(window).on('resize', function() {
         var win = $(this);
-        if (win.width() <= 767) {
+        if (win.width() <= 767.5) {
             $(".single-widget.category").removeClass("mt-0");
         } else {
             $(".single-widget.category").addClass("mt-0");
         }
     });
 
+    focusProducts();
+
     function focusProducts() {
         let isMobileDevice = false;
 
-        if (window.matchMedia("(max-width: 767px)").matches) {
+        if (window.matchMedia("(max-width: 767.5px)").matches) {
             $('html, body').animate({
                 scrollTop: $(".focusFilterProduct").offset().top
             }, 1000);
         } else {
-            console.log("isdesktop");
             $('html, body').animate({
                 scrollTop: $(".product-area").offset().top
             }, 1000);

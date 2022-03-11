@@ -58,6 +58,10 @@
             $('.search-top').toggleClass('active');
         });
 
+        $("#menuButton i").on("click", function() {
+            $("#showelement .slicknav_btn").click();
+        });
+
         /*=======================        
         /*=======================
           Home Slider JS
@@ -284,19 +288,6 @@
     /*=====================================
      Others JS
     ======================================*/
-    $(function() {
-        $("#slider-range").slider({
-            range: true,
-            min: 0,
-            max: 100000,
-            values: [0, 100000],
-            slide: function(event, ui) {
-                $("#amount").val("Rs" + ui.values[0] + " - Rs" + ui.values[1]);
-            }
-        });
-        $("#amount").val("Rs" + $("#slider-range").slider("values", 0) +
-            " - Rs" + $("#slider-range").slider("values", 1));
-    });
 
     /*=====================================
       Preloader JS
@@ -357,7 +348,7 @@
                         addResultColor("grid", c, "green");
                     }
                 } else if (data.statusCode == 201) {
-                    $(c).html("Failed to add");
+                    $(c).html("Please try again later.");
                     if (d) {
                         addResultColor("list", c, "alert-danger");
                     } else {
@@ -371,7 +362,7 @@
                         addResultColor("grid", c, "#ed1c24");
                     }
                 } else if (data.statusCode == 203) {
-                    $(c).html("Login first");
+                    $(c).html("Please login to add this product to cart. ");
                     if (d) {
                         addResultColor("list", c, "alert-danger");
                     } else {
@@ -443,7 +434,7 @@
                                 addResultColor("grid", c, "#ed1c24");
                             }
                         } else if (data.statusCode == 203) {
-                            $(c).html("Login first");
+                            $(c).html("Please login to add this product to wishlist.");
                             if (d) {
                                 addResultColor("list", c, "alert-danger");
                             } else {
@@ -481,7 +472,7 @@
                                 addResultColor("grid", c, "#ed1c24");
                             }
                         } else if (data.statusCode == 203) {
-                            $(c).html("Login first");
+                            $(c).html("Please login to compare this product.");
                             if (d) {
                                 addResultColor("list", c, "alert-danger");
                             } else {
@@ -562,7 +553,7 @@
                     $(resultID).html("Product not found");
                 } else if (data.statusCode == 203) {
                     color = "alert-danger";
-                    $(resultID).html("Login first");
+                    $(resultID).html("Please login to add this product to cart.");
                 } else if (data.statusCode == 204) {
                     color = "alert-danger";
                     $(resultID).html("Already in cart");
@@ -603,7 +594,7 @@
                     $(resultID).html("Product not found");
                 } else if (data.statusCode == 203) {
                     color = "alert-danger";
-                    $(resultID).html("Login first");
+                    $(resultID).html("Please login to add this product to  wishlist.");
                 } else if (data.statusCode == 204) {
                     color = "alert-danger";
                     $(resultID).html("Already in favourite");
@@ -642,7 +633,7 @@
                     $(resultID).html("Product not found");
                 } else if (data.statusCode == 203) {
                     color = "alert-danger";
-                    $(resultID).html("Login first");
+                    $(resultID).html("Please login to compare this product.");
                 } else if (data.statusCode == 204) {
                     color = "alert-danger";
                     $(resultID).html("Already in compare list");
@@ -725,45 +716,6 @@ CHECKOUT PAGE
 
     });
 
-    // $(window).on('resize', function() {
-    //     var win = $(this); //this = window
-    //     //if (win.height() >= 820) { /* ... */ }
-    //     if (win.width() <= 375) {
-    //         $(".holdProductBrand").removeClass("col-6");
-    //         $(".holdProductBrand").addClass("col-12");
-    //     } else if (win.width() <= 555) {
-    //         $("#holdBanner1").removeClass("col-6");
-    //         $("#holdBanner1").addClass("col-12");
-    //         $("#holdBanner2").removeClass("col-6");
-    //         $("#holdBanner2").addClass("col-12");
-    //         $(".holdProductBrand").removeClass("col-12");
-    //         $(".holdProductBrand").removeClass("col-4");
-    //         $(".holdProductBrand").addClass("col-6");
-    //     } else if (win.width() <= 767) {
-    //         $("#holdBanner1").addClass("col-6");
-    //         $("#holdBanner1").removeClass("col-12");
-    //         $("#holdBanner2").addClass("col-6");
-    //         $("#holdBanner2").removeClass("col-12");
-    //         $(".holdProductBrand").addClass("col-4");
-    //         $(".holdProductBrand").removeClass("col-6");
-    //     }
-    // });
 
-    // focusProducts();
-
-    // function focusProducts() {
-    //     let width = $(window).width();
-    //     if (window.matchMedia("(max-width: 375px)").matches) {
-    //         $(".holdProductBrand").removeClass("col-4");
-    //         $(".holdProductBrand").addClass("col-12");
-    //     } else if (window.matchMedia("(max-width: 555px)").matches) {
-    //         $("#holdBanner1").removeClass("col-6");
-    //         $("#holdBanner1").addClass("col-12");
-    //         $("#holdBanner2").removeClass("col-6");
-    //         $("#holdBanner2").addClass("col-12");
-    //         $(".holdProductBrand").removeClass("col-4");
-    //         $(".holdProductBrand").addClass("col-6");
-    //     }
-    // }
 
 })(jQuery);

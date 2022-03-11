@@ -226,12 +226,24 @@ $active = "products";
 										</div>
 										<div class="content">
 											<h5><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h5>';
-											if($row['discount']!=0){
-												$updatedPrice = $row['price'] - $row['discount'];												
+
+											if(isset($_SESSION['isRetail'])){
+												if($_SESSION['isRetail']){
+													$discount = $row['discount'];
+											}
+											else{
+												$discount = $row['wholesale_discount'];
+											}
+											}
+											else{
+												$discount = $row['discount'];
+											}
+											if($discount > 0){										
+												$updatedPrice = $row['price'] - $discount;												
 											}
 											else{
 												$updatedPrice = $row['price'];																				
-											}									
+											}								
 											echo'<p class="price">Rs '.$updatedPrice.'</p>';													
 											echo'<ul class="reviews">';
 											$product_code = $row['code'];
@@ -342,11 +354,24 @@ $active = "products";
 							$result1 = mysqli_query($conn, $sql);							
 							if(mysqli_num_rows($result) > 0){								
 								while($row=mysqli_fetch_assoc($result)){
-									if($row['discount']!=0){
-										$updatedPrice = $row['price'] - $row['discount'];								
+									if(isset($_SESSION['isRetail'])){
+										if($_SESSION['isRetail']){
+											$discount = $row['discount'];
 									}
 									else{
-										$updatedPrice = $row['price'];								
+										$discount = $row['wholesale_discount'];
+									}
+									}
+									else{
+										$discount = $row['discount'];
+									}									
+									if($discount!=0){										
+										$updatedPrice = $row['price'] - $discount;
+										$percentage = round(($discount * 100)/$row['price']);
+									}
+									else{
+										$updatedPrice = $row['price'];	
+										$percentage = 0;							
 									}
 									echo'<!-- Modal -->
 									<div class="modal fade" id="modalbox'.$row['code'].'" tabindex="-1" role="dialog">
@@ -357,7 +382,7 @@ $active = "products";
 												</div>
 												<div class="modal-body">
 													<div class="row no-gutters">
-														<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+														<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 															<!-- Product Slider -->
 																<div class="product-gallery">
 																	<div class="quickview-slider-active">
@@ -377,7 +402,7 @@ $active = "products";
 																</div>
 															<!-- End Product slider -->
 														</div>
-														<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+														<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 															<div class="quickview-content">
 																<h2>'.$row['name'].'</h2>
 																<div class="quickview-ratting-review">
@@ -431,16 +456,21 @@ $active = "products";
 																		}
 																		echo'</span>
 																	</div>
-																</div>';
-																if($row['discount']!=0){
-																	$updatedPrice = $row['price'] - $row['discount'];
-																	echo'<h3>Rs <span style="color:#ed1c24; text-decoration: line-through;">'.$row['price'].'</span> '.$updatedPrice.'</h3>';								
+																</div>
+																<div class="row">
+																 <div class="col-md-12 d-flex justify-content-between">';																 
+																 if($discount!=0){																	
+																	echo'<span>Rs <span style="color:#ed1c24; text-decoration: line-through;">'.$row['price'].'</span> '.$updatedPrice.'</span>
+																	<span style="color:#ef271b;">'.$percentage.'% off</span>';
 																}
-																else{
-																	$updatedPrice = $row['price'];	
-																	echo'<h3>Rs'.$updatedPrice.'</h3>';							
-																}																														
-																echo'<div class="quickview-peragraph">';															
+																else{																	
+																	echo'<span>Rs'.$updatedPrice.'</span>';							
+																}
+																echo '
+																<span class="tags"></span>
+																</div>
+																</div>																																																														
+																<div class="quickview-peragraph">';															
 																$description = explode('.', $row['description']);								
 																foreach($description as $var){
 																echo '<li>'.$var.'</li>';
@@ -502,7 +532,6 @@ $active = "products";
 										</div>
 									</div>
 									<!-- Modal end -->';
-									$discount = 0;
 									echo'<div class="col-lg-4 col-md-6 col-sm-4 col-6 isProduct">								
 									<div class="single-product">
 									<p class="hide-element" style="font-size:16px;" id="result'.$row['code'].'">Result</p>
@@ -529,13 +558,27 @@ $active = "products";
 										</div>
 										<div class="product-content">
 											<h3><a href="singleproduct.php?i='.$row['code'].'">'.$row['name'].'</a></h3>
-											<div class="product-price">';
-											echo'<span style="margin-right:4px;">Rs</span>';
-											if($row['discount']!=0){
-													$discount = $row['discount'];
-													echo'<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
+											<div class="product-price">											
+											<div class="row">
+											<div class="col-md-8">
+											<span style="margin-right:4px;">Rs</span>';
+											if($discount!=0){			
+													echo'
+													<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>
+													<span> '.$updatedPrice.'</span>																							
+													';
 											}
-												echo'<span> '.($row['price']-$discount).'</span>
+											else{
+												echo'<span> '.$updatedPrice.'</span>';
+											}
+												echo'
+												</div>
+												<div class="col-md-4">';
+												if($percentage>0){
+													echo'<span style="; color:#ef271b;">'.$percentage.'% Off</span>';
+												}												
+											echo'</div>
+											</div>
 											</div>
 										</div>
 									</div>
@@ -549,7 +592,26 @@ $active = "products";
 						</div>
 						<div class="row" id="list-style-product-display">														
 								<?php
-								while($row=mysqli_fetch_assoc($result1)){		
+								while($row=mysqli_fetch_assoc($result1)){
+									if(isset($_SESSION['isRetail'])){
+										if($_SESSION['isRetail']){
+											$discount = $row['discount'];
+									}
+									else{
+										$discount = $row['wholesale_discount'];
+									}
+									}
+									else{
+										$discount = $row['discount'];
+									}									
+									if($discount!=0){										
+										$updatedPrice = $row['price'] - $discount;
+										$percentage = round(($discount * 100)/$row['price']);
+									}
+									else{
+										$updatedPrice = $row['price'];	
+										$percentage = 0;							
+									}		
 									if($row['quantity_stock'] > 0){
 										$outOfStockGrid = false;
 									}
@@ -574,7 +636,7 @@ $active = "products";
 														</div>
 														<div class="product-action-2">';
 														if(!$outOfStockGrid){	
-															echo'<p title="Add to cart" id="listcart'.$row['code'].'">Add to cart</p>';
+															echo'<span title="Add to cart" id="listcart'.$row['code'].'">Add to cart</span>';
 															}
 															else{
 																echo'<span style="color: #ed1c24 !important;"><i style="color: #ed1c24 !important;" class="far fa-times-circle"></i>NO STOCK</span>';
@@ -585,12 +647,16 @@ $active = "products";
 												<hr>
 												<div class="list-display-product-price">';
 											echo'<span style="margin-right:4px;">Rs</span>';
-											if($row['discount']!=0){
-													$discount = $row['discount'];
-													echo'<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>';
-											}
-												echo'<span style="font-size:large;"> '.($row['price']-$discount).'</span>
-												</div>	
+											if($discount!=0){			
+												echo'
+												<span style="text-decoration: line-through; color:#ef271b;">'.$row['price'].'</span>
+												<span> '.$updatedPrice.'</span>																							
+												<span style="color:#ef271b;">'.$percentage.'% off</span>';
+										}
+										else{
+											echo'<span> '.$updatedPrice.'</span>';
+										}						
+												echo'</div>	
 												<div id="liststyleResult'.$row['code'].'" class="alert hide-element">				
 																				
 												</div>	

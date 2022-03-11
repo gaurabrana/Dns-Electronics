@@ -42,7 +42,11 @@ p {
     display: none
 }
 
-#msform input,
+#msform input[type=checkbox] {
+    transform: scale(1.5);
+}
+
+#msform input:not([type=checkbox]):not([type=button]):not([type=file]),
 #msform textarea,
 #msform tel {
     padding: 8px 15px 8px 15px;
@@ -177,6 +181,11 @@ p {
 #progressbar #confirm:before {
     font-family: FontAwesome;
     content: "\f00c"
+}
+
+#progressbar #documents:before {
+    font-family: FontAwesome;
+    content: "\f15c"
 }
 
 #progressbar li:before {
@@ -317,4 +326,55 @@ p {
 
 .imageLoading {
     width: auto;
+}
+
+.form-section {
+    text-decoration: underline;
+    text-decoration-color: #ed1c24;
+    text-underline-position: under;
+    padding: 4px 0px;
+}
+
+.registerWholesale {
+    padding: 2px;
+    font-size: large;
+    color: #ed1c24;
+    text-decoration-color: #ed1c24;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #ed1c24;
+}
+
+.back:hover {
+    color: #682773;
+    cursor: pointer
+}
+
+.labels {
+    font-size: 11px
+}
+
+@-webkit-keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
 }

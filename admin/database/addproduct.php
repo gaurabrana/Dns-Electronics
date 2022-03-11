@@ -7,7 +7,7 @@ if(isset($_POST['addProduct'])){
     $newID++;
     $code = strtoupper(substr($name,0,3)).rand(100,10000);    
     $date = date("Y-m-d h:i:s A");
-    $sql = "Insert into product values ('$newID','$name', '$price', '$discount', '$description', '$code', 'DNS ELECTRONICS','$brand','0','$stock','Electronics','$category','$mainImage','$imagekey','$date')";
+    $sql = "Insert into product values ('$newID','$name', '$price', '$discount', '$wholesalediscount', '$orderlimit' ,'$description', '$code', 'DNS ELECTRONICS','$brand','0','$stock','Electronics','$category','$mainImage','$imagekey','$date')";
     $executeAddProduct = mysqli_query($conn, $sql);
     if($executeAddProduct){        
         $error = 0;
@@ -21,7 +21,8 @@ if(isset($_POST['addProduct'])){
             }                  
         }
         if($error==0){
-            echo json_encode(array("statusCode" => 200));
+            $imageFolderKey = md5(time());
+            echo json_encode(array("statusCode" => 200, "imagekey" => $imageFolderKey));
         }
         else{
             echo json_encode(array("statusCode" => 201));
@@ -29,7 +30,7 @@ if(isset($_POST['addProduct'])){
 
     }
     else{                
-        echo json_encode(array("statusCode" => 202));
+        echo json_encode(array("statusCode" => 202, "error" => mysqli_error($conn)));
     }
 }
 ?>

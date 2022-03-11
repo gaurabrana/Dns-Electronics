@@ -9,21 +9,16 @@ if(isset($_POST['action'])){
     $getTotalOrdered = mysqli_fetch_assoc($getTotalPriceExecute);
     $total = $getTotalOrdered['total'];
     //remaining amount 
-    if($payamount > $total){
+    if($payamount != $total){
         echo json_encode(array("statusCode" => 202));
         exit();
     }    
     $remainingtotal = $total - $payamount;
-    if($remainingtotal == 0){
-        $status = "Full Paid";
-    }
-    else{
-        $status = "Half Paid";
-    }
-    $sql = "Insert into payment values ('$paymentid', '$orderid', '$type', '-', '$total', '$payamount', '$remainingtotal', '$paydate','$status')";
+    $status = "Paid";
+    $sql = "Insert into payment values ('$paymentid', '$orderid', '$type', '-', '$total', '$payamount', '$paydate','$status')";
     $result = mysqli_query($conn, $sql);
     if($result){
-        echo json_encode(array("statusCode" => 200));
+        echo json_encode(array("statusCode" => 200, "date" => $paydate, "status" => $status));
     }
     else{
         echo json_encode(array("statusCode" => 201));

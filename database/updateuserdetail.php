@@ -1,10 +1,12 @@
 <?php 
 if(isset($_POST['action'])){
     include("connect.php");
-    include("encryption.php");
+    include("encryption.php");    
     if($_POST['action']==="verifydetails"){
         $userid = $_SESSION['id'];
         $currentpass = $_POST['currentpass'];
+        
+
         //checkpassword
         $sql = "Select password from customer where id = '$userid'";
         $result = mysqli_query($conn, $sql);
@@ -13,15 +15,18 @@ if(isset($_POST['action'])){
         if(encrypt_text(md5($currentpass)) == $pass){
             $email = filter_var($_POST['newemail'], FILTER_SANITIZE_EMAIL);
             $oldemail = $_SESSION['email'];        
+
             //check if email associated with other users
-            $checkEmailAssociation = "Select count(id) as total from customer where id <> '$userid' and email = '$email'";
+            $checkEmailAssociation = "Select count(id) from customer where id <> '$userid' and email = '$email'";
             $checkEmailAssociationResult = mysqli_query($conn, $checkEmailAssociation);
             $getMailCheckRow = mysqli_fetch_assoc($checkEmailAssociationResult);
-            $totalcount = $getMailCheckRow['total'];
-            if($totalcount != 0){
+            $totalRetailcount = $getMailCheckRow['retailTotal'];
+            $totalWholesalecount = $getMailCheckRow['wholesaleTotal'];
+            if(!($totalRetailcount==0 && $totalWholesalecount==0)){            
                 echo json_encode(array("statusCode" => 205));
-           exit();
-            }
+                exit();
+            }  
+
         //send code                
         if (!filter_var($email,FILTER_VALIDATE_EMAIL)){        
             echo json_encode(array("statusCode" => 204));

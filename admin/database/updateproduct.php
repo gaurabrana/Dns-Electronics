@@ -2,7 +2,7 @@
 if(isset($_POST['updateProduct'])){
     include("connect.php");
     extract($_POST);            
-    $sql = "Update product set name='$name', price='$price', discount='$discount', description='$description', brand='$brand', quantity_stock='$stock',category='$category',image_name='$mainImage' where code='$code'";
+    $sql = "Update product set name='$name', price='$price', discount='$discount', wholesale_discount = '$wholesale', minimum_unit = '$minimumunit' ,description='$description', brand='$brand', quantity_stock='$stock',category='$category',image_name='$mainImage' where code='$code'";
     $executeUpdateProduct = mysqli_query($conn, $sql);
     if($executeUpdateProduct){        
         $error = 0;
@@ -19,7 +19,7 @@ if(isset($_POST['updateProduct'])){
             }            
         }
         if($error==0){
-            echo json_encode(array("statusCode" => 200));
+            echo json_encode(array("statusCode" => 200, "error" => mysqli_error($conn)));
         }
         else{
             echo json_encode(array("statusCode" => 201));

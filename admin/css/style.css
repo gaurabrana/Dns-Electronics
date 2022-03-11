@@ -11457,7 +11457,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 .nk-sidebar .metismenu .mega-menu ul.in li a:hover,
 .nk-sidebar .metismenu .mega-menu ul.in li a:focus,
 .nk-sidebar .metismenu .mega-menu ul.in li a.active {
-    color: #7571f9;
+    color: #ed1c24;
 }
 
 .nk-sidebar .metismenu a {
@@ -20955,6 +20955,42 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 
 .small-size img {
     width: 60%;
+}
+
+.documentTitle {
+    text-decoration: underline;
+    margin: 10px 0px;
+}
+
+.orderStatus {
+    min-height: 40px;
+}
+
+.orderStatus {
+    border-radius: 0;
+    box-shadow: none;
+    height: 45px;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+    .orderStatus {
+        transition: none;
+    }
+}
+
+.orderStatus {
+    display: block;
+    width: auto;
+    height: calc(2.0625rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 

@@ -66,25 +66,23 @@ include("database/connect.php");
                 <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Update Order Payments</h4>
+                                <h4 class="card-title">Cash On Delivery Order Payments</h4>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered zero-configuration">
+                                    <table class="table paymenttable table-bordered zero-configuration">
                                         <thead>
                                             <tr>
-                                                <th>Order ID</th>     
-                                                <th>Payment Type</th>                                                
+                                                <th>Order ID</th>                                                                                                
                                                 <th>Due Total (Rs)</th>
-                                                <th>Paid Amount (Rs)</th>
-                                                <th>Remaining Amount (Rs)</th> 
+                                                <th>Paid Amount (Rs)</th>                                                
                                                 <th>Payment Date</th>     
                                                 <th>Status</th>
-                                                <th>Details</th>
+                                                <th>Update</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             include("./formatdate.php");
-                                            $getOngoingOrders = "Select * from orders where status <> 'completed'";
+                                            $getOngoingOrders = "Select * from orders where status <> 'completed' and payment_type='COD'";
                                             $executegetAllOngoingOrders = mysqli_query($conn, $getOngoingOrders);
                                             $forModal = mysqli_query($conn, $getOngoingOrders);
                                             while ($row = mysqli_fetch_assoc($executegetAllOngoingOrders)) {
@@ -94,9 +92,7 @@ include("database/connect.php");
                                                 $getTotalPrice = "Select sum(total_price) as total from order_item where order_id = '$orderid'";
                                                 $getTotalPriceExecute = mysqli_query($conn, $getTotalPrice);
                                                 $getTotalOrdered = mysqli_fetch_assoc($getTotalPriceExecute);
-                                                $total = $getTotalOrdered['total']; 
-
-
+                                                $total = $getTotalOrdered['total'];                                                 
                                                 $getPaymentDetail = "Select * from payment where order_id = '$orderid'";
                                                 $getPaymentDetailResult  = mysqli_query($conn, $getPaymentDetail);
                                                 if(mysqli_num_rows($getPaymentDetailResult) > 0){
@@ -107,37 +103,33 @@ include("database/connect.php");
                                                     $row1 = mysqli_fetch_assoc($getPaymentDetailResult);                                                    
                                                     $paymentid = $row1['id'];
                                                     $due_amount = $row1['due_amount'];
-                                                    $paid_amount = $row1['paid_amount'];
-                                                    $remaining_amount = $row1['remaining_amount'];
+                                                    $paid_amount = $row1['paid_amount'];                                                    
                                                     $paid_date = $row1['paid_date'];
-                                                    $status = $row1['status'];                          
-                                                                                                        
-                                                    if($status=="Half Paid"){
-                                                        $paymentcompleted = false;
-                                                    }
-                                                    else if($status == "Full Paid"){
-                                                        $paymentcompleted = true;
-                                                    }
+                                                    $status = "Paid"                          ;                                                                                                                             
                                                 }
                                                 else{
                                                     // no payment details
                                                     $paymentid = "-";
                                                     $paid = false;
                                                     $due_amount = $total;
-                                                    $paid_amount = "-";
-                                                    $remaining_amount = "-";
+                                                    $paid_amount = "-";                                                    
                                                     $paid_date = "-";                                                    
                                                     $status = "Unpaid";
                                                 }                                                                                                                                              
-                                                    echo '<tr>
-                                                    <td>' . $orderid . '</td>       
-                                                    <td>' . $row['payment_type'] . '</td>                                                                                                                                                                                                                                             
+                                                    echo '<tr id="paymentfororder'.$orderid.'">
+                                                    <td>' . $orderid . '</td>                                                                                                                                                                                                                                                                                                      
                                                     <td>' . $total . '</td>
-                                                    <td>' . $paid_amount . '</td>         
-                                                    <td>' . $remaining_amount . '</td>                                                          
+                                                    <td>' . $paid_amount . '</td>                                                                                                         
                                                     <td>' . $paid_date . '</td>            
-                                                    <td>'.$status.'</td>                                                                                                                                                                            
-                                                    <td><button class="btn btn-danger" data-target="#moredetails' . $orderid . '" data-toggle="modal">Update</button></td>
+                                                    <td>'.$status.'</td>                                                   
+                                                    <td>';
+                                                    if($status == "Unpaid"){
+                                                        echo'<button class="btn btn-danger" data-target="#moredetails' . $orderid . '" data-toggle="modal">Update</button>';
+                                                    }    
+                                                    else{
+                                                        echo'Completed';
+                                                    }                                                
+                                                    echo'</td>
                                                     </tr>';
                                                                                                 
                                             }
@@ -145,20 +137,21 @@ include("database/connect.php");
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>Order ID</th>   
-                                                <th>Payment Type</th>                                                                                                                                     
+                                                <th>Order ID</th>                                                                                                                                                                                     
                                                 <th>Due Total (Rs)</th>
-                                                <th>Paid Amount (Rs)</th>
-                                                <th>Remaining Amount (Rs)</th>
+                                                <th>Paid Amount (Rs)</th>                                            
                                                 <th>Payment Date</th>
                                                 <th>Status</th>
-                                                <th>Details</th>
+                                                <th>Update</th>
                                             </tr>
                                         </tfoot>
                                     </table>
                                     <?php
                                     while($row = mysqli_fetch_assoc($forModal)){
                                         $order_id = $row['id'];
+                                        $getPaymentDetail = "Select status from payment where order_id = '$order_id'";
+                                                $getPaymentDetailResult  = mysqli_query($conn, $getPaymentDetail);
+                                                if(mysqli_num_rows($getPaymentDetailResult) == 0){
                                         $getTotalPrice = "Select sum(total_price) as total from order_item where order_id = '$order_id'";
                                                 $getTotalPriceExecute = mysqli_query($conn, $getTotalPrice);
                                                 $getTotalOrdered = mysqli_fetch_assoc($getTotalPriceExecute);
@@ -189,7 +182,7 @@ include("database/connect.php");
                                                 <label class="col-lg-4 col-form-label" for="val-payamount">Paid Amount (Rs)<span class="text-danger">*</span>
                                                 </label>
                                                 <div class="col-lg-6">
-                                                    <input type="number" min="1" max="'.$total.'" oninput="checkAmount(' . $order_id . ','.$total.')" class="form-control" required id="val-payamount' . $order_id . '" name="val-payamount" placeholder="Enter paid amount..">
+                                                    <input type="number" min="1" max="'.$total.'" class="form-control amountPaid" required id="val-payamount' . $order_id . '" name="val-payamount" placeholder="Enter paid amount..">
                                                 </div>
                                             </div>   
                                             <div class="form-group row">
@@ -202,7 +195,7 @@ include("database/connect.php");
                                             <div class="form-group row form-material" id="holdCalendar'.$order_id.'">
                                             <div class="col-md-12">
                                             <label class="m-t-40">Payment Date&Time <span class="text-danger">*</span></label>
-                                            <input type="text" id="date-format" class="form-control" placeholder="Select payment date and time">
+                                            <input type="text" id="date-format'.$order_id.'" class="form-control CalendarForPayment" placeholder="Select payment date and time">
                                         </div>  
                                         </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
                                             <div id="hold-payment-result' . $order_id . '" class="alert hide-element" role="alert">                                            
@@ -219,6 +212,7 @@ include("database/connect.php");
                                         </div>
                                       </div>';
                                     }
+                                }
                                     ?>
                                 </div>
                             </div>
@@ -264,10 +258,12 @@ include("database/connect.php");
     <script src="./plugins/moment/moment.js"></script>
     <script src="./plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
     <script>
- $('#date-format').bootstrapMaterialDatePicker({
-        format: 'dddd DD MMMM YYYY - HH:mm A'        
-    });
-
+        $(".CalendarForPayment").each(function(){
+            let id = $(this).attr("id");
+            $("#"+id).bootstrapMaterialDatePicker({
+                format: 'dddd DD MMMM YYYY - HH:mm A'
+            });
+        });
     </script>
 </body>
 

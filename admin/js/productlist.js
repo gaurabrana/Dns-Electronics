@@ -36,6 +36,8 @@
         let pPrice = $("#val-price" + pid).val();
         let pType = $("#val-type" + pid).val();
         let pDiscountprice = $("#val-discountprice" + pid).val();
+        let pWholesalediscountprice = $("#val-wholesalediscountprice" + pid).val();
+        let pMinimumunit = $("#val-minimumunit" + pid).val();
         let pDescription = $("#val-description" + pid).val();
         let pBrand = $("#val-brand" + pid).val();
         let pBrandName;
@@ -96,6 +98,25 @@
         } else {
             pDiscountprice = 0;
         }
+        if (pWholesalediscountprice.length = 0) {
+            no_of_errors++;
+            showInfo("Invalid product wholesale discount price.<br>", "alert-danger");
+        } else {
+            if (pWholesalediscountprice < 0) {
+                no_of_errors++;
+                showInfo("Invalid product wholesale discount price.<br>", "alert-danger");
+            }
+        }
+        if (pMinimumunit.length = 0) {
+            no_of_errors++;
+            showInfo("Invalid product minumum order unit.<br>", "alert-danger");
+        } else {
+            if (pMinimumunit < 1) {
+                no_of_errors++;
+                showInfo("Invalid product minumum order unit.<br>", "alert-danger");
+            }
+        }
+
         if (pDescription.length == 0) {
             no_of_errors++;
             showInfo("Empty product description.<br>", "alert-danger");
@@ -115,11 +136,6 @@
         if (pStock.length == 0) {
             no_of_errors++;
             showInfo("Empty product stock quantity.<br>", "alert-danger");
-        } else {
-            if (pStock <= 0) {
-                no_of_errors++;
-                showInfo("Invalid product stock quantity.<br>", "alert-danger");
-            }
         }
         if (pMainImage.length == 0) {
             no_of_errors++;
@@ -129,7 +145,7 @@
         if (no_of_errors == 0) {
             let imageKey = $("#productimagekey" + pid).val();
             //prepare to send product details
-            let pdata = { "updateProduct": "ready", code: pid, name: pName, price: pPrice, description: pDescription, discount: pDiscountprice, stock: pStock, mainImage: pMainImage, subImage: imageSrc, brand: pBrandName, category: pCategoryName, imagekey: imageKey };
+            let pdata = { "updateProduct": "ready", code: pid, name: pName, price: pPrice, description: pDescription, discount: pDiscountprice, wholesale: pWholesalediscountprice, minimumunit: pMinimumunit, stock: pStock, mainImage: pMainImage, subImage: imageSrc, brand: pBrandName, category: pCategoryName, imagekey: imageKey };
             $.ajax({
                 url: "database/updateproduct.php",
                 method: "POST",
@@ -142,12 +158,11 @@
                         //add successful
                         showInfo("Product updated successfully", "alert-success");
                         let imageShow = '<img class="image-in-table" src="' + $("#mainImage" + pid).attr("src") + '" alt="#"></img>';
-                        console.log(imageShow);
                         let row = $("#rowforproduct" + pid).get(0);
                         let button = '<a data-toggle="modal" data-target="#modalforproduct' + pid + '" title="Update Product"><i class="ti-pencil-alt2"></i></a>&nbsp;&nbsp;&nbsp;' +
                             '<a data-toggle = "modal" data-target = "#modalforproductdelete' + pid + '" title = "Delete Product"><i class = "ti-trash"> </i></a>';
                         var table = $("#listproducts").DataTable();
-                        let data = [imageShow, pName, pPrice, pDiscountprice, (pDescription.slice(0, 100) + "..."), pid, pBrandName, pStock, pType, pCategoryName, button];
+                        let data = [imageShow, pName, pPrice, pDiscountprice, pWholesalediscountprice, pMinimumunit, (pDescription.slice(0, 100) + "..."), pid, pBrandName, pStock, pType, pCategoryName, button];
                         table.row(row).data(data).draw();
 
                     } else if (result.statusCode == 201) {

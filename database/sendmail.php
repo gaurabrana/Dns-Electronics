@@ -9,6 +9,7 @@ require_once __DIR__ . '\PHPMailer\vendor\phpmailer\phpmailer\src\SMTP.php';
 
 // passing true in constructor enables exceptions in PHPMailer
 $mail = new PHPMailer(true);
+$emailSent = false;
 
 try {
     // Server settings
@@ -36,8 +37,7 @@ try {
     if($mail->send()){
         $emailSent = true;
     }    
-} catch (Exception $e) {
-    $emailSent = false;
+} catch (Exception $e) {    
     if(!isset($isUpdateProfile)){
         $output['statusCode'] = 202;        
     }     

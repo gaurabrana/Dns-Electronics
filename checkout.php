@@ -1,5 +1,8 @@
 <?php
 include('database/connect.php');
+if(!isset($_SESSION['id'])){
+header("Location: index.php");
+}
 $active = "checkout";
 ?>
 <!DOCTYPE html>
@@ -97,10 +100,9 @@ $active = "checkout";
 							}
 							else{
 								$userid = "notloggedin";
-							}
-							
+							}							
 							$hasDefaultAddresses = "Select * from billing_info where user_id = '$userid' and active = 'Yes'";
-							$ExecutehasDefaultAddresses = mysqli_query($conn, $hasDefaultAddresses);
+							$ExecutehasDefaultAddresses = mysqli_query($conn, $hasDefaultAddresses);							
 							if(mysqli_num_rows($ExecutehasDefaultAddresses) > 0){
 								$getAddressDetails = mysqli_fetch_assoc($ExecutehasDefaultAddresses);
 								$hasAddresses = true;
@@ -152,13 +154,13 @@ $active = "checkout";
 								echo'<p hidden id="newaddressbook">true</p>';
 								if($userid != "notloggedin"){
 									echo '<p>You have not set default billing and shipping details. </br></br><label>Set these detail default for all orders ??</label>
-									<input type="checkbox" name="setdefault"> </p>';
+									<input type="checkbox" name="setdefault" id="setdefault"> </p>';
 								}
 								else{
 									echo"<p>Add billing and shipping details.</p>";
 								}								
 								echo'	<!-- Form -->												
-								<form class="form" name="defaultaddress" method="post">
+								<form class="form" id="newBook" name="defaultaddress" method="post">
 									<div class="row">													
 										<div class="col-lg-6 col-md-6 col-12">
 											<div class="form-group">
@@ -168,7 +170,7 @@ $active = "checkout";
 										</div>
 										<div class="col-lg-6 col-md-6 col-12">
 											<div class="form-group">
-												<label>Last Name<span>*</span></label>
+												<label>Last Name<span>*</span></label>												
 												<input type="text" id="billinglname" name="lname" placeholder="" required="required">
 											</div>
 										</div>
@@ -214,7 +216,7 @@ $active = "checkout";
 										<div class="col-lg-6 col-md-6 col-12">
 											<div class="form-group">
 												<label>Postal Code<span>*</span></label>
-												<input type="text" id="billingpostalcode" name="post" placeholder="" required="required">
+												<input type="number" id="billingpostalcode" name="post" placeholder="" required="required">
 											</div>
 										</div>									
 										<div class="col-12">
@@ -240,7 +242,7 @@ $active = "checkout";
 										<div class="col-lg-6 col-md-6 col-12">			
 										<div class="form-group">							
 										<label>Email Address<span>*</span></label>
-												<input type="text"id="shippingemail" name="shippingemail" placeholder="" required="required">			
+												<input type="email"id="shippingemail" name="shippingemail" placeholder="" required="required">			
 										</div>							
 										</div>															
 										<div class="col-lg-6 col-md-6 col-12">
@@ -279,7 +281,7 @@ $active = "checkout";
 										<div class="col-lg-6 col-md-6 col-12">
 											<div class="form-group">
 												<label>Postal Code<span>*</span></label>
-												<input type="text" id="shippingpostalcode" name="shippingpostalcode" placeholder="" required="required">
+												<input type="number" id="shippingpostalcode" name="shippingpostalcode" placeholder="" required="required">
 											</div>
 										</div>																	
 									</div>		
@@ -300,8 +302,8 @@ $active = "checkout";
 									<?php
 									$no_item = false;
 						if(isset($_SESSION['cartid'])){
-							$cart_id = 	$_SESSION['cartid'];							
-							$sql = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
+							$cart_id = 	$_SESSION['cartid'];														
+							$sql = "Select p.id,p.image_folder_key, c.id as productcartid, p.quantity_stock, p.code, p.name,p.sold_by, p.image_name, p.price, p.discount, p.wholesale_discount, p.description, c.quantity from product p, product_in_cart c where c.cart_id = '$cart_id' and p.code = c.product_code";
 						$result = mysqli_query($conn, $sql);
 						$total = 0;
 						$totalDiscount = 0;
@@ -314,12 +316,20 @@ $active = "checkout";
 								$subtotal = 0;								
 								$totalDiscount = $totalDiscount + ($row['discount']*$row['quantity']);
 								$totalWithoutDiscount = $totalWithoutDiscount + ($row['quantity'] * $row['price']);
-								if($row['discount']!=0){
-									$updatedPrice = $row['price'] - $row['discount'];								
+								if($_SESSION['isRetail']){
+									$discount = $row['discount'];
 								}
 								else{
-									$updatedPrice = $row['price'];								
-								}							
+									$discount = $row['wholesale_discount'];
+								}
+								if($discount > 0){										
+									$updatedPrice = $row['price'] - $discount;
+									$percentage = round(($discount * 100)/$row['price']);
+								}
+								else{
+									$updatedPrice = $row['price'];	
+									$percentage = 0;							
+								}						
 								$subtotal = $row['quantity'] * $updatedPrice;							
 								$total = $total + $subtotal;						
 								$name  = substr($row['name'],0,20)."....";		
@@ -361,9 +371,10 @@ $active = "checkout";
 								<div class="content">									
 									<div class="checkbox">
 									<p style="color: #ed1c24;" id="paymenterror"></p>
-									<li style="list-style-type: none;"><input name="payment" id="2" type="radio" value="COD"> Cash On Delivery</li>
-										<li style="list-style-type: none;"><input name="payment" id="1" type="radio" value="Esewa"> Esewa</li>																				
-										<li style="list-style-type: none;"><input name="payment" id="3" type="radio" value="Paypal"> PayPal</li>
+									<li style="list-style-type: none;"><input name="payment" id="1" type="radio" value="COD"> Cash On Delivery</li>
+										<li style="list-style-type: none;"><input name="payment" id="2" type="radio" value="Esewa"> Esewa</li>	
+										<li style="list-style-type: none;"><input name="payment" id="3" type="radio" value="Khalti"> Khalti</li>																			
+										<li style="list-style-type: none;"><input name="payment" id="4" type="radio" value="Paypal"> PayPal</li>										
 									</div>
 								</div>
 							</div>

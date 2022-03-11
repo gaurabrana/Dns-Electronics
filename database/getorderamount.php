@@ -1,14 +1,17 @@
 <?php
-include('connect.php');
-
-    $userid = $_SESSION['id'];
-    $sql = "Select sum(total_price) as total from order_item where order_id = (Select id from orders where user_id ='$userid' and status = 'pending')";
+    if(!isset($_POST['orderid'])){
+        echo json_encode(array("statusCode" => 201));
+    }
+    else{
+        include('connect.php');
+        $orderid = $_POST['orderid'];        
+    $sql = "Select sum(total_price) as total from order_item where order_id = '$orderid'";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);    
     $total = $row['total'];
 
 
-    $url = 'https://api.exchangerate-api.com/v4/latest/USD'; // path to your JSON file
+    $url = 'https://open.er-api.com/v6/latest/USD'; // path to your JSON file
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
@@ -26,6 +29,7 @@ include('connect.php');
     $value = ($toRate / $fromRate) * $total;
     $convertedamount =  number_format($value,2,".","");
     
-    echo $convertedamount;
+    echo json_encode(array("statusCode" => 200, "totalamount" => $convertedamount));
+    }
 
 ?>

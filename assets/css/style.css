@@ -5195,3 +5195,36 @@
     background-color: #ed1c24;
     color: #fff;
 }
+
+.impfield {
+    color: #ed1c24;
+}
+
+.citizenshipImage {
+    height: auto;
+    max-width: 100%;
+}
+
+.orderLog {
+    padding: 20px;
+}
+
+.orderLog:hover {
+    border: none;
+    padding: 4px;
+    box-shadow: 0 2px 8px 0 rgba(226, 138, 138, 0.2), 0 6px 20px 0 rgba(231, 126, 126, 0.19);
+}
+
+.silver-btn {
+    border: 1px solid;
+    border-color: #ccc #ccc #bbb;
+    border-radius: 3px;
+    background: #e6e6e6;
+    color: rgba(0, 0, 0, 0.8);
+    line-height: 1;
+    width: 100%;
+}
+
+.paymentpartners img:hover {
+    transform: scale(1.1, 1.1);
+}
