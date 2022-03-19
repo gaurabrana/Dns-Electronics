@@ -71,7 +71,7 @@ $active = "home";
 		while($row = mysqli_fetch_assoc($result)){
 			$image = "img//homepage_image//".$row['image_name']."";
 		}
-		echo'style:"background-image: url('.$image.')"'; ?>  -->
+		//echo'style:"background-image: url('.$image.')"'; ?>
 		<div class="single-slider">
 			<div class="container">
 				<div class="row no-gutters">
@@ -544,8 +544,27 @@ echo'<!-- Modal -->
 			</div>
 		</div>
 	</section>
-	<!-- /End Cowndown Area -->
+	<!-- /End Cowndown Area -->	
 	
+	<!--- Member Welcome Dialog Start-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Membership Applied</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>	
+	<!--- Member Welcome Dialog End-->
 	
 	<!-- Start Shop Services Area -->
 	<section class="shop-services section home">
@@ -657,8 +676,8 @@ echo'<!-- Modal -->
 	<!-- Active JS -->
 	<script src="assets/js/active.js"></script>
 	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-	<script>
-    AOS.init();
+	<script>	
+    AOS.init();	
   </script>
 </body>
 </html>
