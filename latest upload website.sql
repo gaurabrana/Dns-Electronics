@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2021 at 03:38 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.11
+-- Generation Time: Feb 09, 2025 at 12:51 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `admin` (
   `email` varchar(30) NOT NULL,
   `password` varchar(50) NOT NULL,
   `active` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin`
@@ -60,7 +60,7 @@ CREATE TABLE `billing_info` (
   `shipping_info` varchar(10) NOT NULL,
   `added_date` varchar(50) NOT NULL,
   `active` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `billing_info`
@@ -80,7 +80,7 @@ INSERT INTO `billing_info` (`info_id`, `user_id`, `firstname`, `lastname`, `emai
 CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cart`
@@ -91,7 +91,8 @@ INSERT INTO `cart` (`cart_id`, `customer_id`) VALUES
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 5);
+(5, 5),
+(6, 6);
 
 -- --------------------------------------------------------
 
@@ -102,7 +103,7 @@ INSERT INTO `cart` (`cart_id`, `customer_id`) VALUES
 CREATE TABLE `compare` (
   `customer_id` int(11) NOT NULL,
   `product_code` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,7 @@ CREATE TABLE `contactmessage` (
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `message` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `contactmessage`
@@ -137,7 +138,7 @@ CREATE TABLE `countries` (
   `countries_name` varchar(64) NOT NULL DEFAULT '',
   `countries_iso_code` varchar(2) NOT NULL,
   `countries_isd_code` varchar(7) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `countries`
@@ -399,6 +400,7 @@ INSERT INTO `countries` (`countries_id`, `countries_name`, `countries_iso_code`,
 
 CREATE TABLE `customer` (
   `id` int(10) NOT NULL,
+  `type` varchar(50) NOT NULL,
   `uniquekey` varchar(50) NOT NULL,
   `username` varchar(30) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -413,18 +415,19 @@ CREATE TABLE `customer` (
   `active` varchar(5) NOT NULL,
   `access` varchar(10) NOT NULL,
   `verificationkey` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`, `uniquekey`, `username`, `name`, `password`, `email`, `phone_no`, `age`, `gender`, `joined_date`, `profile_picture`, `approved`, `active`, `access`, `verificationkey`) VALUES
-(1, '1061623852871', 'testing123', 'testing', 'd0aabe9a362cb2712ee90e04810902f3', 'testing@testing.com', '+9779868304522', 25, 'Male', '2021-06-16', 'medium6941623852871.jpg', 'YES', 'NO', 'DISABLED', '5aca7571734e1df16738dad7ac1f73f9'),
-(2, '2401628224127', 'gaurab9775', 'Gaurab Rana', 'O5CjR8laCdBnmavfC2E8wSVPzj5B2sYRWrkysLs9adI=', 'ericwinty90@gmail.com', '+9779868309222', 23, 'Male', '2021-06-19', 'medium4931635170665.jpg', 'YES', 'YES', 'ENABLED', '2541a52cd5831641287d155fa891553c'),
-(3, '2401672224127', 'gaurab8784', 'Gaurab Rana', 'd7f83334408c96a53bf0fe3a6999bb39', 'hello@hello.com', '+9779868304522', 16, 'Male', '2021-08-06', 'medium6731628224127.jpg', 'NO', 'NO', 'DISABLED', '60b868bae203243d77ecd62e66ed4544'),
-(4, '1971628226256', 'gaurab1842', 'Gaurab Rana', 'd0aabe9a362cb2712ee90e04810902f3', 'dstain17@gmail.com', '+9779868304522', 22, 'Male', '2021-10-14', 'medium7361628226256.jpg', 'YES', 'NO', 'ENABLED', 'd30feb4060eb4f3b59a0447bf2529131'),
-(5, '2631632499394', 'd3097', 'D stain', 'd0aabe9a362cb2712ee90e04810902f3', 'dstain7@gmail.com', '+9779868604522', 22, 'Female', '2021-09-24', 'notset', 'NO', 'NO', 'DISABLED', 'fc977f7e6c852cfda6523fdaeeafded0');
+INSERT INTO `customer` (`id`, `type`, `uniquekey`, `username`, `name`, `password`, `email`, `phone_no`, `age`, `gender`, `joined_date`, `profile_picture`, `approved`, `active`, `access`, `verificationkey`) VALUES
+(1, '', '1061623852871', 'testing123', 'testing', 'd0aabe9a362cb2712ee90e04810902f3', 'testing@testing.com', '+9779868304522', 25, 'Male', '2021-06-16', 'medium6941623852871.jpg', 'YES', 'NO', 'DISABLED', '5aca7571734e1df16738dad7ac1f73f9'),
+(2, '', '2401628224127', 'gaurab9775', 'Gaurab Rana', 'O5CjR8laCdBnmavfC2E8wSVPzj5B2sYRWrkysLs9adI=', 'tester@gmail.com', '+9779868309222', 23, 'Male', '2021-06-19', 'medium4931635170665.jpg', 'YES', '2023-', 'ENABLED', '2541a52cd5831641287d155fa891553c'),
+(3, '', '2401672224127', 'gaurab8784', 'Gaurab Rana', 'd7f83334408c96a53bf0fe3a6999bb39', 'hello@hello.com', '+9779868304522', 16, 'Male', '2021-08-06', 'medium6731628224127.jpg', 'NO', 'NO', 'DISABLED', '60b868bae203243d77ecd62e66ed4544'),
+(4, '', '1971628226256', 'gaurab1842', 'Gaurab Rana', 'd0aabe9a362cb2712ee90e04810902f3', 'dstain17@gmail.com', '+9779868304522', 22, 'Male', '2021-10-14', 'medium7361628226256.jpg', 'YES', 'NO', 'ENABLED', 'd30feb4060eb4f3b59a0447bf2529131'),
+(5, '', '2631632499394', 'd3097', 'D stain', 'd0aabe9a362cb2712ee90e04810902f3', 'dstain7@gmail.com', '+9779868604522', 22, 'Female', '2021-09-24', 'notset', 'NO', 'NO', 'DISABLED', 'fc977f7e6c852cfda6523fdaeeafded0'),
+(6, 'retail', '4881739100072', 'gaurab3359', 'gaurab rana', 'OcKnHMMPCYVhy6reATVrxydOyjYVhsBEVOJt6uhpY9w=', 'ericwinty90@gmail.com', '+9779868304522', 26, 'Male', '2025-02-09', 'notset', 'YES', '2025-', 'ENABLED', 'ed5dc672f721c7d19ced041987e30aff');
 
 -- --------------------------------------------------------
 
@@ -440,7 +443,7 @@ CREATE TABLE `email_update` (
   `code` int(6) NOT NULL,
   `validity_date` varchar(50) NOT NULL,
   `status` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `email_update`
@@ -460,7 +463,7 @@ CREATE TABLE `homepage_image` (
   `product_id` varchar(50) NOT NULL,
   `image_name` varchar(100) NOT NULL,
   `placing` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `homepage_image`
@@ -468,6 +471,25 @@ CREATE TABLE `homepage_image` (
 
 INSERT INTO `homepage_image` (`id`, `product_id`, `image_name`, `placing`) VALUES
 ('1', '1', 'havells.jpg', 'heading');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `membership_packages`
+--
+
+CREATE TABLE `membership_packages` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `price` int(11) NOT NULL,
+  `discount` varchar(50) NOT NULL,
+  `delivery_charge` int(11) NOT NULL,
+  `coupons` varchar(50) NOT NULL,
+  `giveaway` varchar(50) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `duration` varchar(50) NOT NULL,
+  `featured_item` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -483,7 +505,7 @@ CREATE TABLE `orders` (
   `status` varchar(50) NOT NULL,
   `billing_address_id` varchar(50) NOT NULL,
   `shipping_address_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
@@ -512,7 +534,7 @@ CREATE TABLE `order_billing_info` (
   `address_one` varchar(100) NOT NULL,
   `address_two` varchar(100) NOT NULL,
   `postal_code` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_billing_info`
@@ -538,7 +560,7 @@ CREATE TABLE `order_item` (
   `price` double NOT NULL,
   `quantity` int(11) NOT NULL,
   `total_price` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_item`
@@ -578,7 +600,7 @@ CREATE TABLE `order_shipping_info` (
   `address_one` varchar(100) NOT NULL,
   `address_two` varchar(100) NOT NULL,
   `postal_code` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_shipping_info`
@@ -602,7 +624,7 @@ CREATE TABLE `order_tracking` (
   `status` varchar(50) NOT NULL,
   `message` text NOT NULL,
   `eta` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -620,7 +642,7 @@ CREATE TABLE `payment` (
   `remaining_amount` double NOT NULL,
   `paid_date` varchar(50) DEFAULT NULL,
   `status` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `payment`
@@ -642,6 +664,8 @@ CREATE TABLE `product` (
   `name` varchar(100) NOT NULL,
   `price` float NOT NULL,
   `discount` varchar(11) NOT NULL,
+  `wholesale_discount` varchar(11) NOT NULL,
+  `minimum_unit` int(11) NOT NULL,
   `description` text NOT NULL,
   `code` varchar(10) NOT NULL,
   `sold_by` varchar(50) NOT NULL,
@@ -653,69 +677,69 @@ CREATE TABLE `product` (
   `image_name` varchar(255) NOT NULL,
   `image_folder_key` varchar(100) NOT NULL,
   `added_date` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `name`, `price`, `discount`, `description`, `code`, `sold_by`, `brand`, `shop_id`, `quantity_stock`, `type`, `category`, `image_name`, `image_folder_key`, `added_date`) VALUES
-(1, 'EL-319 Double face Quartz Heater- White\r\n\r\n', 3950, '400', 'Brand:Electron\r\nModel: EL-319\r\nDouble face electric quartz heater.\r\n1600 watts\r\n4 power setting 400/800/1200/1600\r\nCan be shared by 2 person at the same time\r\nElegent design.\r\nCompact.\r\nEasy to use.\r\n1 Year Local seller warranty', 'ELE6646', 'DNS ELECTRONICS', 'Electron', 1, '0', 'Electronics', 'Heater', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '0000-00-00'),
-(2, 'OFR – 11Fin 2900-Watt PTC Fan Heater', 17100, '2000', 'Cord storage and rear safety cover\r\nOver heat protection and tilt over switch for safety\r\nThermostatic heat control, quick heating with PTC fan and castor wheels for easy mobility\r\n3 power settings 1000/1500/2500 watts and an additional 400 watts ( Heater + Fan)\r\nThermostatic heat control. Power input: 230 V. Frequency (hertz) : AC 50 Hz\r\nPTC heater with fan\r\nCountry of Origin: India', 'HAV2901', 'DNS ELECTRONICS', 'Havells', 1, '10', 'Electronics', 'Heater', 'mainimage.jpg', '62014d177ca8d083b6ffa20925ac49ca', '0000-00-00'),
-(3, 'RD-23DC4SS 195 Ltrs Double Door Refrigerator', 33000, '4500', 'Brand: Hisense\r\nModel No: RD-23DC4SS\r\nColor: Silver\r\nCapacity:195 LTRS\r\nDoor Type: Double Door\r\nHigh efficiency compressor.\r\nHandle & lock.\r\nFood basket.\r\nLow power consumption.\r\nEnvironmental friendly product.\r\nExternal Condenser\r\nAnti bacterial gasket\r\nEgg cum and Ice Tray\r\nWorks without Stabilizer\r\nShelves Toughened Glass Shelves\r\nExteriors High Gloss Designer Panel, Bar Handle\r\nTransparent Freezer Door, Transparent Shelf Utility\r\nDoor Lock: Yes\r\nHandle Type: Ariana.\r\n2 Years Full Warranty\r\n10 Years Warranty on Compressor', 'SWE6988', 'DNS ELECTRONICS', 'Hisense', 1, '30', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '0000-00-00'),
-(4, 'TH-40F403N 40″ Full HD LED TV', 37500, '5400', 'Brand: Hisense.\nModel No: HX43M22160F.\nType: LED.\nScreen Size: 43 inch.\nScreen Size: 108 cm.\nScreen Resolution: 1920 x 1080 (Full HD).\nDisplay Feature: Full HD (FHD).\nModel Year: 2018.\nWall Mount: Yes.\n•Floor Stand: Yes.\n•Aspect Ratio: 16:9.\n•Total Sound Output: 20W.\n•Dolby DigitaL: No.\n•Connectivity: \n•HDMI 3.\n•USB 2\n•1 Year Warranty', 'HUA5072', 'DNS ELECTRONICS', 'Hisense', 1, '50', 'Electronics', 'TV', 'mainimage.jpg', '081f7bde831ab2e9c23609148214d691', '2021-01-22'),
-(5, 'Samsung WW80J4213GS Fully Automatic Washing Machine', 69990, '1000', 'Brand Name: Samsung\nModel No: WW80J4213GS\nECO bubble technology\n1200 RPM\nCeramic heater\nDiamond drum\nDigital inverter technology\nIntensive stain removal\nWorks smart\nKeep your washer fresh with eco drum clean\nQuick wash program\nGentle fabric care\nSize: 8 Kg\nDigital display\nStainless Steel Drum.\nPowder coated steel metal body\nFuzzy logic\nFault check display\nWater temperature selection\n12 months full warranty\n10 years warranty on motor', 'TAN8996', 'DNS ELECTRONICS', 'Hisense', 1, '400', 'Electronics', 'Fridge', 'mainimage.jpg', '3ee9f3b434869c3b274f990255cc0fcb', '2021-01-13'),
-(6, 'HAVELLS MOMENTA NV 900W MIXER GRINDER', 6976, '400', 'Brand: Havells\nModel: MOMENTA NV 900W\nColour: Blue\n3 SS Jars\nHavells Mixer Grinder has 900 Watts copper winded motors which lead to longer life of motor & superior performance.', 'TOW5689', 'DNS ELECTRONICS', 'Havells', 1, '45', 'Electronics', 'Heater', 'mainimage.jpg', 'ebe8a2202e30dbd0789f60c15e2cda40', '2021-01-17'),
-(7, 'Mars Inc', 20063, '145265', 'Animal House Pet Supplies', 'MAR4405', 'DNS ELECTRONICS', 'gozzby', 0, '142', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:51:51 PM'),
-(8, 'Wreath Farm', 128359, '132224', 'Scanner Master Police Scanners', 'WRE5546', 'DNS ELECTRONICS', 'panasonic', 0, '115', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(9, 'All Pro Spas', 96615, '60284', 'Kayvan Hakim', 'ALL709', 'DNS ELECTRONICS', 'hatello', 0, '123', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(10, 'Web Marketing Group', 32097, '98769', 'Killean Audiology & Hearing', 'WEB3304', 'DNS ELECTRONICS', 'Canon', 0, '112', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(11, 'Syracuse Casket Direct', 106092, '31813', 'Tyco Electronics', 'SYR2622', 'DNS ELECTRONICS', 'Cameron', 0, '139', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(12, 'Rast Marketing Research', 14762, '117277', 'STERLING MARKETING INTERNATIONAL', 'RAS3417', 'DNS ELECTRONICS', 'ControlCambridge', 0, '72', 'Electronics', 'Fan', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(13, 'Stewart Appliances', 50118, '65213', 'Jacobsson', 'STE8425', 'DNS ELECTRONICS', 'ControlCambridge', 0, '29', 'Electronics', 'AC', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(14, 'Meyer Appliance Service', 101865, '91762', 'Animal House Pet Supplies', 'MEY9666', 'DNS ELECTRONICS', 'Cameron', 0, '47', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(15, 'Syracuse Casket Direct', 42682, '107288', 'THE NEW MARKETEER', 'SYR5115', 'DNS ELECTRONICS', 'Call', 0, '88', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(16, 'Aerial Marketing Group', 14716, '55959', 'Golden Country Inc.', 'AER7549', 'DNS ELECTRONICS', 'hatello', 0, '141', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(17, 'Teleshuttle Corp', 124584, '90724', 'Kayvan Hakim', 'TEL9099', 'DNS ELECTRONICS', 'Cameron', 0, '51', 'Electronics', 'Fan', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(18, 'WOODEN DEIDRA', 73940, '74413', 'Logistics Market Place', 'WOO5615', 'DNS ELECTRONICS', 'hatello', 0, '32', 'Electronics', 'AC', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(19, 'Impact Network Solutions', 132672, '12242', 'Scanner Master Police Scanners', 'IMP683', 'DNS ELECTRONICS', 'Havells', 0, '68', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
-(20, 'Meyer Appliance Service', 48382, '48550', 'Cinema Marketing Group', 'MEY7399', 'DNS ELECTRONICS', 'SoundworksCandace', 0, '33', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(21, 'Beth Moore', 19264, '141246', 'Lorelei Enterprises', 'BET7396', 'DNS ELECTRONICS', 'ControlCambridge', 0, '36', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(22, 'Impact Network Solutions', 122013, '55440', 'Lorelei Enterprises', 'IMP4871', 'DNS ELECTRONICS', 'Huawei', 0, '107', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(23, 'Maui Arthoughts Company', 135289, '137970', 'Lorelei Enterprises', 'MAU1423', 'DNS ELECTRONICS', 'Capcom', 0, '86', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(24, 'Wholesale Appliance Ctr', 7931, '120991', 'Killean Audiology & Hearing', 'WHO2083', 'DNS ELECTRONICS', 'LG', 0, '133', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(25, 'Web Marketing Group', 95626, '31151', 'Scanner Master Police Scanners', 'WEB6695', 'DNS ELECTRONICS', 'SoundworksCandace', 0, '37', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(26, 'Impact Imaging', 118767, '36379', 'Latico Environmental Services', 'IMP9387', 'DNS ELECTRONICS', 'Capcom', 0, '103', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(27, 'Wholesale Appliance Ctr', 9681, '88550', 'Misurell Marketing Consulting', 'WHO7720', 'DNS ELECTRONICS', 'Capcom', 0, '38', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(28, 'Stewart Appliances', 64137, '109417', 'Mon Bien Aime Inc', 'STE6621', 'DNS ELECTRONICS', 'gozzby', 0, '146', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(29, 'Syracuse Casket Direct', 109089, '95188', 'Mobile RDO Communications Svc', 'SYR4599', 'DNS ELECTRONICS', 'Cameron', 0, '43', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(30, 'All Pro Spas', 32171, '148038', 'Latico Environmental Services', 'ALL4817', 'DNS ELECTRONICS', 'notzi', 0, '72', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(31, 'Web Marketing Group', 62064, '97932', 'Scanner Master Police Scanners', 'WEB6154', 'DNS ELECTRONICS', 'Havells', 0, '33', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(32, 'Teleshuttle Corp', 25670, '142775', 'Jacobsson', 'TEL7168', 'DNS ELECTRONICS', 'Samsung', 0, '38', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(33, 'Wreath Farm', 40713, '27490', 'Logistics Market Place', 'WRE6538', 'DNS ELECTRONICS', 'Capcom', 0, '101', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(34, 'WOODEN DEIDRA', 26816, '31895', 'Heather Mcglynn', 'WOO4887', 'DNS ELECTRONICS', 'Huawei', 0, '70', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(35, 'Web Marketing Group', 61112, '31202', 'Lorelei Enterprises', 'WEB6560', 'DNS ELECTRONICS', 'Huawei', 0, '21', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(36, 'Beth Moore', 132505, '143536', 'Classic Awards & Engraving', 'BET3590', 'DNS ELECTRONICS', 'Cameron', 0, '69', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(37, 'Teleshuttle Corp', 122427, '118420', 'Lorelei Enterprises', 'TEL7471', 'DNS ELECTRONICS', 'hatello', 0, '59', 'Electronics', 'Headphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(38, 'Symbolic Systems', 129044, '142792', 'Cinema Marketing Group', 'SYM1797', 'DNS ELECTRONICS', 'sony', 0, '34', 'Electronics', 'AC', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(39, 'Impact Imaging', 117112, '31340', 'Scanner Master Police Scanners', 'IMP5274', 'DNS ELECTRONICS', 'Capcom', 0, '131', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(40, 'Aerial Marketing Group', 85909, '39392', 'STERLING MARKETING INTERNATIONAL', 'AER8332', 'DNS ELECTRONICS', 'Samsung', 0, '75', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(41, 'Syracuse Casket Direct', 38674, '9459', 'Cinema Marketing Group', 'SYR636', 'DNS ELECTRONICS', 'Cameron', 0, '92', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(42, 'Stewart Appliances', 55153, '24109', 'Heather Mcglynn', 'STE2663', 'DNS ELECTRONICS', 'Capcom', 0, '32', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(43, 'The Craighead Co.', 88389, '43381', 'Mon Bien Aime Inc', 'THE545', 'DNS ELECTRONICS', 'Samsung', 0, '124', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(44, 'Aerial Marketing Group', 94432, '26850', 'Mon Bien Aime Inc', 'AER197', 'DNS ELECTRONICS', 'Havells', 0, '43', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(45, 'Stewart Appliances', 148807, '122694', 'STERLING MARKETING INTERNATIONAL', 'STE4881', 'DNS ELECTRONICS', 'hatello', 0, '71', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(46, 'Teleshuttle Corp', 87565, '1752', 'Logistics Market Place', 'TEL3288', 'DNS ELECTRONICS', 'Samsung', 0, '31', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(47, 'Enlable Inc', 54249, '61474', 'Adams Memorials', 'ENL8098', 'DNS ELECTRONICS', 'sony', 0, '22', 'Electronics', 'Headphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(48, 'Meyer Appliance Service', 66159, '145158', 'Misurell Marketing Consulting', 'MEY4759', 'DNS ELECTRONICS', 'Call', 0, '63', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(49, 'Mars Inc', 37859, '12130', 'Logistics Market Place', 'MAR6548', 'DNS ELECTRONICS', 'Cameron', 0, '97', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(50, 'Maui Arthoughts Company', 70815, '127397', 'Adams Memorials', 'MAU2691', 'DNS ELECTRONICS', 'ControlCambridge', 0, '46', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(51, 'Beth Moore', 116499, '65212', 'Adams Memorials', 'BET3344', 'DNS ELECTRONICS', 'Cameron', 0, '20', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(52, 'Maui Arthoughts Company', 75236, '88829', 'Mobile RDO Communications Svc', 'MAU3198', 'DNS ELECTRONICS', 'Huawei', 0, '54', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(53, 'WOODEN DEIDRA', 1569, '97020', 'THE NEW MARKETEER', 'WOO4886', 'DNS ELECTRONICS', 'panasonic', 0, '87', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(54, 'All Pro Spas', 51373, '105949', 'Lorelei Enterprises', 'ALL8161', 'DNS ELECTRONICS', 'Cameron', 0, '147', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(55, 'Impact Network Solutions', 109886, '133078', 'Classic Awards & Engraving', 'IMP3810', 'DNS ELECTRONICS', 'gozzby', 0, '101', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
-(56, 'Syracuse Casket Direct', 23197, '31873', 'STERLING MARKETING INTERNATIONAL', 'SYR1606', 'DNS ELECTRONICS', 'LG', 0, '107', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM');
+INSERT INTO `product` (`id`, `name`, `price`, `discount`, `wholesale_discount`, `minimum_unit`, `description`, `code`, `sold_by`, `brand`, `shop_id`, `quantity_stock`, `type`, `category`, `image_name`, `image_folder_key`, `added_date`) VALUES
+(1, 'EL-319 Double face Quartz Heater- White\r\n\r\n', 3950, '400', '0', 0, 'Brand:Electron\r\nModel: EL-319\r\nDouble face electric quartz heater.\r\n1600 watts\r\n4 power setting 400/800/1200/1600\r\nCan be shared by 2 person at the same time\r\nElegent design.\r\nCompact.\r\nEasy to use.\r\n1 Year Local seller warranty', 'ELE6646', 'DNS ELECTRONICS', 'Electron', 1, '0', 'Electronics', 'Heater', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '0000-00-00'),
+(2, 'OFR – 11Fin 2900-Watt PTC Fan Heater', 17100, '2000', '0', 0, 'Cord storage and rear safety cover\r\nOver heat protection and tilt over switch for safety\r\nThermostatic heat control, quick heating with PTC fan and castor wheels for easy mobility\r\n3 power settings 1000/1500/2500 watts and an additional 400 watts ( Heater + Fan)\r\nThermostatic heat control. Power input: 230 V. Frequency (hertz) : AC 50 Hz\r\nPTC heater with fan\r\nCountry of Origin: India', 'HAV2901', 'DNS ELECTRONICS', 'Havells', 1, '10', 'Electronics', 'Heater', 'mainimage.jpg', '62014d177ca8d083b6ffa20925ac49ca', '0000-00-00'),
+(3, 'RD-23DC4SS 195 Ltrs Double Door Refrigerator', 33000, '4500', '0', 0, 'Brand: Hisense\r\nModel No: RD-23DC4SS\r\nColor: Silver\r\nCapacity:195 LTRS\r\nDoor Type: Double Door\r\nHigh efficiency compressor.\r\nHandle & lock.\r\nFood basket.\r\nLow power consumption.\r\nEnvironmental friendly product.\r\nExternal Condenser\r\nAnti bacterial gasket\r\nEgg cum and Ice Tray\r\nWorks without Stabilizer\r\nShelves Toughened Glass Shelves\r\nExteriors High Gloss Designer Panel, Bar Handle\r\nTransparent Freezer Door, Transparent Shelf Utility\r\nDoor Lock: Yes\r\nHandle Type: Ariana.\r\n2 Years Full Warranty\r\n10 Years Warranty on Compressor', 'SWE6988', 'DNS ELECTRONICS', 'Hisense', 1, '30', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '0000-00-00'),
+(4, 'TH-40F403N 40″ Full HD LED TV', 37500, '5400', '0', 0, 'Brand: Hisense.\nModel No: HX43M22160F.\nType: LED.\nScreen Size: 43 inch.\nScreen Size: 108 cm.\nScreen Resolution: 1920 x 1080 (Full HD).\nDisplay Feature: Full HD (FHD).\nModel Year: 2018.\nWall Mount: Yes.\n•Floor Stand: Yes.\n•Aspect Ratio: 16:9.\n•Total Sound Output: 20W.\n•Dolby DigitaL: No.\n•Connectivity: \n•HDMI 3.\n•USB 2\n•1 Year Warranty', 'HUA5072', 'DNS ELECTRONICS', 'Hisense', 1, '50', 'Electronics', 'TV', 'mainimage.jpg', '081f7bde831ab2e9c23609148214d691', '2021-01-22'),
+(5, 'Samsung WW80J4213GS Fully Automatic Washing Machine', 69990, '1000', '0', 0, 'Brand Name: Samsung\nModel No: WW80J4213GS\nECO bubble technology\n1200 RPM\nCeramic heater\nDiamond drum\nDigital inverter technology\nIntensive stain removal\nWorks smart\nKeep your washer fresh with eco drum clean\nQuick wash program\nGentle fabric care\nSize: 8 Kg\nDigital display\nStainless Steel Drum.\nPowder coated steel metal body\nFuzzy logic\nFault check display\nWater temperature selection\n12 months full warranty\n10 years warranty on motor', 'TAN8996', 'DNS ELECTRONICS', 'Hisense', 1, '400', 'Electronics', 'Fridge', 'mainimage.jpg', '3ee9f3b434869c3b274f990255cc0fcb', '2021-01-13'),
+(6, 'HAVELLS MOMENTA NV 900W MIXER GRINDER', 6976, '400', '0', 0, 'Brand: Havells\nModel: MOMENTA NV 900W\nColour: Blue\n3 SS Jars\nHavells Mixer Grinder has 900 Watts copper winded motors which lead to longer life of motor & superior performance.', 'TOW5689', 'DNS ELECTRONICS', 'Havells', 1, '45', 'Electronics', 'Heater', 'mainimage.jpg', 'ebe8a2202e30dbd0789f60c15e2cda40', '2021-01-17'),
+(7, 'Mars Inc', 20063, '145265', '0', 0, 'Animal House Pet Supplies', 'MAR4405', 'DNS ELECTRONICS', 'gozzby', 0, '142', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:51:51 PM'),
+(8, 'Wreath Farm', 128359, '132224', '0', 0, 'Scanner Master Police Scanners', 'WRE5546', 'DNS ELECTRONICS', 'panasonic', 0, '115', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(9, 'All Pro Spas', 96615, '60284', '0', 0, 'Kayvan Hakim', 'ALL709', 'DNS ELECTRONICS', 'hatello', 0, '123', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(10, 'Web Marketing Group', 32097, '98769', '0', 0, 'Killean Audiology & Hearing', 'WEB3304', 'DNS ELECTRONICS', 'Canon', 0, '112', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(11, 'Syracuse Casket Direct', 106092, '31813', '0', 0, 'Tyco Electronics', 'SYR2622', 'DNS ELECTRONICS', 'Cameron', 0, '139', 'Electronics', 'Headphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(12, 'Rast Marketing Research', 14762, '117277', '0', 0, 'STERLING MARKETING INTERNATIONAL', 'RAS3417', 'DNS ELECTRONICS', 'ControlCambridge', 0, '72', 'Electronics', 'Fan', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(13, 'Stewart Appliances', 50118, '65213', '0', 0, 'Jacobsson', 'STE8425', 'DNS ELECTRONICS', 'ControlCambridge', 0, '29', 'Electronics', 'AC', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(14, 'Meyer Appliance Service', 101865, '91762', '0', 0, 'Animal House Pet Supplies', 'MEY9666', 'DNS ELECTRONICS', 'Cameron', 0, '47', 'Electronics', 'Speaker', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(15, 'Syracuse Casket Direct', 42682, '107288', '0', 0, 'THE NEW MARKETEER', 'SYR5115', 'DNS ELECTRONICS', 'Call', 0, '88', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(16, 'Aerial Marketing Group', 14716, '55959', '0', 0, 'Golden Country Inc.', 'AER7549', 'DNS ELECTRONICS', 'hatello', 0, '141', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(17, 'Teleshuttle Corp', 124584, '90724', '0', 0, 'Kayvan Hakim', 'TEL9099', 'DNS ELECTRONICS', 'Cameron', 0, '51', 'Electronics', 'Fan', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(18, 'WOODEN DEIDRA', 73940, '74413', '0', 0, 'Logistics Market Place', 'WOO5615', 'DNS ELECTRONICS', 'hatello', 0, '32', 'Electronics', 'AC', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(19, 'Impact Network Solutions', 132672, '12242', '0', 0, 'Scanner Master Police Scanners', 'IMP683', 'DNS ELECTRONICS', 'Havells', 0, '68', 'Electronics', 'Smartphone', 'mainimage.jpg', '032721140f52809786361264f1ce109b', '2021-11-17 04:49:51 PM'),
+(20, 'Meyer Appliance Service', 48382, '48550', '0', 0, 'Cinema Marketing Group', 'MEY7399', 'DNS ELECTRONICS', 'SoundworksCandace', 0, '33', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(21, 'Beth Moore', 19264, '141246', '0', 0, 'Lorelei Enterprises', 'BET7396', 'DNS ELECTRONICS', 'ControlCambridge', 0, '36', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(22, 'Impact Network Solutions', 122013, '55440', '0', 0, 'Lorelei Enterprises', 'IMP4871', 'DNS ELECTRONICS', 'Huawei', 0, '107', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(23, 'Maui Arthoughts Company', 135289, '137970', '0', 0, 'Lorelei Enterprises', 'MAU1423', 'DNS ELECTRONICS', 'Capcom', 0, '86', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(24, 'Wholesale Appliance Ctr', 7931, '120991', '0', 0, 'Killean Audiology & Hearing', 'WHO2083', 'DNS ELECTRONICS', 'LG', 0, '133', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(25, 'Web Marketing Group', 95626, '31151', '0', 0, 'Scanner Master Police Scanners', 'WEB6695', 'DNS ELECTRONICS', 'SoundworksCandace', 0, '37', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(26, 'Impact Imaging', 118767, '36379', '0', 0, 'Latico Environmental Services', 'IMP9387', 'DNS ELECTRONICS', 'Capcom', 0, '103', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(27, 'Wholesale Appliance Ctr', 9681, '88550', '0', 0, 'Misurell Marketing Consulting', 'WHO7720', 'DNS ELECTRONICS', 'Capcom', 0, '38', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(28, 'Stewart Appliances', 64137, '109417', '0', 0, 'Mon Bien Aime Inc', 'STE6621', 'DNS ELECTRONICS', 'gozzby', 0, '146', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(29, 'Syracuse Casket Direct', 109089, '95188', '0', 0, 'Mobile RDO Communications Svc', 'SYR4599', 'DNS ELECTRONICS', 'Cameron', 0, '43', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(30, 'All Pro Spas', 32171, '148038', '0', 0, 'Latico Environmental Services', 'ALL4817', 'DNS ELECTRONICS', 'notzi', 0, '72', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(31, 'Web Marketing Group', 62064, '97932', '0', 0, 'Scanner Master Police Scanners', 'WEB6154', 'DNS ELECTRONICS', 'Havells', 0, '33', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(32, 'Teleshuttle Corp', 25670, '142775', '0', 0, 'Jacobsson', 'TEL7168', 'DNS ELECTRONICS', 'Samsung', 0, '38', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(33, 'Wreath Farm', 40713, '27490', '0', 0, 'Logistics Market Place', 'WRE6538', 'DNS ELECTRONICS', 'Capcom', 0, '101', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(34, 'WOODEN DEIDRA', 26816, '31895', '0', 0, 'Heather Mcglynn', 'WOO4887', 'DNS ELECTRONICS', 'Huawei', 0, '70', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(35, 'Web Marketing Group', 61112, '31202', '0', 0, 'Lorelei Enterprises', 'WEB6560', 'DNS ELECTRONICS', 'Huawei', 0, '21', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(36, 'Beth Moore', 132505, '143536', '0', 0, 'Classic Awards & Engraving', 'BET3590', 'DNS ELECTRONICS', 'Cameron', 0, '69', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(37, 'Teleshuttle Corp', 122427, '118420', '0', 0, 'Lorelei Enterprises', 'TEL7471', 'DNS ELECTRONICS', 'hatello', 0, '59', 'Electronics', 'Headphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(38, 'Symbolic Systems', 129044, '142792', '0', 0, 'Cinema Marketing Group', 'SYM1797', 'DNS ELECTRONICS', 'sony', 0, '34', 'Electronics', 'AC', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(39, 'Impact Imaging', 117112, '31340', '0', 0, 'Scanner Master Police Scanners', 'IMP5274', 'DNS ELECTRONICS', 'Capcom', 0, '131', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(40, 'Aerial Marketing Group', 85909, '39392', '0', 0, 'STERLING MARKETING INTERNATIONAL', 'AER8332', 'DNS ELECTRONICS', 'Samsung', 0, '75', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(41, 'Syracuse Casket Direct', 38674, '9459', '0', 0, 'Cinema Marketing Group', 'SYR636', 'DNS ELECTRONICS', 'Cameron', 0, '92', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(42, 'Stewart Appliances', 55153, '24109', '0', 0, 'Heather Mcglynn', 'STE2663', 'DNS ELECTRONICS', 'Capcom', 0, '32', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(43, 'The Craighead Co.', 88389, '43381', '0', 0, 'Mon Bien Aime Inc', 'THE545', 'DNS ELECTRONICS', 'Samsung', 0, '124', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(44, 'Aerial Marketing Group', 94432, '26850', '0', 0, 'Mon Bien Aime Inc', 'AER197', 'DNS ELECTRONICS', 'Havells', 0, '43', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(45, 'Stewart Appliances', 148807, '122694', '0', 0, 'STERLING MARKETING INTERNATIONAL', 'STE4881', 'DNS ELECTRONICS', 'hatello', 0, '71', 'Electronics', 'TV', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(46, 'Teleshuttle Corp', 87565, '1752', '0', 0, 'Logistics Market Place', 'TEL3288', 'DNS ELECTRONICS', 'Samsung', 0, '31', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(47, 'Enlable Inc', 54249, '61474', '0', 0, 'Adams Memorials', 'ENL8098', 'DNS ELECTRONICS', 'sony', 0, '22', 'Electronics', 'Headphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(48, 'Meyer Appliance Service', 66159, '145158', '0', 0, 'Misurell Marketing Consulting', 'MEY4759', 'DNS ELECTRONICS', 'Call', 0, '63', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(49, 'Mars Inc', 37859, '12130', '0', 0, 'Logistics Market Place', 'MAR6548', 'DNS ELECTRONICS', 'Cameron', 0, '97', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(50, 'Maui Arthoughts Company', 70815, '127397', '0', 0, 'Adams Memorials', 'MAU2691', 'DNS ELECTRONICS', 'ControlCambridge', 0, '46', 'Electronics', 'Speaker', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(51, 'Beth Moore', 116499, '65212', '0', 0, 'Adams Memorials', 'BET3344', 'DNS ELECTRONICS', 'Cameron', 0, '20', 'Electronics', 'Heater', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(52, 'Maui Arthoughts Company', 75236, '88829', '0', 0, 'Mobile RDO Communications Svc', 'MAU3198', 'DNS ELECTRONICS', 'Huawei', 0, '54', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(53, 'WOODEN DEIDRA', 1569, '97020', '0', 0, 'THE NEW MARKETEER', 'WOO4886', 'DNS ELECTRONICS', 'panasonic', 0, '87', 'Electronics', 'Fan', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(54, 'All Pro Spas', 51373, '105949', '0', 0, 'Lorelei Enterprises', 'ALL8161', 'DNS ELECTRONICS', 'Cameron', 0, '147', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(55, 'Impact Network Solutions', 109886, '133078', '0', 0, 'Classic Awards & Engraving', 'IMP3810', 'DNS ELECTRONICS', 'gozzby', 0, '101', 'Electronics', 'Smartphone', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM'),
+(56, 'Syracuse Casket Direct', 23197, '31873', '0', 0, 'STERLING MARKETING INTERNATIONAL', 'SYR1606', 'DNS ELECTRONICS', 'LG', 0, '107', 'Electronics', 'Fridge', 'mainimage.jpg', 'e13d43c8094f5804c8b72f4884ac6e23', '2021-11-17 04:49:51 PM');
 
 -- --------------------------------------------------------
 
@@ -727,7 +751,7 @@ CREATE TABLE `product_images` (
   `id` int(11) NOT NULL,
   `folder_key` varchar(50) NOT NULL,
   `image_name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product_images`
@@ -749,7 +773,7 @@ CREATE TABLE `product_in_cart` (
   `cart_id` int(11) NOT NULL,
   `product_code` varchar(11) NOT NULL,
   `quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product_in_cart`
@@ -773,7 +797,7 @@ CREATE TABLE `product_queries` (
   `adminreply` text NOT NULL,
   `replied_date` varchar(50) NOT NULL,
   `added_date` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product_queries`
@@ -800,7 +824,7 @@ CREATE TABLE `reviews` (
   `rating` int(11) NOT NULL,
   `comment` text NOT NULL,
   `added_date` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reviews`
@@ -830,7 +854,7 @@ CREATE TABLE `shipping_info` (
   `address_two` varchar(100) NOT NULL,
   `postal_code` varchar(50) NOT NULL,
   `added_date` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `shipping_info`
@@ -860,7 +884,7 @@ CREATE TABLE `trader` (
   `joined_date` date NOT NULL,
   `approved` varchar(5) NOT NULL,
   `active` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trader`
@@ -872,6 +896,24 @@ INSERT INTO `trader` (`shop_id`, `trader_name`, `username`, `password`, `shop_na
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `wholesale_detail`
+--
+
+CREATE TABLE `wholesale_detail` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `current_address` varchar(100) NOT NULL,
+  `permanent_address` varchar(100) NOT NULL,
+  `citizenship_number` varchar(100) NOT NULL,
+  `citizenship_front` varchar(100) NOT NULL,
+  `citizenship_back` varchar(100) NOT NULL,
+  `business_name` varchar(100) NOT NULL,
+  `pan_number` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `wishlist`
 --
 
@@ -879,7 +921,7 @@ CREATE TABLE `wishlist` (
   `id` varchar(50) NOT NULL,
   `customer_id` int(10) NOT NULL,
   `product_code` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `wishlist`
@@ -940,6 +982,12 @@ ALTER TABLE `email_update`
 -- Indexes for table `homepage_image`
 --
 ALTER TABLE `homepage_image`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `membership_packages`
+--
+ALTER TABLE `membership_packages`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1015,6 +1063,12 @@ ALTER TABLE `trader`
   ADD PRIMARY KEY (`shop_id`);
 
 --
+-- Indexes for table `wholesale_detail`
+--
+ALTER TABLE `wholesale_detail`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `wishlist`
 --
 ALTER TABLE `wishlist`
@@ -1043,10 +1097,22 @@ ALTER TABLE `email_update`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `membership_packages`
+--
+ALTER TABLE `membership_packages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `wholesale_detail`
+--
+ALTER TABLE `wholesale_detail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
