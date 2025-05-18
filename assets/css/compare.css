@@ -1,0 +1,30 @@
+.compare-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.compare-row {
+    display: table-row;
+    border-bottom: 1px solid #ddd;
+}
+
+.compare-row.header {
+    font-weight: bold;
+    background: #f8f8f8;
+}
+
+.compare-cell {
+    display: table-cell;
+    padding: 15px;
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid #ccc;
+}
+
+.compare-img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+}

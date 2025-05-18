@@ -282,8 +282,7 @@ include("database/connect.php");
 		});
 		$(".navbarlogin").click(function() {			
 
-			var email = $('#email_log').val();
-			console.log(email);
+			var email = $('#email_log').val();			
 			var password = $('#password_log').val();
 			var rememberme = false;
 			var currentLocation = window.location.href;			
@@ -310,7 +309,7 @@ include("database/connect.php");
 						if (dataResult.statusCode != null) {							
 							if (dataResult.statusCode != 200) {
 								$("#error").show();
-								$("#error").fadeOut(10000);
+								$("#error").fadeOut(2000);
 							}
 						}
 						if (dataResult.statusCode == 200) {
@@ -337,7 +336,7 @@ include("database/connect.php");
 			} else {
 				$('#error').html('Please fill all fields.');
 				$("#error").show();
-				$("#error").fadeOut(4300);
+				$("#error").fadeOut(2000);
 				$(".navbarlogin").removeAttr('disabled');
 			}
 		});

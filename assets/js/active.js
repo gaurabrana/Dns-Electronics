@@ -1,36 +1,36 @@
 /* =====================================
 [Start Activation Code]
 =========================================
-	01. Mobile Menu JS
-	02. Sticky Header JS
-	03. Search JS
-	04. Slider Range JS
-	05. Home Slider JS
-	06. Popular Slider JS
-	07. Quick View Slider JS
-	08. Home Slider 4 JS
-	09. CountDown
-	10. Flex Slider JS
-	11. Cart Plus Minus Button
-	12. Checkbox JS
-	13. Extra Scroll JS
-	14. Product page Quantity Counter
-	15. Video Popup JS
-	16. Scroll UP JS
-	17. Nice Select JS
-	18. Others JS
-	19. Preloader JS
+    01. Mobile Menu JS
+    02. Sticky Header JS
+    03. Search JS
+    04. Slider Range JS
+    05. Home Slider JS
+    06. Popular Slider JS
+    07. Quick View Slider JS
+    08. Home Slider 4 JS
+    09. CountDown
+    10. Flex Slider JS
+    11. Cart Plus Minus Button
+    12. Checkbox JS
+    13. Extra Scroll JS
+    14. Product page Quantity Counter
+    15. Video Popup JS
+    16. Scroll UP JS
+    17. Nice Select JS
+    18. Others JS
+    19. Preloader JS
 =========================================
 [End Activation Code]
 =========================================*/
 
 
-(function($) {
+(function ($) {
     "use strict";
-    $(document).on('ready', function() {
+    $(document).on('ready', function () {
 
         /*====================================
-        	Mobile Menu
+            Mobile Menu
         ======================================*/
         $('.menu').slicknav({
             prependTo: ".mobile-nav",
@@ -43,7 +43,7 @@
         /*====================================
         03. Sticky Header JS
         ======================================*/
-        jQuery(window).on('scroll', function() {
+        jQuery(window).on('scroll', function () {
             if ($(this).scrollTop() > 200) {
                 $('.header').addClass("sticky");
             } else {
@@ -54,11 +54,11 @@
         /*=======================
           Search JS JS
         =========================*/
-        $('.top-search a').on("click", function() {
+        $('.top-search a').on("click", function () {
             $('.search-top').toggleClass('active');
         });
 
-        $("#menuButton i").on("click", function() {
+        $("#menuButton i").on("click", function () {
             $("#showelement .slicknav_btn").click();
         });
 
@@ -168,10 +168,10 @@
         /*====================================
         14. CountDown
         ======================================*/
-        $('[data-countdown]').each(function() {
+        $('[data-countdown]').each(function () {
             var $this = $(this),
                 finalDate = $(this).data('countdown');
-            $this.countdown(finalDate, function(event) {
+            $this.countdown(finalDate, function (event) {
                 $this.html(event.strftime(
                     '<div class="cdown"><span class="days"><strong>%-D</strong><p>Days.</p></span></div><div class="cdown"><span class="hour"><strong> %-H</strong><p>Hours.</p></span></div> <div class="cdown"><span class="minutes"><strong>%M</strong> <p>MINUTES.</p></span></div><div class="cdown"><span class="second"><strong> %S</strong><p>SECONDS.</p></span></div>'
                 ));
@@ -181,7 +181,7 @@
         /*====================================
         16. Flex Slider JS
         ======================================*/
-        (function($) {
+        (function ($) {
             'use strict';
             $('.flexslider-thumbnails').flexslider({
                 animation: "slide",
@@ -196,7 +196,7 @@
         var CartPlusMinus = $('.cart-plus-minus');
         CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
         CartPlusMinus.append('<div class="inc qtybutton">+</div>');
-        $(".qtybutton").on("click", function() {
+        $(".qtybutton").on("click", function () {
             var $button = $(this);
             var oldValue = $button.parent().find("input").val();
             if ($button.text() === "+") {
@@ -215,7 +215,7 @@
         /*=======================
           Extra Scroll JS
         =========================*/
-        $('.scroll').on("click", function(e) {
+        $('.scroll').on("click", function (e) {
             var anchor = $(this);
             $('html, body').stop().animate({
                 scrollTop: $(anchor.attr('href')).offset().top - 0
@@ -226,7 +226,7 @@
         /*===============================
         10. Checkbox JS
         =================================*/
-        $('input[type="checkbox"]').change(function() {
+        $('input[type="checkbox"]').change(function () {
             if ($(this).is(':checked')) {
                 $(this).parent("label").addClass("checked");
             } else {
@@ -237,14 +237,14 @@
         /*==================================
          12. Product page Quantity Counter
          ===================================*/
-        $('.qty-box .quantity-right-plus').on('click', function() {
+        $('.qty-box .quantity-right-plus').on('click', function () {
             var $qty = $('.qty-box .input-number');
             var currentVal = parseInt($qty.val(), 10);
             if (!isNaN(currentVal)) {
                 $qty.val(currentVal + 1);
             }
         });
-        $('.qty-box .quantity-left-minus').on('click', function() {
+        $('.qty-box .quantity-left-minus').on('click', function () {
             var $qty = $('.qty-box .input-number');
             var currentVal = parseInt($qty.val(), 10);
             if (!isNaN(currentVal) && currentVal > 1) {
@@ -262,7 +262,7 @@
         });
 
         /*====================================
-        	Scroll Up JS
+            Scroll Up JS
         ======================================*/
         $.scrollUp({
             scrollText: '<span><i class="fa fa-angle-up"></i></span>',
@@ -294,7 +294,7 @@
     ======================================*/
     //After 2s preloader is fadeOut
     $('.preloader').delay(500).fadeOut('slow');
-    setTimeout(function() {
+    setTimeout(function () {
         //After 2s, the no-scroll class of the body will be removed
         $('body').removeClass('no-scroll');
     }, 500); //Here you can change preloader time
@@ -308,7 +308,7 @@
             type: "POST",
             url: 'database/getcartdata.php',
             data: { action: "getData" },
-            success: function(result) {
+            success: function (result) {
                 $("#holdshoppingcart").html(result);
             }
         });
@@ -316,7 +316,7 @@
 
     getItemInCart();
 
-    $(document).on("click", ".product-action-2 span", function(e) {
+    $(document).on("click", ".product-action-2 span", function (e) {
         var a = $(this).attr("id");
         if (a == undefined) {
             return;
@@ -337,7 +337,7 @@
             type: "POST",
             data: { action: b },
             cache: false,
-            success: function(result) {
+            success: function (result) {
                 var data = JSON.parse(result);
                 if (data.statusCode == 200) {
                     getItemInCart();
@@ -381,7 +381,7 @@
     });
 
 
-    $(document).on("click", ".product-action p", function(e) {
+    $(document).on("click", ".product-action p", function (e) {
         e.preventDefault;
         var a = $(this).attr("id");
         var b = null;
@@ -408,7 +408,7 @@
                 type: "POST",
                 data: { action: b },
                 cache: false,
-                success: function(result) {
+                success: function (result) {
                     var data = JSON.parse(result);
                     if (a.indexOf("favourite") >= 0) {
                         if (data.statusCode == 200) {
@@ -502,7 +502,7 @@
         }
         $(b)
             .delay(3000)
-            .queue(function(next) {
+            .queue(function (next) {
                 if (a == "list") {
                     $(b).removeClass(c);
                 }
@@ -511,7 +511,7 @@
             });
     }
 
-    $(document).on("click", ".add-to-cart a", function(e) {
+    $(document).on("click", ".add-to-cart a", function (e) {
         e.preventDefault();
 
         let getClickedButtonID = $(this).attr("id");
@@ -538,7 +538,7 @@
             type: "POST",
             data: { action: a, quantityofproduct: productquantity },
             cache: false,
-            success: function(result) {
+            success: function (result) {
                 var data = JSON.parse(result);
                 $(resultID).css("visibility", "visible");
                 if (data.statusCode == 200) {
@@ -561,7 +561,7 @@
                 $(resultID).addClass(color);
                 $(resultID)
                     .delay(3000)
-                    .queue(function(next) {
+                    .queue(function (next) {
                         $(this).css('visibility', 'hidden');
                         $(this).removeClass(color)
                         next();
@@ -580,7 +580,7 @@
             type: "POST",
             data: { action: a },
             cache: false,
-            success: function(result) {
+            success: function (result) {
                 var data = JSON.parse(result);
                 $(resultID).css("visibility", "visible");
                 if (data.statusCode == 200) {
@@ -602,7 +602,7 @@
                 $(resultID).addClass(color);
                 $(resultID)
                     .delay(3000)
-                    .queue(function(next) {
+                    .queue(function (next) {
                         $(this).css('visibility', 'hidden');
                         $(this).removeClass(color);
                         next();
@@ -619,7 +619,8 @@
             type: "POST",
             data: { action: a },
             cache: false,
-            success: function(result) {
+            success: function (result) {
+                console.log(result);
                 var data = JSON.parse(result);
                 $(resultID).css("visibility", "visible");
                 if (data.statusCode == 200) {
@@ -641,7 +642,7 @@
                 $(resultID).addClass(color);
                 $(resultID)
                     .delay(3000)
-                    .queue(function(next) {
+                    .queue(function (next) {
                         $(this).css('visibility', 'hidden');
                         $(this).removeClass(color);
                         next();
@@ -671,12 +672,12 @@
 CHECKOUT PAGE
     */
 
-    $('#myTab a').on('click', function(e) {
+    $('#myTab a').on('click', function (e) {
         e.preventDefault()
         $(this).tab('show');
     })
 
-    $("#searchProduct").on("keyup", function(e) {
+    $("#searchProduct").on("keyup", function (e) {
         var searchKeyword = $(this).val();
         var category = $("#categorySearch").val();
         if (searchKeyword.length > 0) {
@@ -689,13 +690,13 @@ CHECKOUT PAGE
             url: "database/searchProduct.php",
             type: "POST",
             data: { search: searchKeyword, category: category },
-            success: function(data) {
+            success: function (data) {
                 $(".search-list").html(data);
             }
         });
     });
 
-    $(".fav-del").on("click", function(e) {
+    $(".fav-del").on("click", function (e) {
         var id = $(this).attr("id");
         var productCode = id.split("removeFav")[1];
 
@@ -703,7 +704,7 @@ CHECKOUT PAGE
             url: "database/addtowishlist.php",
             type: "POST",
             data: { code: productCode, action: "remove" },
-            success: function(data) {
+            success: function (data) {
                 var result = JSON.parse(data);
                 if (result.statusCode == "200") {
                     var item = "favItem" + productCode;
@@ -716,12 +717,12 @@ CHECKOUT PAGE
 
     });
 
-    var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-        keyboard: false
-      })   
-      function showMembershipModal(){
+    function showMembershipModal() {
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+            keyboard: false
+        })
         myModal.show();
-      }      
-      showMembershipModal();
+    }
+    //   showMembershipModal();
 
 })(jQuery);

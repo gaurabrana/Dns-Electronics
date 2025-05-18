@@ -186,9 +186,9 @@ if(isset($_SESSION['id'])){
 							echo'</span>
 						</div>
 				</div>';
-				if($_SESSION['isRetail']){
+				if (isset($_SESSION['isRetail']) && $_SESSION['isRetail'] != null) {
 					$discount = $row['discount'];
-			}
+				}
 			else{
 				$discount = $row['wholesale_discount'];
 			}
@@ -207,7 +207,7 @@ if(isset($_SESSION['id'])){
 				   <span style="color:#ef271b;">'.$percentage.'% off</span>';
 			   }
 			   else{																	
-				   echo'<span>Rs'.$updatedPrice.'</span>';							
+				   echo'<span>Rs '.$updatedPrice.'</span>';							
 			   }
 			   echo '
 			   <span class="tags"></span>
